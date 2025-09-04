@@ -1,29 +1,168 @@
 import './App.css'
+import { useState, useEffect, useRef } from 'react'
+import { FaInstagram, FaGithub, FaLinkedinIn } from 'react-icons/fa'
 
-function App() {
+const experience = [
+  { role: 'Product designer 2', company: 'Microsoft', period: 'Apr 2025 – Present', location: 'Remote & Vancouver, CA' },
+  { role: 'Product designer 2', company: 'Microsoft', period: 'Jun 2022 – Apr 2025', location: 'Remote & Vancouver, CA' },
+  { role: 'User experience designer', company: 'Jungle Scout', period: 'Feb 2020 – May 2022', location: 'Remote & Vancouver, CA' },
+  { role: 'User experience designer', company: 'Visier Inc.', period: 'May 2018 – Dec 2019', location: 'Vancouver, CA' },
+]
+
+export default function App(){
+  const [typewriterText, setTypewriterText] = useState('')
+  const [isTyping, setIsTyping] = useState(false)
+  const [hasAnimated, setHasAnimated] = useState(false)
+  const footerRef = useRef(null)
+  
+  const fullText = "you've reached the edge. i am still loading what's next..."
+  
+  const startTypewriter = () => {
+    if (hasAnimated) return
+    
+    setHasAnimated(true)
+    setIsTyping(true)
+    let index = 0
+    setTypewriterText('')
+    
+    const typeInterval = setInterval(() => {
+      if (index < fullText.length) {
+        setTypewriterText(fullText.slice(0, index + 1))
+        index++
+      } else {
+        clearInterval(typeInterval)
+        setIsTyping(false)
+      }
+    }, 50)
+  }
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            startTypewriter()
+          }
+        })
+      },
+      { threshold: 0.1 }
+    )
+    
+    if (footerRef.current) {
+      observer.observe(footerRef.current)
+    }
+    
+    // Fallback: start animation after 2 seconds if not triggered by intersection
+    const fallbackTimer = setTimeout(() => {
+      if (!hasAnimated) {
+        startTypewriter()
+      }
+    }, 2000)
+    
+    return () => {
+      observer.disconnect()
+      clearTimeout(fallbackTimer)
+    }
+  }, [])
   return (
-    <div className="App">
-      <header className='app-header'>
-       <h1>Hello, I am Grant</h1>
-        <p className="tagline">there is no design to this site yet 😅</p>
-      </header>
+    <>
+      {/* Fixed Background */}
+      <div className="bg-aurora">
+        {/* Additional gradient layer */}
+        <div className="gradient-layer"></div>
+      </div>
       
-      <main className="app-main">
-        <div className="intro-section">
-          <h2>🚧 Under heavy construction...</h2>
-          <p>
-            This is an AI-driven experience that showcases my design career and learning journey using AI to accelerate my growth. 
-            Looking forward to sharing more soon!
-          </p>
+      {/* Scrollable Content */}
+      <div className="responsive-container">
+        {/* Header */}
+        <div className="header-container">
+          <div className="header-inner">
+            <div className="header-left">
+              <div>
+                <span className="header-maybe">maybe:</span>
+                <span className="header-name"> Grant Zou</span>
+              </div>
+              <div className="header-title">
+                <div className="header-ai">ai</div>
+                <div className="header-designer">product designer</div>
+              </div>
+            </div>
+            <div className="header-right">
+              <div className="construction-text">This website is still under construction</div>
+              <div className="construction-emoji">🚧</div>
+            </div>
+          </div>
         </div>
         
-        <div className="coming-soon">
-          <h3>Currently designing @ Microsoft Azure</h3>
-          <p>@granitez /grantxyzou</p>
+        {/* Main Content */}
+        <div className="main-container">
+          {/* Sidebar */}
+          <div className="sidebar">
+            <div className="sidebar-bio">
+              <div className="bio-text">
+                Grant remixes music, experiments with new technologies, and keeps rhythm in life through badminton and running. He sees design as storytelling: blending experience and connection, whether in beats, interfaces, or shared moments.
+              </div>
+            </div>
+            
+            {/* Social Links */}
+            <div className="social-link">
+              <FaInstagram className="social-icon-svg" />
+              <a href="https://instagram.com/granitez" target="_blank" rel="noopener noreferrer" className="social-text">@granitez</a>
+            </div>
+            <div className="social-link">
+              <FaLinkedinIn className="social-icon-svg" />
+              <a href="https://www.linkedin.com/in/grantxyzou" target="_blank" rel="noopener noreferrer" className="social-text">linkedin.com/in/grantxyzou</a>
+            </div>
+            <div className="social-link social-link-last">
+              <FaGithub className="social-icon-svg" />
+              <a href="https://github.com/grantxyzou" target="_blank" rel="noopener noreferrer" className="social-text">github.com/grantxyzou</a>
+            </div>
+          </div>
+          
+          {/* Main Content */}
+          <div className="content">
+            {/* About Me Section */}
+            <div className="section about-section">
+              <div className="section-title">About...me</div>
+              <div className="section-content">
+                <div className="about-text">
+                  Currently under construction, but so am I. What you see here is only scaffolding; the full narrative is still being built. Stay tuned for a portfolio that doesn't just showcase, but converses.
+                </div>
+              </div>
+            </div>
+            
+            {/* Experience Section */}
+            <div className="section experience-section">
+              <div className="section-title">About his experience...</div>
+              <div className="experience-list">
+                {experience.map((exp, i) => (
+                  <div key={i} className={`experience-item ${i > 0 ? 'experience-border' : ''}`}>
+                    <div className="experience-content">
+                      <div className="experience-role">{exp.role}</div>
+                      <div className="experience-details">
+                        <div className="experience-company">{exp.company}</div>
+                        <div className="experience-period">{exp.period}</div>
+                        <div className="experience-location">{exp.location}</div>
+                      </div>
+                    </div>
+                    <div className="experience-dot" />
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* Footer */}
+            <div className="footer" ref={footerRef}>
+              <div className="footer-content">
+                <div className="footer-text typewriter">
+                  {typewriterText || fullText}
+                  {typewriterText && <span className={`cursor ${isTyping ? 'blinking' : 'steady'}`}>|</span>}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </>
   )
 }
-
-export default App

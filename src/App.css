@@ -1,160 +1,749 @@
-/* Global resets and base styles */
+@import "tailwindcss";
+/* Fix text-size-adjust browser compatibility
+html, body {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+} */
+
+/* CSS Variables */
+:root { 
+  color-scheme: dark;
+}
+
+/* Base styles */
 * {
   box-sizing: border-box;
 }
 
-html {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color-scheme: light;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-}
-
-body {
+html, body {
   margin: 0;
   padding: 0;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  color: white;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Background with Gradient Overlays */
+.bg-aurora {
+  background: #100F0F;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.bg-aurora::before {
+  content: '';
+  position: absolute;
+  width: 2375px;
+  height: 1640px;
+  left: -280px;
+  top: 659px;
+  opacity: 0.50;
+  background: linear-gradient(180deg, #8FA2B0 0%, #1B324D 56%);
+  box-shadow: 200px 200px 200px;
+  filter: blur(100px);
+  animation: float-gentle 20s ease-in-out infinite;
+}
+
+.bg-aurora::after {
+  content: '';
+  position: absolute;
+  width: 2838px;
+  height: 1509px;
+  left: -205px;
+  top: 758px;
+  mix-blend-mode: darken;
+  background: linear-gradient(180deg, #BEB293 0%, black 67%);
+  box-shadow: 200px 200px 200px;
+  filter: blur(100px);
+  animation: drift-slow 25s ease-in-out infinite reverse;
+}
+
+/* Additional gradient layer */
+.bg-aurora .gradient-layer {
+  position: absolute;
+  width: 903.61px;
+  height: 1760.98px;
+  left: 445px;
+  top: 1535.78px;
+  transform: rotate(-58deg);
+  transform-origin: top left;
+  opacity: 0.60;
+  mix-blend-mode: hard-light;
+  background: linear-gradient(180deg, #8FA2B0 0%, #1B324D 56%);
+  box-shadow: 200px 200px 200px;
+  filter: blur(100px);
+  animation: wave-rotate 30s ease-in-out infinite;
+}
+
+/* Background Animation Keyframes */
+@keyframes float-gentle {
+  0%, 100% { 
+    transform: translate(0px, 0px) scale(1);
+    opacity: 0.50;
+  }
+  25% { 
+    transform: translate(30px, -20px) scale(1.02);
+    opacity: 0.45;
+  }
+  50% { 
+    transform: translate(-15px, 30px) scale(0.98);
+    opacity: 0.55;
+  }
+  75% { 
+    transform: translate(20px, 10px) scale(1.01);
+    opacity: 0.48;
+  }
+}
+
+@keyframes drift-slow {
+  0%, 100% { 
+    transform: translate(0px, 0px) rotate(0deg);
+    opacity: 1;
+  }
+  33% { 
+    transform: translate(-40px, 25px) rotate(1deg);
+    opacity: 0.9;
+  }
+  66% { 
+    transform: translate(25px, -35px) rotate(-0.5deg);
+    opacity: 0.95;
+  }
+}
+
+@keyframes wave-rotate {
+  0%, 100% { 
+    transform: rotate(-58deg) translate(0px, 0px) scale(1);
+    opacity: 0.60;
+  }
+  20% { 
+    transform: rotate(-56deg) translate(15px, -25px) scale(1.03);
+    opacity: 0.55;
+  }
+  40% { 
+    transform: rotate(-60deg) translate(-20px, 15px) scale(0.97);
+    opacity: 0.65;
+  }
+  60% { 
+    transform: rotate(-57deg) translate(25px, 20px) scale(1.01);
+    opacity: 0.58;
+  }
+  80% { 
+    transform: rotate(-59deg) translate(-10px, -15px) scale(0.99);
+    opacity: 0.62;
+  }
+}
+
+@keyframes breathe {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 0.8;
+    box-shadow: 0 0 0 0 rgba(217, 217, 217, 0.4);
+  }
+  50% { 
+    transform: scale(1.2);
+    opacity: 1;
+    box-shadow: 0 0 0 8px rgba(217, 217, 217, 0);
+  }
+}
+
+/* Animations and Effects */
+@keyframes flicker {
+  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 1; }
+  20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.72; }
+}
+
+/* Responsive Container */
+.responsive-container {
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  width: 100%;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  display: inline-flex;
+  padding: 60px 20px 60px 20px;
+  background: transparent;
 }
 
-/* App-specific styles */
-#root {
-  max-width: 1280px;
+/* Header Styles */
+.header-container {
+  width: 100%;
+  max-width: 1440px;
+  padding-bottom: 40px;
+  justify-content: space-between;
+  align-items: flex-start;
+  display: inline-flex;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
 }
 
-.App {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: 2rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  min-height: 80vh;
+.header-inner {
+  width: 100%;
+  justify-content: space-between;
+  align-items: flex-end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
-.app-header {
-  margin-bottom: 3rem;
+.header-left {
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  display: inline-flex;
 }
 
-.app-header h1 {
-  font-size: 2.5rem;
-  color: #2c3e50;
-  margin-bottom: 0.5rem;
-  font-weight: 700;
+.header-maybe {
+  color: rgba(255, 255, 255, 0.30);
+  font-size: 24px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 600;
+  line-height: 31.20px;
+  word-wrap: break-word;
 }
 
-.tagline {
-  font-size: 1.2rem;
-  color: #7f8c8d;
-  margin: 0;
-  font-weight: 300;
+.header-name {
+  color: white;
+  font-size: 24px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 600;
+  line-height: 31.20px;
+  word-wrap: break-word;
 }
 
-.intro-section {
-  margin-bottom: 3rem;
-  padding: 2rem;
-  background: rgba(103, 126, 234, 0.1);
-  border-radius: 12px;
-  border-left: 4px solid #667eea;
+.header-title {
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 4px;
+  display: inline-flex;
 }
 
-.intro-section h2 {
-  color: #2c3e50;
-  margin-bottom: 1rem;
-}
-
-.intro-section p {
-  color: #34495e;
-  line-height: 1.6;
-  font-size: 1.1rem;
-}
-
-.coming-soon {
-  padding: 2rem;
-  background: rgba(118, 75, 162, 0.1);
-  border-radius: 12px;
-  border-left: 4px solid #764ba2;
-}
-
-.coming-soon h3 {
-  color: #2c3e50;
-  margin-bottom: 1rem;
-}
-
-.coming-soon p {
-  color: #7f8c8d;
-  font-style: italic;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .app-header h1 {
-    font-size: 2rem;
-  }
-  
-  .tagline {
-    font-size: 1rem;
-  }
-  
-  .intro-section,
-  .coming-soon {
-    padding: 1.5rem;
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+.header-ai {
+  opacity: 0.20;
+  color: #ABABAB;
+  font-size: 24px;
+  font-family: 'IBM Plex Sans', sans-serif;
   font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  line-height: 31.20px;
+  word-wrap: break-word;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+.header-designer {
+  color: #ABABAB;
+  font-size: 24px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 400;
+  line-height: 31.20px;
+  word-wrap: break-word;
+}
+
+.header-right {
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+  display: flex;
+}
+
+.construction-text {
+  text-align: right;
+  color: #ABABAB;
+  font-size: 20px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 400;
+  line-height: 26px;
+  word-wrap: break-word;
+}
+
+.construction-emoji {
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 23.40px;
+  word-wrap: break-word;
+}
+
+/* Main Container */
+.main-container {
+  width: 100%;
+  max-width: 1440px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 20px;
+  display: inline-flex;
+  margin: 0 auto;
+}
+
+/* Sidebar */
+.sidebar {
+  flex: 1 1 0;
+  max-width: 368px;
+  padding-top: 212px;
+  padding-right: 10px;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  display: inline-flex;
+}
+
+.sidebar-bio {
+  width: 100%;
+  padding: 30px 40px 40px 6px;
+  border-top: 1px rgba(144.67, 159.47, 173.32, 0.40) solid;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 37px;
+  display: flex;
+}
+
+.bio-text {
+  width: 100%;
+  flex: 1 1 0;
+  max-width: 420px;
+  color: rgba(255, 255, 255, 0.80);
+  font-size: 16px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 400;
+  line-height: 22.40px;
+  word-wrap: break-word;
+}
+
+.social-link {
+  width: 100%;
+  padding: 12px 7px;
+  border-top: 0.50px #657E95 solid;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  display: inline-flex;
+}
+
+.social-link-last {
+  border-bottom: 0.50px #657E95 solid;
+}
+
+.social-icon {
+  width: 16px;
+  height: 16px;
+  position: relative;
+}
+
+.social-icon::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: #E2E1F0;
+}
+
+.social-text {
+  color: #E2E1F0;
+  font-size: 12px;
+  font-family: 'Schibsted Grotesk', sans-serif;
+  font-weight: 600;
+  line-height: 15.60px;
+  word-wrap: break-word;
+  text-decoration: none;
+}
+
+.social-text:hover {
+  text-decoration: underline;
+}
+
+/* Content */
+.content {
+  flex: 1 1 0;
+  padding: 0 20px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  display: inline-flex;
+}
+
+.section {
+  width: 100%;
+  padding: 30px 0 80px 0;
+  border-top: 1px #383838 solid;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 40px;
+  display: flex;
+}
+
+.experience-section {
+  border-top: 1px #3B3B3C solid;
+  gap: 37px;
+}
+
+.section-title {
+  width: 100%;
+  min-width: 220px;
+  color: white;
+  font-size: 12px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 600;
+  line-height: 15.60px;
+  word-wrap: break-word;
+}
+
+.section-content {
+  width: 100%;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 10px;
+  display: inline-flex;
+}
+
+.about-text {
+  width: 100%;
+  max-width: 824px;
+  color: white;
+  font-size: 18px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 400;
+  line-height: 23.40px;
+  word-wrap: break-word;
+}
+
+.experience-list {
+  width: 100%;
+  padding-right: 20px;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 50px;
+  display: flex;
+}
+
+.experience-item {
+  width: 100%;
+  padding-top: 20px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 30px;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+
+.experience-border {
+  border-top: 0.50px #919FAD solid;
+}
+
+.experience-content {
+  flex: 1;
+  min-width: 220px;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 12px;
+  display: inline-flex;
+}
+
+.experience-role {
+  width: 100%;
+  color: white;
+  font-size: 16px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 600;
+  line-height: 20.80px;
+  word-wrap: break-word;
+}
+
+.experience-details {
+  width: 100%;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 2px;
+  display: flex;
+}
+
+.experience-company,
+.experience-period,
+.experience-location {
+  width: 100%;
+  color: #ABABAB;
+  font-size: 16px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 400;
+  line-height: 22.40px;
+  word-wrap: break-word;
+}
+
+.experience-dot {
+  width: 14px;
+  height: 14px;
+  background: #D9D9D9;
+  box-shadow: 3px 3px 3px;
+  border-radius: 9999px;
+  filter: blur(1.50px);
+  flex-shrink: 0;
+  animation: breathe 3s ease-in-out infinite;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .responsive-container {
+    padding: 40px 16px 40px 16px;
   }
-  a:hover {
-    color: #747bff;
+  
+  .header-container {
+    padding-bottom: 24px;
   }
-  button {
-    background-color: #f9f9f9;
+  
+  .header-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
   }
+  
+  .header-maybe,
+  .header-name {
+    font-size: 20px;
+    line-height: 26px;
+  }
+  
+  .header-ai,
+  .header-designer {
+    font-size: 20px;
+    line-height: 26px;
+  }
+  
+  .header-right {
+    order: -1;
+    width: 100%;
+    justify-content: flex-start;
+    margin-bottom: 8px;
+  }
+  
+  .construction-text {
+    font-size: 16px;
+    line-height: 21px;
+    text-align: left;
+  }
+  
+  .construction-emoji {
+    font-size: 16px;
+    line-height: 21px;
+  }
+  
+  .main-container {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .sidebar {
+    max-width: none;
+    width: 100%;
+    padding-top: 40px;
+    padding-right: 0;
+    order: 2;
+  }
+  
+  .sidebar-bio {
+    padding: 20px 0 24px 0;
+    gap: 20px;
+  }
+  
+  .bio-text {
+    font-size: 14px;
+    line-height: 19.60px;
+  }
+  
+  .social-link {
+    padding: 10px 0;
+  }
+  
+  .content {
+    padding: 0;
+    order: 1;
+  }
+  
+  .section {
+    padding: 20px 0 40px 0;
+    gap: 24px;
+  }
+  
+  .experience-section {
+    gap: 24px;
+  }
+  
+  .about-text {
+    font-size: 16px;
+    line-height: 22.40px;
+  }
+  
+  .experience-list {
+    padding-right: 0;
+    gap: 32px;
+  }
+  
+  .experience-item {
+    gap: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .experience-content {
+    min-width: auto;
+    gap: 8px;
+  }
+  
+  .experience-role {
+    font-size: 14px;
+    line-height: 18.20px;
+  }
+  
+  .experience-company,
+  .experience-period,
+  .experience-location {
+    font-size: 14px;
+    line-height: 19.60px;
+  }
+  
+  .experience-dot {
+    width: 12px;
+    height: 12px;
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+  
+  .footer {
+    padding-top: 16px;
+    gap: 20px;
+  }
+  
+  .footer-content {
+    min-width: auto;
+    gap: 8px;
+  }
+  
+  .footer-text {
+    font-size: 14px;
+    line-height: 19.60px;
+  }
+  
+  .cursor {
+    font-size: 14px;
+  }
+}
+
+/* Tablet Responsive Styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .responsive-container {
+    padding: 50px 24px 50px 24px;
+  }
+  
+  .header-container {
+    padding-bottom: 32px;
+  }
+  
+  .main-container {
+    gap: 16px;
+  }
+  
+  .sidebar {
+    max-width: 280px;
+    padding-top: 120px;
+  }
+  
+  .sidebar-bio {
+    padding: 24px 20px 32px 6px;
+  }
+  
+  .bio-text {
+    font-size: 15px;
+    line-height: 21px;
+  }
+  
+  .content {
+    padding: 0 16px;
+  }
+  
+  .about-text {
+    font-size: 17px;
+    line-height: 23.80px;
+  }
+  
+  .experience-item {
+    gap: 24px;
+  }
+  
+  .experience-content {
+    max-width: 400px;
+  }
+}
+
+/* Footer */
+.footer {
+  width: 100%;
+  padding-top: 20px;
+  border-top: 0.50px #919FAD solid;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 30px;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+
+.footer-content {
+  flex: 1 1 0;
+  min-width: 220px;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 12px;
+  display: inline-flex;
+}
+
+.footer-text {
+  width: 100%;
+  color: #ABABAB;
+  font-size: 16px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 400;
+  line-height: 22.40px;
+  word-wrap: break-word;
+}
+
+/* Typewriter Effect */
+.typewriter {
+  position: relative;
+}
+
+.cursor {
+  color: #ABABAB;
+  font-weight: 300;
+  font-size: 16px;
+  margin-left: 2px;
+}
+
+.cursor.blinking {
+  animation: blink 1s infinite;
+}
+
+.cursor.steady {
+  animation: steady-blink 1.5s infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+@keyframes steady-blink {
+  0%, 70% { opacity: 1; }
+  71%, 100% { opacity: 0; }
 }
