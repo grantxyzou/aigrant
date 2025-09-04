@@ -3,9 +3,9 @@ import { useState, useEffect, useRef } from 'react'
 import { FaInstagram, FaGithub, FaLinkedinIn } from 'react-icons/fa'
 
 const experience = [
-  { role: 'Product designer 2', company: 'Microsoft', period: 'Apr 2025 – Present', location: 'Remote & Vancouver, CA' },
-  { role: 'Product designer 2', company: 'Microsoft', period: 'Jun 2022 – Apr 2025', location: 'Remote & Vancouver, CA' },
-  { role: 'User experience designer', company: 'Jungle Scout', period: 'Feb 2020 – May 2022', location: 'Remote & Vancouver, CA' },
+  { role: 'Product designer 2', company: 'Microsoft (Azure core)', period: 'Apr 2025 – Present', location: 'Remote & Vancouver, CA' },
+  { role: 'Product designer 2', company: 'Microsoft (Cost Management)', period: 'Jun 2022 – Apr 2025', location: 'Remote & Vancouver, CA' },
+  { role: 'User experience designer I', company: 'Jungle Scout', period: 'Feb 2020 – May 2022', location: 'Remote & Vancouver, CA' },
   { role: 'User experience designer', company: 'Visier Inc.', period: 'May 2018 – Dec 2019', location: 'Vancouver, CA' },
 ]
 
@@ -13,6 +13,7 @@ export default function App(){
   const [typewriterText, setTypewriterText] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const [hasAnimated, setHasAnimated] = useState(false)
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const footerRef = useRef(null)
   
   const fullText = "you've reached the edge. i am still loading what's next..."
@@ -37,6 +38,16 @@ export default function App(){
   }
   
   useEffect(() => {
+    // Mouse tracking for parallax effect
+    const handleMouseMove = (e) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 2
+      const y = (e.clientY / window.innerHeight - 0.5) * 2
+      setMousePosition({ x, y })
+    }
+
+    window.addEventListener('mousemove', handleMouseMove)
+
+    // Intersection observer for typewriter
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -60,6 +71,7 @@ export default function App(){
     }, 2000)
     
     return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
       observer.disconnect()
       clearTimeout(fallbackTimer)
     }
@@ -67,9 +79,19 @@ export default function App(){
   return (
     <>
       {/* Fixed Background */}
-      <div className="bg-aurora">
+      <div 
+        className="bg-aurora"
+        style={{
+          transform: `translate(${mousePosition.x * 5}px, ${mousePosition.y * 3}px)`
+        }}
+      >
         {/* Additional gradient layer */}
-        <div className="gradient-layer"></div>
+        <div 
+          className="gradient-layer"
+          style={{
+            transform: `rotate(-58deg) translate(${mousePosition.x * -8}px, ${mousePosition.y * 6}px)`
+          }}
+        ></div>
       </div>
       
       {/* Scrollable Content */}
@@ -104,7 +126,7 @@ export default function App(){
               </div>
             </div>
             
-            {/* Social Links */}
+            {/* Desktop Social Links */}
             <div className="social-link">
               <FaInstagram className="social-icon-svg" />
               <a href="https://instagram.com/granitez" target="_blank" rel="noopener noreferrer" className="social-text">@granitez</a>
@@ -126,7 +148,7 @@ export default function App(){
               <div className="section-title">About...me</div>
               <div className="section-content">
                 <div className="about-text">
-                  Currently under construction, but so am I. What you see here is only scaffolding; the full narrative is still being built. Stay tuned for a portfolio that doesn't just showcase, but converses.
+                  Currently under construction. What you see here is only scaffolding; the full narrative is still being built. <span className="flicker-text">I am still under construction.</span> Stay tuned for a portfolio that doesn't just showcase, but converses.
                 </div>
               </div>
             </div>
@@ -159,6 +181,22 @@ export default function App(){
                   {typewriterText && <span className={`cursor ${isTyping ? 'blinking' : 'steady'}`}>|</span>}
                 </div>
               </div>
+            </div>
+          </div>
+          
+          {/* Social Links - Mobile Bottom */}
+          <div className="social-links-mobile">
+            <div className="social-link">
+              <FaInstagram className="social-icon-svg" />
+              <a href="https://instagram.com/granitez" target="_blank" rel="noopener noreferrer" className="social-text">@granitez</a>
+            </div>
+            <div className="social-link">
+              <FaLinkedinIn className="social-icon-svg" />
+              <a href="https://www.linkedin.com/in/grantxyzou" target="_blank" rel="noopener noreferrer" className="social-text">linkedin.com/in/grantxyzou</a>
+            </div>
+            <div className="social-link social-link-last">
+              <FaGithub className="social-icon-svg" />
+              <a href="https://github.com/grantxyzou" target="_blank" rel="noopener noreferrer" className="social-text">github.com/grantxyzou</a>
             </div>
           </div>
         </div>
