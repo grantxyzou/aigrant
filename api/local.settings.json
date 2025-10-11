@@ -1,0 +1,9 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "",
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "AZURE_OPENAI_ENDPOINT": "https://grant-mete29fw-westus.services.ai.azure.com/api/rpc",
+    "AZURE_OPENAI_API_KEY": "EvLIL8SLn71KJ5fbqC7jiAJ5NNewDBA0NINr86qafVnO1yaIfJmSJQQJ99BHAC4f1cMXJ3w3AAAAACOGD4xw"
+  }
+}

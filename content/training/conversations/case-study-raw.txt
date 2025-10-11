@@ -1,0 +1,115 @@
+# Grant's Portfolio Case Study - Raw Content
+
+## Instructions:
+Paste your case study content below. I'll help you parse it and convert it into training conversations.
+
+## Case Study Content:
+Advertising analytics - monitor performance & discover insights
+
+Product, Content, Engineering, Marketing, Video
+Role:
+Design owner, Researcher, Workshop facilitator
+Intro
+I experienced an internal team switch at Jungle Scout. 
+Beginning in early 2021, design resources were allocated to Cobalt, an enterprise tool for large brands and agencies. As a result, Orange, the consumer product, fell behind on feature innovation. While given the opportunity to join the Orange team, it was difficult to leave the team that I had grown to love. I decided, however, after discussing it with my manager, that it would be a significant growth opportunity where I could share my knowledge of the design process, collaboration, and my experience as an Amazon seller. 
+Advertising Analytics is the first net new feature for product Orange since 2021 and is currently being implemented. As the design owner for this project, I led customer interviews, conducted interview synthesis, facilitated brainstorming workshops and worked closely with the eng team to ensure a smooth spec handoff.
+ 
+View fullsize
+￼
+ 
+Design Opportunity
+Sellers need help understanding their Pay-per-click (PPC) data and derive actionable insights so that their sales and profit increase. We do not provide a solution for this in Jungle Scout Orange today. I then moved into research to investigate the opportunity further.
+Research: Part I - Qualitative
+The goal of this research effort is to:
+	•	understand customers’ needs for Advertisement analytics
+	•	identify customer pain-points when using Amazon Campaign Manager
+After chatting with 6 Orange customers with various selling experiences who are also currently running Amazon Campaigns I organized synthesis sessions with my Product Manager and identified recurring themes. 
+ 
+￼
+Virtual stickies done on FigJam
+ 
+We identified customer pain points and organized our findings into themes through this exercise. 
+Painpoints
+Customers currently running Amazon campaigns need assistance understanding all the advertising performance metrics presented. They also need insights on what they should do to have their product placed at the top of the page.
+Themes
+These themes were valuable insights and great starting points for us to begin exploring design solutions for this feature. With the scope and software as iterative processes in mind, we decided to conduct a quantitative survey to prioritize these themes and tackle the top needs.
+This strategy was discussed and agreed on between the product manager and me, releasing the feature incrementally while collecting usage data and customer feedback from version 1. We can build onto and improve the next version with these newfound insights.
+Research: Part II - Quantitative
+For the quantitative study, I created an in-App survey asking customers to rank out of the 7 needs, which resonated with them the most. Overall, we had 216 participants fill out the survey (17% drop-off rate).
+￼
+With the quantitative survey result rolling in, we decided to hone in on 3 themes: 
+	1	Analyzing my PPC performance
+	2	PPC insights
+	3	Recommend PPC strategy to learn
+This decision was made based on what type of data is currently available in our database.
+Workshop:
+Since the Orange product has not had updates for a while, this net new feature made many stakeholders eager to chime in with ideas. I created a brainstorming workshop making sure stakeholders were part of the process. The workshop’s goal was to brainstorm using the identified themes. The session was held online for 60mins. After giving everyone a quick rundown on where the opportunity started and how we arrived at the 4 themes. We quickly got some great ideas.
+￼
+Did I mention how awesome FigJam was?
+Once we collected stakeholders' voices and visions, we gained clarity on feature directions and organized these ideas into business requirement documentation and got to work.
+ 
+Design Process:
+These are Jungle Scout personas we identified for our Orange products. With the insights I gathered from the research effort I modified them to better fit advertising analytic features.
+ 
+￼
+￼
+ 
+Jobs to be done
+Jobs to be done statement created based on the persona. This simple statement helped me create a customer flow to address their pain points and needs. I thought this was particularly useful.
+As an Orange user, I want to see if there are any changes I need to make to my PPC strategy. I expect the feature to answer all of my yes/no questions and some of my what/why questions.
+ 
+ 
+￼
+ 
+ 
+To frame the problem better, I also created how might we statements to ensure I am designing with a clear goal and opportunity in mind.
+How might we provide PPC insights in Orange that are more valuable than the Amazon Campaign Manager?
+How might we create a feature that is straightforward for beginner sellers but when needed can also provide complex insights to experienced sellers?
+Based on the pain point we uncovered from the interviews: Customers currently running Amazon campaigns need assistance understanding all the advertising performance metrics presented. They also need insights on what they should do to have their product placed at the top of the page.
+I worked with my product manager to develop a set of advertisement insights for our customers. Then I explored ways of presenting the insights in the form of data visualizations which helped customers uncover the answers to their questions.
+ 
+￼
+ 
+Data visualization exploration
+This was a fun exercise, I combed data sets that don’t could be foreign to customers and creating compelling data visualizations to help users obtain new insights. This effort could not have gone smoothly without the collaboration with my PM who is also an Amazon seller, we worked together over the course of one week to plan out answers to customers’ business questions.
+After creating a set of data visualization, I validated these data viz by running a concept test on UserZoom Go. We recruited Amazon sellers and presented the charts in front of them to understand how easy it is to have Amazon sellers comprehend the data viz.
+￼
+￼
+Final Design
+With the four themes in mind, I proposed a feature where Jungle Scout leverages industry expertise to help our customers understand their advertisement data. The feature is divided into 3 tabs:
+	•	Overview - Showing company level ads performance overview
+	•	Sales Activity - ASIN level ads performance overview
+	•	Advertising Analytics - Campaign agnostic top-performing campaigns, ad groups, product ads.
+ 
+￼
+￼
+￼
+ 
+Success tracking
+To continue making informed decisions and future UX improvements to the advertising analytics feature, we need to define success metrics and measure them. For example, showing a customer satisfaction modal via Get Feedback is currently in the works. Since this is a new feature, I want to passively collect feedback via a survey asking how satisfied they are with using the feature and their favourite data visualization. We are also tracking direct metrics such as page visits, increase in Amazon account sync, and heatmapping all the UI elements to see click rates.
+Current state
+The feature is being implemented by the Eng team I am working with. This feature is scheduled to launch by the end of Q1, 2022. I am currently prioritizing any questions engineers may have over my day-to-day work. So I am not blocking any urgent questions. Aside from supporting the Eng team, I am meeting with the Marketing team to ensure they are aligned on the value of this feature, providing requirements with the video team to coordinate all video contents will be ready by launch.
+
+Learning Highlights
+Spearheading a new project requires proactiveness and cross-team collaboration.
+When a new project is at work, it is crucial to periodically pull in the stakeholders for collaboration and progress updates. This allows stakeholders to collaborate by providing feedback as the project progresses. I found the workshop I facilitated particularly useful. By demonstrating the research data to everyone as the project moved along, I avoided presenting a massive amount of information during the final sign-off, which could have been difficult to follow.
+Always challenge the brief and avoid ‘solution-eering’ problem framing.
+I often catch brief authors and myself creating a brief with a solution in mind. This is dangerous because we could be just solving an unvalidated problem that might not address the customers’ pain. This time around when the new Orange team brought up this brief, I immediately communicated to the PM and brief author to be mindful of creating a problem statement with the solution in mind. We collaborated and moved forward with customer interviews to validate the need then edited the brief to remove any phrases that may suggest a solution.
+
+---
+
+## Notes for Conversion:
+- Key phrases and terminology Grant uses
+- Design process steps mentioned
+- Problem-solving approaches
+- Technical details and tools
+- Challenges and solutions
+- Insights and learnings
+- Grant's design philosophy in action
+
+## Conversation Ideas to Extract:
+1. "Can you walk me through one of Grant's projects?"
+2. "What's Grant's design process like?"
+3. "How does Grant handle design challenges?"
+4. "What tools does Grant use in his work?"
+5. "What did Grant learn from this project?"

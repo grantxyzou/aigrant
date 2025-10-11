@@ -1,6 +1,7 @@
 import './App.css'
 import { useState, useEffect, useRef } from 'react'
 import { FaInstagram, FaGithub, FaLinkedinIn } from 'react-icons/fa'
+import ChatInterface from './ChatInterface'
 
 const experience = [
   { role: 'Product designer 2', company: 'Microsoft (Azure core)', period: 'Apr 2025 – Present', location: 'Remote & Vancouver, CA' },
@@ -170,6 +171,14 @@ export default function App(){
                     <div className="experience-dot" />
                   </div>
                 ))}
+              </div>
+            </div>
+            
+            {/* Chat Interface */}
+            <div className="section">
+              <div className="section-title">Ask Grant...</div>
+              <div className="section-content">
+                <ChatInterface />
               </div>
             </div>
             

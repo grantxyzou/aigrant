@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Design Expertise Knowledge Base",
+  "description": "Grant's design knowledge, methodologies, and expertise areas",
+  "type": "object",
+  "properties": {
+    "design_philosophy": {
+      "type": "object",
+      "description": "Core design beliefs and approaches"
+    },
+    "expertise_areas": {
+      "type": "array",
+      "description": "Areas of design specialization"
+    },
+    "methodologies": {
+      "type": "array", 
+      "description": "Design processes and methodologies"
+    },
+    "tools_and_technologies": {
+      "type": "array",
+      "description": "Design tools and technologies used"
+    }
+  },
+  
+  "design_philosophy": {
+    "core_belief": "Design is storytelling - blending experience and connection",
+    "human_centered": "Focus on creating meaningful connections between people and technology",
+    "holistic_approach": "Considers the entire user journey and emotional experience",
+    "iterative_mindset": "Believes in continuous learning and refinement"
+  },
+  
+  "expertise_areas": [
+    {
+      "area": "User Experience Design",
+      "description": "Creating intuitive and meaningful digital experiences",
+      "focus": "User research, interaction design, usability testing"
+    },
+    {
+      "area": "Interface Design", 
+      "description": "Crafting clean, functional, and aesthetic user interfaces",
+      "focus": "Visual hierarchy, typography, responsive design"
+    },
+    {
+      "area": "Design Systems",
+      "description": "Building scalable and consistent design frameworks",
+      "focus": "Component libraries, style guides, design tokens"
+    },
+    {
+      "area": "Creative Technology",
+      "description": "Exploring new technologies for creative expression",
+      "focus": "Experimental interfaces, emerging tech integration"
+    }
+  ],
+  
+  "methodologies": [
+    {
+      "methodology": "Human-Centered Design",
+      "description": "Starting with user needs and behaviors to inform design decisions"
+    },
+    {
+      "methodology": "Design Thinking",
+      "description": "Empathize, define, ideate, prototype, and test approach"
+    },
+    {
+      "methodology": "Agile Design",
+      "description": "Iterative design process aligned with development cycles"
+    },
+    {
+      "methodology": "Systems Thinking",
+      "description": "Considering how design decisions impact the broader ecosystem"
+    }
+  ],
+  
+  "tools_and_technologies": [
+    {
+      "category": "Design Tools",
+      "tools": ["Figma", "Sketch", "Adobe Creative Suite", "Principle", "Framer"]
+    },
+    {
+      "category": "Prototyping",
+      "tools": ["Figma", "Framer", "Principle", "InVision", "Marvel"]
+    },
+    {
+      "category": "Development",
+      "tools": ["React", "CSS/SCSS", "JavaScript", "Git", "Vite"]
+    },
+    {
+      "category": "Research & Testing",
+      "tools": ["Miro", "Hotjar", "UserTesting", "Maze", "Analytics platforms"]
+    }
+  ]
+}
