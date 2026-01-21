@@ -124,8 +124,10 @@ Response system handles multiple question types:
 **Current Status:**
 ✅ Training data structure complete and documented
 ✅ Chat interface working with authentic Grant responses
-✅ Zero Azure costs - running locally only
-❌ Azure Functions not connected (Node.js version issue)
+✅ Azure Functions v3 model deployed to Azure Static Web Apps
+✅ Secret chat access via URL hash (`#chat-grant2026`)
+✅ Frontend calls `/api/ask` endpoint
+⏳ Azure OpenAI integration ready (branch: `feature/llm-integration`)
 
 **Files Modified/Created:**
 - `/content/training/` - Complete directory structure
@@ -134,18 +136,32 @@ Response system handles multiple question types:
 - `/content/training/behaviors/personality-traits.json` - AI personality definition
 - `/content/training/knowledge/design-expertise.json` - Domain expertise
 - `/content/training/templates/response-templates.json` - Response structures
-- `/src/ChatInterface.jsx` - Working chat component
-- `/src/App.jsx` - Added chat section to portfolio
+- `/src/ChatInterface.jsx` - Chat component calling API
+- `/src/App.jsx` - Secret chat access via `#chat-grant2026`
 - `/src/App.css` - Chat interface styling
-- `/api/` - Azure Functions setup (incomplete)
+- `/api/ask/index.js` - Azure Function with LLM integration ready
+- `/api/ask/function.json` - Function bindings (v3 model)
+- `/staticwebapp.config.json` - SPA routing config
 - Updated project documentation
 
+**Branches:**
+- `main` - Production (fallback responses, no LLM)
+- `feature/llm-integration` - Azure OpenAI integration ready
+
+**To Enable LLM:**
+1. Set environment variables in Azure Static Web Apps:
+   - `AZURE_OPENAI_ENDPOINT` - Your Azure OpenAI endpoint
+   - `AZURE_OPENAI_API_KEY` - Your API key
+   - `AZURE_OPENAI_DEPLOYMENT` - Model deployment name (e.g., `gpt-4o`)
+2. Merge `feature/llm-integration` branch to main
+3. Redeploy
+
 **Next Steps When Ready:**
-1. Resolve Node.js compatibility for Azure Functions (downgrade or update functions)
-2. Connect chat interface to Azure OpenAI API
+1. Configure Azure OpenAI environment variables in Azure Portal
+2. Merge LLM branch and test live
 3. Add more training conversations from additional case studies
-4. Implement proper error handling and loading states
-5. Add conversation memory and context awareness
+4. Implement conversation memory and context awareness
+5. Add rate limiting for API protection
 
 **POC Success Metrics:**
 - AI responses use Grant's authentic terminology ✅
