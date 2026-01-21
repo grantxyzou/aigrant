@@ -39,10 +39,12 @@ export default function App(){
     }, 50)
   }
   
-  // Secret chat access: ?chat=grant2026
+  // Secret chat access: ?chat=grant2026 OR #chat-grant2026
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
-    if (params.get('chat') === 'grant2026') {
+    const hash = window.location.hash
+    
+    if (params.get('chat') === 'grant2026' || hash === '#chat-grant2026') {
       setShowChat(true)
       sessionStorage.setItem('chatEnabled', 'true')
     } else if (sessionStorage.getItem('chatEnabled') === 'true') {
