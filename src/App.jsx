@@ -15,6 +15,7 @@ export default function App(){
   const [isTyping, setIsTyping] = useState(false)
   const [hasAnimated, setHasAnimated] = useState(false)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [showChat, setShowChat] = useState(false)
   const footerRef = useRef(null)
   
   const fullText = "you've reached the edge. i am still loading what's next..."
@@ -38,6 +39,17 @@ export default function App(){
     }, 50)
   }
   
+  // Secret chat access: ?chat=grant2026
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('chat') === 'grant2026') {
+      setShowChat(true)
+      sessionStorage.setItem('chatEnabled', 'true')
+    } else if (sessionStorage.getItem('chatEnabled') === 'true') {
+      setShowChat(true)
+    }
+  }, [])
+
   useEffect(() => {
     // Mouse tracking for parallax effect
     const handleMouseMove = (e) => {
@@ -174,13 +186,15 @@ export default function App(){
               </div>
             </div>
             
-            {/* Chat Interface */}
-            <div className="section">
-              <div className="section-title">Ask Grant...</div>
-              <div className="section-content">
-                <ChatInterface />
+            {/* Chat Interface - Secret Access Only */}
+            {showChat && (
+              <div className="section">
+                <div className="section-title">Ask Grant...</div>
+                <div className="section-content">
+                  <ChatInterface />
+                </div>
               </div>
-            </div>
+            )}
             
             {/* Footer */}
             <div className="footer" ref={footerRef}>
