@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 const API_URL = import.meta.env.DEV 
   ? 'http://localhost:7071/api/ask' 
@@ -8,6 +8,12 @@ export default function ChatInterface() {
   const [messages, setMessages] = useState([])
   const [inputValue, setInputValue] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const messagesEndRef = useRef(null)
+
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages, isLoading])
 
   const sendMessage = async () => {
     if (!inputValue.trim()) return
@@ -81,6 +87,8 @@ export default function ChatInterface() {
             <div className="message-content">Thinking...</div>
           </div>
         )}
+        
+        <div ref={messagesEndRef} />
       </div>
       
       <div className="chat-input">
