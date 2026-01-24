@@ -8,12 +8,30 @@ export default function ChatInterface() {
   const [messages, setMessages] = useState([])
   const [inputValue, setInputValue] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false)
   const messagesEndRef = useRef(null)
+  const inputRef = useRef(null)
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages, isLoading])
+    if (isOverlayOpen) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [messages, isLoading, isOverlayOpen])
+
+  // Lock body scroll when overlay is open
+  useEffect(() => {
+    if (isOverlayOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isOverlayOpen])
 
   const sendMessage = async () => {
     if (!inputValue.trim()) return
@@ -23,6 +41,7 @@ export default function ChatInterface() {
     const question = inputValue
     setInputValue('')
     setIsLoading(true)
+    setIsOverlayOpen(true) // Open overlay when sending
 
     try {
       const response = await fetch(API_URL, {
@@ -40,7 +59,6 @@ export default function ChatInterface() {
       }
     } catch (error) {
       console.error('Chat error:', error)
-      // Fallback to local response if API fails
       const fallbackResponse = generateFallbackResponse(question)
       setMessages(prev => [...prev, { role: 'assistant', content: fallbackResponse }])
     } finally {
@@ -48,7 +66,6 @@ export default function ChatInterface() {
     }
   }
 
-  // Simple fallback if API is unavailable
   const generateFallbackResponse = (question) => {
     return "I'm Grant, a product designer at Microsoft Azure. I approach design as storytelling - blending experience and connection. The API is currently unavailable, but feel free to explore my portfolio or try again later!"
   }
@@ -60,52 +77,121 @@ export default function ChatInterface() {
     }
   }
 
+  const closeOverlay = () => {
+    setIsOverlayOpen(false)
+  }
+
+  const clearAndClose = () => {
+    setMessages([])
+    setIsOverlayOpen(false)
+  }
+
+  const openOverlay = () => {
+    setIsOverlayOpen(true)
+  }
+
   return (
-    <div className="chat-interface">
-      <div className="chat-header">
-        <h3>Ask Grant about his design work</h3>
-        <p>Try asking: "What's your design process?" or "Tell me about your research approach"</p>
-      </div>
-      
-      <div className="chat-messages">
-        {messages.length === 0 && (
-          <div className="welcome-message">
-            👋 Hi! I'm Grant's AI assistant. Ask me about his design work, process, or experience.
-          </div>
-        )}
+    <>
+      {/* Fixed Bottom Input Bar */}
+      <div className={`chat-input-bar ${isOverlayOpen ? 'hidden' : ''}`}>
+        <div className="chat-input-container">
+          <textarea
+            ref={inputRef}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Ask anything about Grant..."
+            disabled={isLoading}
+            rows={1}
+          />
+          <button 
+            onClick={sendMessage} 
+            disabled={isLoading || !inputValue.trim()}
+            aria-label="Send message"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
         
-        {messages.map((message, index) => (
-          <div key={index} className={`message ${message.role}`}>
-            <div className="message-content">
-              {message.content}
+        {/* Expand button - shows when there are messages and overlay is closed */}
+        {messages.length > 0 && (
+          <button className="expand-chat-button" onClick={openOverlay} aria-label="Expand chat">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="18 15 12 9 6 15"></polyline>
+            </svg>
+          </button>
+        )}
+      </div>
+
+      {/* Chat Overlay */}
+      <div className={`chat-overlay ${isOverlayOpen ? 'open' : ''}`}>
+        <div className="chat-overlay-header">
+          <button className="close-button" onClick={closeOverlay} aria-label="Minimize chat">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <span className="chat-title">Chat with Grant's AI</span>
+          <button className="clear-button" onClick={clearAndClose} aria-label="Clear chat">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div className="chat-overlay-messages">
+          {messages.map((message, index) => (
+            <div key={index} className={`message ${message.role}`}>
+              <div className="message-content">
+                {message.content}
+              </div>
             </div>
-          </div>
-        ))}
-        
-        {isLoading && (
-          <div className="message assistant loading">
-            <div className="message-content">Thinking...</div>
-          </div>
-        )}
-        
-        <div ref={messagesEndRef} />
+          ))}
+          
+          {isLoading && (
+            <div className="message assistant loading">
+              <div className="message-content">
+                <span className="typing-indicator">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </span>
+              </div>
+            </div>
+          )}
+          
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Input inside overlay for continued conversation */}
+        <div className="chat-overlay-input">
+          <textarea
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Ask a follow-up question..."
+            disabled={isLoading}
+            rows={1}
+          />
+          <button 
+            onClick={sendMessage} 
+            disabled={isLoading || !inputValue.trim()}
+            aria-label="Send message"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
       </div>
-      
-      <div className="chat-input">
-        <textarea
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder="Ask about Grant's design work..."
-          disabled={isLoading}
-        />
-        <button 
-          onClick={sendMessage} 
-          disabled={isLoading || !inputValue.trim()}
-        >
-          Send
-        </button>
-      </div>
-    </div>
+
+      {/* Backdrop */}
+      {isOverlayOpen && <div className="chat-backdrop" onClick={closeOverlay} />}
+    </>
   )
 }
