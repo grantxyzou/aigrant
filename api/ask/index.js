@@ -18,68 +18,126 @@ module.exports = async function (context, req) {
         const userQuestion = req.body?.question || req.body?.message || req.query?.question || 'Hello';
         context.log('User question:', userQuestion);
 
-        const response = generateResponse(userQuestion);
+        // Get Azure OpenAI config from environment
+        const endpoint = process.env.AZURE_OPENAI_ENDPOINT;
+        const apiKey = process.env.AZURE_OPENAI_API_KEY;
+        const deployment = process.env.AZURE_OPENAI_DEPLOYMENT || 'gpt-4o';
+
+        if (!endpoint || !apiKey) {
+            // Fallback to local response if not configured
+            context.log('Azure OpenAI not configured, using fallback');
+            const fallbackResponse = generateFallbackResponse(userQuestion);
+            context.res = {
+                status: 200,
+                headers,
+                body: { success: true, response: fallbackResponse, question: userQuestion }
+            };
+            return;
+        }
+
+        // System prompt with Grant's personality and knowledge
+        const systemPrompt = `You are Grant Zou's AI assistant on his portfolio website. You speak AS Grant in first person.
+
+ABOUT GRANT:
+- Product Designer 2 at Microsoft Azure (Azure Core team since Apr 2025, previously Cost Management 2022-2025)
+- Previously UX Designer at Jungle Scout (2020-2022) and Visier Inc (2018-2019)
+- Based in Vancouver, Canada
+
+DESIGN PHILOSOPHY:
+- "Design is storytelling - blending experience and connection"
+- Strong "problem-first" philosophy - actively challenges briefs, avoids "solution-eering"
+- Human-centered approach with systematic research validation
+- Believes designers should understand their medium (codes in React, CSS)
+
+NOTABLE PROJECT - Advertising Analytics (Jungle Scout):
+- First net new feature for Jungle Scout Orange since 2021
+- Owned entire design process as design lead
+- Conducted interviews with 6 Amazon sellers
+- Organized FigJam synthesis sessions with PM
+- Facilitated 60-minute stakeholder brainstorming workshop
+- Validated with 216-participant survey
+- Challenge: Making complex PPC data accessible to sellers
+
+RESEARCH APPROACH:
+- Two-part method: qualitative first (interviews), then quantitative validation (surveys)
+- Uses FigJam for synthesis with virtual stickies
+- UserZoom Go for concept testing
+- Believes in pulling stakeholders into collaboration throughout
+
+PERSONAL:
+- Remixes music - sees parallels with design (rhythm, flow, emotional connections)
+- Plays badminton competitively
+- Runs to keep balance
+
+COMMUNICATION STYLE:
+- Authentic, thoughtful, genuinely curious
+- Professional but approachable
+- Shows enthusiasm for design and technology
+- Uses specific examples from real projects
+- Conversational, not robotic
+
+Keep responses concise (2-4 sentences) unless asked for detail. Be warm and engaging.`;
+
+        // Call Azure OpenAI
+        const apiUrl = `${endpoint}/openai/deployments/${deployment}/chat/completions?api-version=2024-08-01-preview`;
+        
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'api-key': apiKey
+            },
+            body: JSON.stringify({
+                messages: [
+                    { role: 'system', content: systemPrompt },
+                    { role: 'user', content: userQuestion }
+                ],
+                max_tokens: 500,
+                temperature: 0.7
+            })
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            context.log.error('Azure OpenAI error:', response.status, errorText);
+            throw new Error(`API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const aiResponse = data.choices[0].message.content;
 
         context.res = {
             status: 200,
             headers,
-            body: { success: true, response, question: userQuestion }
+            body: { success: true, response: aiResponse, question: userQuestion }
         };
+
     } catch (error) {
         context.log.error('Error:', error);
+        // Fallback on error
+        const fallbackResponse = generateFallbackResponse(req.body?.question || 'hello');
         context.res = {
-            status: 500,
+            status: 200,
             headers,
-            body: { success: false, error: error.message }
+            body: { success: true, response: fallbackResponse, question: req.body?.question || 'hello' }
         };
     }
 };
 
-function generateResponse(question) {
+function generateFallbackResponse(question) {
     const q = question.toLowerCase();
     
-    const starters = ["", "Great question! ", "That's something I'm passionate about. ", ""];
-    const starter = starters[Math.floor(Math.random() * starters.length)];
-
-    if (q.includes('process') || q.includes('approach') || q.includes('methodology') || q.includes('how do you')) {
-        return starter + "I follow a human-centered approach that starts with deep empathy for users. I believe in starting with 'why' - understanding the real problem before jumping to solutions. My process involves research and discovery, rapid ideation, and continuous iteration based on user feedback.";
+    if (q.includes('process') || q.includes('approach')) {
+        return "I follow a human-centered approach that starts with deep empathy. I believe in starting with 'why' - understanding the real problem before jumping to solutions.";
     }
-
-    if (q.includes('research') || q.includes('validate') || q.includes('user')) {
-        return starter + "I take a two-part research approach - qualitative first, then quantitative validation. For example, I interviewed 6 Amazon sellers about their PPC pain points, then organized synthesis sessions using FigJam before running surveys with 216 participants to prioritize needs.";
+    if (q.includes('research')) {
+        return "I take a two-part research approach - qualitative first with interviews, then quantitative validation with surveys. For Advertising Analytics, I interviewed 6 sellers and surveyed 216 participants.";
     }
-
-    if (q.includes('project') || q.includes('work') || q.includes('portfolio') || q.includes('example') || q.includes('jungle scout')) {
-        return starter + "The Advertising Analytics feature at Jungle Scout is one I'm really proud of. It was the first net new feature for Orange since 2021. I owned the entire design process - from customer interviews, to FigJam synthesis, to facilitating stakeholder workshops. We validated everything through a 216-participant survey.";
+    if (q.includes('microsoft') || q.includes('work')) {
+        return "I'm currently a Product Designer 2 at Microsoft Azure, working on the Azure Core team. Before that, I was on Cost Management and at Jungle Scout.";
     }
-
-    if (q.includes('collaboration') || q.includes('team') || q.includes('stakeholder') || q.includes('workshop')) {
-        return starter + "I'm proactive about bringing stakeholders into the process rather than presenting to them at the end. For Advertising Analytics, I ran a 60-minute brainstorming workshop to make sure everyone had a voice. I believe in pulling stakeholders in for collaboration throughout the project.";
+    if (q.includes('hello') || q.includes('hi')) {
+        return "Hey! I'm Grant - a product designer at Microsoft Azure. Ask me about my design process, projects, or experience. What would you like to know?";
     }
-
-    if (q.includes('philosophy') || q.includes('belief') || q.includes('principle') || q.includes('think')) {
-        return starter + "I have a strong 'problem-first' philosophy - I actively challenge briefs and avoid 'solution-eering.' It's dangerous when you create problems with solutions already in mind. I always validate customer needs first through interviews before defining solutions.";
-    }
-
-    if (q.includes('tool') || q.includes('software') || q.includes('figma') || q.includes('tech')) {
-        return starter + "I work primarily in Figma for design systems and interface work. But my technical fluency sets me apart - I code in React and love working with CSS animations. I believe designers should understand their medium.";
-    }
-
-    if (q.includes('data') || q.includes('visualization') || q.includes('complex') || q.includes('analytics')) {
-        return starter + "I approach data visualization as a storytelling challenge. In Advertising Analytics, I had to take complex PPC data that was 'foreign to customers' and create compelling visualizations. I worked with my PM for a full week to plan out answers to customers' business questions.";
-    }
-
-    if (q.includes('microsoft') || q.includes('career') || q.includes('experience') || q.includes('background')) {
-        return starter + "I'm currently a Product Designer 2 at Microsoft Azure - started in Cost Management in 2022 and recently moved to Azure Core. Before that, I was at Jungle Scout. Each role has taught me different things about design at scale.";
-    }
-
-    if (q.includes('music') || q.includes('remix') || q.includes('personal') || q.includes('badminton') || q.includes('hobby')) {
-        return starter + "I remix music and see parallels with design - both are about rhythm, flow, and creating emotional connections. I keep balance through badminton and running. There's something about technical precision in both music production and design that appeals to me.";
-    }
-
-    if (q.includes('hello') || q.includes('hi') || q.includes('hey') || q.match(/^(yo|sup)/)) {
-        return "Hey! I'm Grant's AI assistant. Ask me about his design process, projects at Microsoft or Jungle Scout, or his approach to research. What would you like to know?";
-    }
-
-    return starter + "I'm Grant, a product designer who approaches design as storytelling - blending experience and connection. I'm currently at Microsoft Azure, previously at Jungle Scout. What specifically would you like to know about my work?";
+    return "I'm Grant, a product designer who approaches design as storytelling. I'm at Microsoft Azure, previously Jungle Scout. What would you like to know about my work?";
 }
