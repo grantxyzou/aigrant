@@ -134,6 +134,84 @@ export default function ChatInterface() {
     setIsOverlayOpen(true)
   }
 
+  // Format message content with basic markdown support
+  const formatMessage = (content) => {
+    if (!content) return null
+    
+    // Split into paragraphs
+    const paragraphs = content.split(/\n\n+/)
+    
+    return paragraphs.map((paragraph, pIndex) => {
+      // Check if it's a bullet list
+      const lines = paragraph.split('\n')
+      const isBulletList = lines.every(line => 
+        line.trim().startsWith('- ') || 
+        line.trim().startsWith('• ') || 
+        line.trim() === ''
+      )
+      
+      if (isBulletList && lines.some(l => l.trim())) {
+        return (
+          <ul key={pIndex} className="message-list">
+            {lines
+              .filter(line => line.trim())
+              .map((line, lIndex) => (
+                <li key={lIndex}>{formatInlineText(line.replace(/^[-•]\s*/, ''))}</li>
+              ))}
+          </ul>
+        )
+      }
+      
+      // Check for numbered list
+      const isNumberedList = lines.every(line => 
+        /^\d+[.)]\s/.test(line.trim()) || line.trim() === ''
+      )
+      
+      if (isNumberedList && lines.some(l => l.trim())) {
+        return (
+          <ol key={pIndex} className="message-list">
+            {lines
+              .filter(line => line.trim())
+              .map((line, lIndex) => (
+                <li key={lIndex}>{formatInlineText(line.replace(/^\d+[.)]\s*/, ''))}</li>
+              ))}
+          </ol>
+        )
+      }
+      
+      // Regular paragraph
+      return <p key={pIndex}>{formatInlineText(paragraph)}</p>
+    })
+  }
+  
+  // Format inline text (bold, italic)
+  const formatInlineText = (text) => {
+    // Handle **bold** and *italic*
+    const parts = []
+    let remaining = text
+    let key = 0
+    
+    while (remaining) {
+      // Check for bold
+      const boldMatch = remaining.match(/\*\*(.+?)\*\*/)
+      if (boldMatch) {
+        const index = remaining.indexOf(boldMatch[0])
+        if (index > 0) {
+          parts.push(<span key={key++}>{remaining.slice(0, index)}</span>)
+        }
+        parts.push(<strong key={key++}>{boldMatch[1]}</strong>)
+        remaining = remaining.slice(index + boldMatch[0].length)
+        continue
+      }
+      
+      // No more formatting, add rest
+      parts.push(<span key={key++}>{remaining}</span>)
+      break
+    }
+    
+    return parts.length > 0 ? parts : text
+  }
+
   return (
     <>
       {/* Fixed Bottom Input Bar */}
@@ -225,7 +303,7 @@ export default function ChatInterface() {
           {messages.map((message, index) => (
             <div key={index} className={`message ${message.role}`}>
               <div className="message-content">
-                {message.content}
+                {message.role === 'assistant' ? formatMessage(message.content) : message.content}
               </div>
             </div>
           ))}

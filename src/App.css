@@ -1393,6 +1393,38 @@ html, body {
   line-height: 1.6;
 }
 
+/* Formatted message content */
+.message-content p {
+  margin: 0 0 0.75em 0;
+}
+
+.message-content p:last-child {
+  margin-bottom: 0;
+}
+
+.message-content .message-list {
+  margin: 0.5em 0;
+  padding-left: 1.25em;
+}
+
+.message-content .message-list li {
+  margin: 0.3em 0;
+  line-height: 1.5;
+}
+
+.message-content ul.message-list {
+  list-style-type: disc;
+}
+
+.message-content ol.message-list {
+  list-style-type: decimal;
+}
+
+.message-content strong {
+  font-weight: 600;
+  color: #fff;
+}
+
 .chat-overlay-messages .message.user .message-content {
   background: linear-gradient(
     135deg,
