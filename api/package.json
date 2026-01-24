@@ -2,7 +2,7 @@
   "name": "api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/functions/*.js",
   "scripts": {
     "dev": "func start",
     "start": "func start",
@@ -11,7 +11,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "@azure/functions": "^4.8.0"
   }
