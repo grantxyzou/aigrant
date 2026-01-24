@@ -16,9 +16,56 @@ export default function App(){
   const [hasAnimated, setHasAnimated] = useState(false)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [showChat, setShowChat] = useState(false)
+  const [introBlurb, setIntroBlurb] = useState('')
+  const [isLoadingBlurb, setIsLoadingBlurb] = useState(true)
   const footerRef = useRef(null)
   
   const fullText = "you've reached the edge. i am still loading what's next..."
+
+  const API_URL = import.meta.env.DEV 
+    ? 'http://localhost:7071/api/ask' 
+    : '/api/ask'
+
+  const defaultBlurb = "Currently under construction. What you see here is only scaffolding; the full narrative is still being built. Stay tuned for a portfolio that doesn't just showcase, but converses."
+
+  // Fetch dynamic intro blurb on page load
+  useEffect(() => {
+    const fetchIntroBlurb = async () => {
+      // Check session storage first to avoid repeated calls
+      const cached = sessionStorage.getItem('introBlurb')
+      if (cached) {
+        setIntroBlurb(cached)
+        setIsLoadingBlurb(false)
+        return
+      }
+
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            question: '__INTRO_BLURB__',
+            isIntroRequest: true 
+          })
+        })
+        
+        const data = await response.json()
+        if (data.success && data.response) {
+          setIntroBlurb(data.response)
+          sessionStorage.setItem('introBlurb', data.response)
+        } else {
+          setIntroBlurb(defaultBlurb)
+        }
+      } catch (error) {
+        console.error('Failed to fetch intro:', error)
+        setIntroBlurb(defaultBlurb)
+      } finally {
+        setIsLoadingBlurb(false)
+      }
+    }
+
+    fetchIntroBlurb()
+  }, [])
   
   const startTypewriter = () => {
     if (hasAnimated) return
@@ -163,7 +210,11 @@ export default function App(){
               <div className="section-title">About...me</div>
               <div className="section-content">
                 <div className="about-text">
-                  Currently under construction. What you see here is only scaffolding; the full narrative is still being built. <span className="flicker-text">I am still under construction.</span> Stay tuned for a portfolio that doesn't just showcase, but converses.
+                  {isLoadingBlurb ? (
+                    <span className="blurb-loading">Loading a fresh take...</span>
+                  ) : (
+                    introBlurb
+                  )}
                 </div>
               </div>
             </div>

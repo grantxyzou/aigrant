@@ -20,15 +20,17 @@ app.http('ask', {
 
         try {
             let userQuestion = 'Hello';
+            let isIntroRequest = false;
             
             if (request.method === 'POST') {
                 const body = await request.json();
                 userQuestion = body?.question || body?.message || 'Hello';
+                isIntroRequest = body?.isIntroRequest === true;
             } else {
                 userQuestion = request.query.get('question') || 'Hello';
             }
             
-            context.log('User question:', userQuestion);
+            context.log('User question:', userQuestion, 'isIntroRequest:', isIntroRequest);
 
             // Get Azure OpenAI config from environment
             const endpoint = process.env.AZURE_OPENAI_ENDPOINT;
@@ -38,11 +40,62 @@ app.http('ask', {
             if (!endpoint || !apiKey) {
                 // Fallback to local response if not configured
                 context.log('Azure OpenAI not configured, using fallback');
-                const fallbackResponse = generateFallbackResponse(userQuestion);
+                const fallbackResponse = isIntroRequest 
+                    ? generateIntroBlurb()
+                    : generateFallbackResponse(userQuestion);
                 return {
                     status: 200,
                     headers,
                     jsonBody: { success: true, response: fallbackResponse, question: userQuestion }
+                };
+            }
+
+            // Handle intro blurb request
+            if (isIntroRequest) {
+                const introPrompt = `Generate a short, playful introduction blurb about Grant for his portfolio landing page. 
+
+Requirements:
+- 2-3 sentences maximum
+- Playful and slightly witty tone
+- Mention one interesting fact about him (design at Microsoft Azure, music production, badminton, systems thinking, or Copilot/AI work)
+- Should feel fresh and conversational, not corporate
+- Don't use quotes or say "Grant is..." - write as if describing someone intriguing
+- End with something that invites curiosity
+
+Examples of tone (don't copy these exactly):
+- "A designer who thinks in systems and speaks in prototypes..."
+- "Currently making cloud infrastructure feel less like rocket science at Microsoft Azure..."
+- "Part-time DJ, full-time advocate for users who don't read instructions..."`;
+
+                const apiUrl = `${endpoint}/openai/deployments/${deployment}/chat/completions?api-version=2024-08-01-preview`;
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'api-key': apiKey
+                    },
+                    body: JSON.stringify({
+                        messages: [
+                            { role: 'system', content: 'You are a creative copywriter helping Grant with his portfolio. Be playful, clever, and concise.' },
+                            { role: 'user', content: introPrompt }
+                        ],
+                        max_tokens: 150,
+                        temperature: 0.9
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const introResponse = data.choices[0].message.content;
+
+                return {
+                    status: 200,
+                    headers,
+                    jsonBody: { success: true, response: introResponse }
                 };
             }
 
@@ -167,12 +220,14 @@ ${trainingContext}`;
             context.error('Error:', error);
             // Fallback on error
             let question = 'hello';
+            let isIntro = false;
             try {
                 const body = await request.clone().json();
                 question = body?.question || 'hello';
+                isIntro = body?.isIntroRequest === true;
             } catch {}
             
-            const fallbackResponse = generateFallbackResponse(question);
+            const fallbackResponse = isIntro ? generateIntroBlurb() : generateFallbackResponse(question);
             return {
                 status: 200,
                 headers,
@@ -181,6 +236,17 @@ ${trainingContext}`;
         }
     }
 });
+
+function generateIntroBlurb() {
+    const blurbs = [
+        "A designer who makes cloud infrastructure feel less like reading ancient scrolls. Currently at Microsoft Azure, turning complex systems into experiences that actually explain themselves.",
+        "Part-time DJ, full-time advocate for users who skip the documentation. Designing Copilot experiences at Microsoft Azure that guide without hand-holding.",
+        "Obsessed with the moment right before users fail—and designing it away. Currently shaping AI-assisted workflows at Microsoft Azure.",
+        "Systems thinker who believes products should be legible, not just usable. Making cloud migrations feel less like moving houses blindfolded at Microsoft Azure.",
+        "Designs for the moments where software technically works but users still get lost. Currently at Microsoft Azure, building experiences that reduce false completion."
+    ];
+    return blurbs[Math.floor(Math.random() * blurbs.length)];
+}
 
 function generateFallbackResponse(question) {
     const q = question.toLowerCase();
