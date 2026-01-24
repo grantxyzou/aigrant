@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Azure Functions
+api/local.settings.json
+*.local
+.env*
