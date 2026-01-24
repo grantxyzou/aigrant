@@ -19,6 +19,7 @@ export default function App(){
   const [introBlurb, setIntroBlurb] = useState('')
   const [displayedBlurb, setDisplayedBlurb] = useState('')
   const [isLoadingBlurb, setIsLoadingBlurb] = useState(true)
+  const [isScrolled, setIsScrolled] = useState(false)
   const footerRef = useRef(null)
   
   const fullText = "you've reached the edge. i am still loading what's next..."
@@ -129,7 +130,13 @@ export default function App(){
       setMousePosition({ x, y })
     }
 
+    // Scroll tracking for sticky header
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50)
+    }
+
     window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('scroll', handleScroll)
 
     // Intersection observer for typewriter
     const observer = new IntersectionObserver(
@@ -156,6 +163,7 @@ export default function App(){
     
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('scroll', handleScroll)
       observer.disconnect()
       clearTimeout(fallbackTimer)
     }
@@ -178,9 +186,8 @@ export default function App(){
         ></div>
       </div>
       
-      {/* Scrollable Content */}
-      <div className="responsive-container">
-        {/* Header */}
+      {/* Sticky Header */}
+      <header className={`header-sticky ${isScrolled ? 'scrolled' : ''}`}>
         <div className="header-container">
           <div className="header-inner">
             <div className="header-left">
@@ -199,6 +206,10 @@ export default function App(){
             </div>
           </div>
         </div>
+      </header>
+
+      {/* Scrollable Content */}
+      <div className="responsive-container">
         
         {/* Main Content */}
         <div className="main-container">
