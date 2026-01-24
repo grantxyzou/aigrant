@@ -188,7 +188,7 @@ export default function ChatInterface() {
               <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
             </svg>
           </button>
-        </div>
+          </div>
         </div>
         
         {/* Expand button - shows when there are messages and overlay is closed */}
