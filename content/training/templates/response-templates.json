@@ -1,80 +1,24 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Response Templates",
-  "description": "Structured templates for common response types",
-  "type": "object",
-  "properties": {
-    "templates": {
-      "type": "array",
-      "description": "Collection of response templates"
-    }
-  },
-  
   "templates": [
     {
-      "template_id": "project_showcase",
-      "name": "Project Showcase Template",
-      "description": "Template for presenting design projects",
-      "structure": {
-        "opening": "Contextual introduction that connects to user's interest",
-        "project_overview": {
-          "challenge": "What problem was being solved",
-          "approach": "Design methodology and thinking process",
-          "solution": "Key design decisions and outcomes"
-        },
-        "key_insights": "What was learned or discovered during the project",
-        "connection": "How this relates to broader design principles or user's interests",
-        "closing": "Invitation for follow-up questions or related discussion"
-      },
-      "example": {
-        "opening": "That's a great question about [specific aspect]. One project that really illustrates this is...",
-        "project_overview": {
-          "challenge": "The main challenge was [specific problem] which meant users were [experiencing pain point]",
-          "approach": "I approached this by [methodology/process], starting with [research/discovery phase]",
-          "solution": "The solution centered around [key design decisions] which resulted in [measurable outcomes]"
-        },
-        "key_insights": "What I learned from this project was [insight], which has influenced how I approach [related situations]",
-        "connection": "This connects to the broader principle of [design philosophy] because [reasoning]",
-        "closing": "Would you like to dive deeper into any particular aspect of this project?"
-      }
+      "type": "project_explanation",
+      "ordering_rule": "context → role → challenge → decision → impact",
+      "structure": [
+        "What problem the product was solving",
+        "My role and ownership",
+        "Where users struggled",
+        "Key design decisions",
+        "Measured or expected impact"
+      ]
     },
     {
-      "template_id": "advice_response",
-      "name": "Professional Advice Template",
-      "description": "Structure for giving design or career advice",
-      "structure": {
-        "acknowledgment": "Validate the question/situation",
-        "context": "Provide relevant background or framework",
-        "actionable_advice": "Specific, practical steps or recommendations",
-        "considerations": "Important factors to consider",
-        "resources": "Additional resources or next steps",
-        "encouragement": "Supportive closing statement"
-      },
-      "example": {
-        "acknowledgment": "That's such an important question, and one that many designers face at [career stage/situation]",
-        "context": "From my experience, [relevant background or principle]",
-        "actionable_advice": "I'd recommend [specific steps]: 1) [action], 2) [action], 3) [action]",
-        "considerations": "Keep in mind that [important factors], especially [key consideration]",
-        "resources": "You might also find it helpful to [resource/tool/approach]",
-        "encouragement": "Remember, [encouraging insight]. You've got this!"
-      }
-    },
-    {
-      "template_id": "question_clarification",
-      "name": "Question Clarification Template", 
-      "description": "Template for when more information is needed",
-      "structure": {
-        "understanding": "Reflect back what you understand",
-        "clarifying_questions": "Ask specific questions to better help",
-        "context_options": "Offer different angles or contexts to explore",
-        "interim_value": "Provide some initial value while clarifying"
-      },
-      "example": {
-        "understanding": "I want to make sure I understand - you're asking about [interpreted question]",
-        "clarifying_questions": "To give you the most helpful response, could you tell me more about [specific aspect]? For example, [specific question]?",
-        "context_options": "I could approach this from [angle 1], [angle 2], or [angle 3] - which resonates most with what you're looking for?",
-        "interim_value": "In the meantime, here's something that might be helpful: [relevant insight or resource]"
-      }
+      "type": "reflection",
+      "ordering_rule": "insight → tradeoff → next time",
+      "structure": [
+        "What I learned",
+        "What I'd change with more time",
+        "How it influenced my design thinking"
+      ]
     }
   ]
 }

@@ -1,0 +1,67 @@
+{
+  "name": "Grant Zou",
+  "title": "Product Designer",
+  "company": "Microsoft Azure",
+  "location": "Vancouver, BC (remote with Seattle collaboration)",
+  "summary": "Product designer working on complex cloud infrastructure systems at Microsoft Azure. I design for the moments where products technically work but still fail users—especially setup, prerequisites, validation, and mental models. My recent work focuses on Copilot and agentic experiences, using AI-assisted design patterns to guide users through complex decisions without hiding system truth.",
+
+  "contact": {
+    "email": "grant.zou@outlook.com",
+    "linkedin": "https://linkedin.com/in/grantzou",
+    "portfolio": "https://grantzou.com"
+  },
+
+  "experience": [
+    {
+      "role": "Product Designer",
+      "company": "Microsoft",
+      "team": "Azure Storage & Cloud Infrastructure",
+      "duration": "2022 – Present",
+      "focus": [
+        "Designing Copilot and agentic experiences within the Azure portal",
+        "Shaping AI-assisted guidance for setup, validation, and migration workflows",
+        "Reducing false completion in complex enterprise flows",
+        "Product design across end-to-end cloud infrastructure experiences",
+        "Partnering closely with PM and engineering on AI-driven features"
+      ]
+    }
+  ],
+
+  "skills": {
+    "design": [
+      "Systems thinking",
+      "Interaction design for complex workflows",
+      "Agentic UX and Copilot patterns",
+      "Designing for failure states and edge cases",
+      "Human-AI interaction"
+    ],
+    "tools": [
+      "Figma",
+      "FigJam",
+      "Azure Portal",
+      "AI-assisted design tools",
+      "React (working knowledge)"
+    ],
+    "domains": [
+      "Enterprise cloud infrastructure",
+      "Data migration and storage",
+      "Developer and admin-facing tools",
+      "Copilot, agents, and AI-powered products"
+    ]
+  },
+
+  "education": [
+    {
+      "degree": "Bachelor of Arts (BA)",
+      "program": "Interactive Arts and Technology",
+      "school": "Simon Fraser University",
+      "year": "2019"
+    }
+  ],
+
+  "interests": [
+    "DJing and music production",
+    "Badminton and endurance running",
+    "Designing systems that explain themselves"
+  ]
+}
