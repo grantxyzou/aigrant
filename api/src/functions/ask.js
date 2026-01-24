@@ -52,20 +52,7 @@ app.http('ask', {
 
             // Handle intro blurb request
             if (isIntroRequest) {
-                const introPrompt = `Generate a short, playful introduction blurb about Grant for his portfolio landing page. 
-
-Requirements:
-- 2-3 sentences maximum
-- Playful and slightly witty tone
-- Mention one interesting fact about him (design at Microsoft Azure, music production, badminton, systems thinking, or Copilot/AI work)
-- Should feel fresh and conversational, not corporate
-- Don't use quotes or say "Grant is..." - write as if describing someone intriguing
-- End with something that invites curiosity
-
-Examples of tone (don't copy these exactly):
-- "A designer who thinks in systems and speaks in prototypes..."
-- "Currently making cloud infrastructure feel less like rocket science at Microsoft Azure..."
-- "Part-time DJ, full-time advocate for users who don't read instructions..."`;
+                const introPrompt = `Write a one-sentence playful intro about Grant for his portfolio. Max 15 words. Be witty and intriguing. Don't use quotes. Examples of tone: "Making cloud feel less cloudy at Azure." or "Designs for the confused, works at Microsoft."`;
 
                 const apiUrl = `${endpoint}/openai/deployments/${deployment}/chat/completions?api-version=2024-08-01-preview`;
                 
@@ -77,11 +64,11 @@ Examples of tone (don't copy these exactly):
                     },
                     body: JSON.stringify({
                         messages: [
-                            { role: 'system', content: 'You are a creative copywriter helping Grant with his portfolio. Be playful, clever, and concise.' },
+                            { role: 'system', content: 'You write ultra-short, witty portfolio taglines. One sentence max. No quotes.' },
                             { role: 'user', content: introPrompt }
                         ],
-                        max_tokens: 150,
-                        temperature: 0.9
+                        max_tokens: 50,
+                        temperature: 0.95
                     })
                 });
 
@@ -239,11 +226,11 @@ ${trainingContext}`;
 
 function generateIntroBlurb() {
     const blurbs = [
-        "A designer who makes cloud infrastructure feel less like reading ancient scrolls. Currently at Microsoft Azure, turning complex systems into experiences that actually explain themselves.",
-        "Part-time DJ, full-time advocate for users who skip the documentation. Designing Copilot experiences at Microsoft Azure that guide without hand-holding.",
-        "Obsessed with the moment right before users fail—and designing it away. Currently shaping AI-assisted workflows at Microsoft Azure.",
-        "Systems thinker who believes products should be legible, not just usable. Making cloud migrations feel less like moving houses blindfolded at Microsoft Azure.",
-        "Designs for the moments where software technically works but users still get lost. Currently at Microsoft Azure, building experiences that reduce false completion."
+        "Making cloud feel less cloudy at Microsoft Azure.",
+        "Designs for the confused. Works at Microsoft.",
+        "Part-time DJ, full-time user advocate at Azure.",
+        "Turning complex systems into 'oh, that makes sense' at Microsoft.",
+        "Obsessed with the moment before users fail."
     ];
     return blurbs[Math.floor(Math.random() * blurbs.length)];
 }

@@ -17,6 +17,7 @@ export default function App(){
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [showChat, setShowChat] = useState(false)
   const [introBlurb, setIntroBlurb] = useState('')
+  const [displayedBlurb, setDisplayedBlurb] = useState('')
   const [isLoadingBlurb, setIsLoadingBlurb] = useState(true)
   const footerRef = useRef(null)
   
@@ -26,7 +27,28 @@ export default function App(){
     ? 'http://localhost:7071/api/ask' 
     : '/api/ask'
 
-  const defaultBlurb = "Currently under construction. What you see here is only scaffolding; the full narrative is still being built. Stay tuned for a portfolio that doesn't just showcase, but converses."
+  const defaultBlurb = "Designing for the confused at Microsoft Azure."
+
+  // Typewriter effect for blurb
+  useEffect(() => {
+    if (!introBlurb || isLoadingBlurb) return
+    
+    let index = 0
+    setDisplayedBlurb('')
+    
+    const typeChar = () => {
+      if (index < introBlurb.length) {
+        setDisplayedBlurb(introBlurb.slice(0, index + 1))
+        index++
+        // Random delay between 30-80ms for organic feel
+        const delay = 30 + Math.random() * 50
+        setTimeout(typeChar, delay)
+      }
+    }
+    
+    // Small initial delay before starting
+    setTimeout(typeChar, 200)
+  }, [introBlurb, isLoadingBlurb])
 
   // Fetch dynamic intro blurb on page load
   useEffect(() => {
@@ -211,9 +233,14 @@ export default function App(){
               <div className="section-content">
                 <div className="about-text">
                   {isLoadingBlurb ? (
-                    <span className="blurb-loading">Loading a fresh take...</span>
+                    <span className="blurb-cursor">|</span>
                   ) : (
-                    introBlurb
+                    <>
+                      {displayedBlurb}
+                      {displayedBlurb.length < introBlurb.length && (
+                        <span className="blurb-cursor">|</span>
+                      )}
+                    </>
                   )}
                 </div>
               </div>

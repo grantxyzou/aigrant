@@ -441,15 +441,16 @@ html, body {
   word-wrap: break-word;
 }
 
-.blurb-loading {
-  color: #888;
-  font-style: italic;
-  animation: pulse 1.5s ease-in-out infinite;
+.blurb-cursor {
+  display: inline-block;
+  color: #8FA2B0;
+  animation: blink 0.8s ease-in-out infinite;
+  margin-left: 2px;
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
 }
 
 .flicker-text {
