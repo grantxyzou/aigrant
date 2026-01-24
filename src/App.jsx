@@ -188,15 +188,8 @@ export default function App(){
               </div>
             </div>
             
-            {/* Chat Interface - Secret Access Only */}
-            {showChat && (
-              <div className="section">
-                <div className="section-title">Ask Grant...</div>
-                <div className="section-content">
-                  <ChatInterface />
-                </div>
-              </div>
-            )}
+            {/* Chat Interface - Now always rendered, input bar at bottom */}
+            {showChat && <ChatInterface />}
             
             {/* Footer */}
             <div className="footer" ref={footerRef}>
