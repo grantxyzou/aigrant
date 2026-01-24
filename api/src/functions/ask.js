@@ -1,5 +1,46 @@
 const { app } = require('@azure/functions');
 
+// Simple in-memory rate limiter
+const rateLimitStore = new Map();
+const RATE_LIMIT = 10; // requests
+const RATE_WINDOW = 2 * 60 * 1000; // 2 minutes in ms
+
+function checkRateLimit(ip) {
+    const now = Date.now();
+    const record = rateLimitStore.get(ip);
+    
+    if (!record) {
+        rateLimitStore.set(ip, { count: 1, resetTime: now + RATE_WINDOW });
+        return { allowed: true, remaining: RATE_LIMIT - 1 };
+    }
+    
+    // Reset if window expired
+    if (now > record.resetTime) {
+        rateLimitStore.set(ip, { count: 1, resetTime: now + RATE_WINDOW });
+        return { allowed: true, remaining: RATE_LIMIT - 1 };
+    }
+    
+    // Check limit
+    if (record.count >= RATE_LIMIT) {
+        const retryAfter = Math.ceil((record.resetTime - now) / 1000);
+        return { allowed: false, remaining: 0, retryAfter };
+    }
+    
+    // Increment
+    record.count++;
+    return { allowed: true, remaining: RATE_LIMIT - record.count };
+}
+
+// Cleanup old entries every 5 minutes
+setInterval(() => {
+    const now = Date.now();
+    for (const [ip, record] of rateLimitStore) {
+        if (now > record.resetTime) {
+            rateLimitStore.delete(ip);
+        }
+    }
+}, 5 * 60 * 1000);
+
 app.http('ask', {
     methods: ['GET', 'POST', 'OPTIONS'],
     authLevel: 'anonymous',
@@ -16,6 +57,29 @@ app.http('ask', {
         // Handle CORS preflight
         if (request.method === 'OPTIONS') {
             return { status: 204, headers };
+        }
+
+        // Rate limiting
+        const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() 
+            || request.headers.get('x-real-ip') 
+            || 'unknown';
+        
+        const rateCheck = checkRateLimit(clientIp);
+        
+        if (!rateCheck.allowed) {
+            context.log(`Rate limit exceeded for IP: ${clientIp}`);
+            return {
+                status: 429,
+                headers: {
+                    ...headers,
+                    'Retry-After': rateCheck.retryAfter.toString()
+                },
+                jsonBody: { 
+                    success: false, 
+                    error: "Slow down! You're asking too many questions. Try again in a couple minutes.",
+                    retryAfter: rateCheck.retryAfter
+                }
+            };
         }
 
         try {

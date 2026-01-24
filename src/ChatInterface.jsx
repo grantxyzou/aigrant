@@ -85,6 +85,15 @@ export default function ChatInterface() {
 
       const data = await response.json()
       
+      // Handle rate limiting
+      if (response.status === 429) {
+        setMessages(prev => [...prev, { 
+          role: 'assistant', 
+          content: data.error || "Slow down! You're asking too many questions. Try again in a couple minutes."
+        }])
+        return
+      }
+      
       if (data.success) {
         setMessages(prev => [...prev, { role: 'assistant', content: data.response }])
       } else {
