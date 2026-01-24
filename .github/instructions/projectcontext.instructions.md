@@ -146,7 +146,36 @@ git push origin main
 
 ## Development Log
 
-### January 24, 2026
+### January 24, 2026 (Session 2)
+
+**Layout & Sticky Elements:**
+- Header: sticky with scroll-triggered compact mode
+  - Uses `isScrolled` state (triggers at 50px scroll)
+  - Dynamic sizing with CSS `clamp()` for responsive scaling
+  - Smooth cubic-bezier transitions on shrink
+  - Background blur + semi-transparent overlay when scrolled
+- Sidebar: converted to fixed floating component
+  - `position: fixed` anchored to viewport bottom-left
+  - Hidden on mobile (≤768px), shows mobile social links instead
+  - Main content has `padding-left` to reserve space
+
+**CSS Variables System:**
+- `--page-padding: clamp(16px, 4vw, 88px)` - responsive page margins
+- `--content-padding: clamp(12px, 2vw, 20px)` - inner content spacing
+- `--content-max-width: 1440px` - max width constraint
+- Header, sidebar, and content all use same variables for alignment
+
+**Alignment Rules:**
+- Header-left aligns with sidebar (grid layout with 368px column + 6px padding)
+- Header-right aligns with content right edge (uses `--content-padding`)
+- Experience strokes contained within content area (not edge-to-edge)
+
+**Key CSS Classes:**
+- `.header-sticky` - sticky header wrapper with `.scrolled` modifier
+- `.sidebar` - fixed bottom-left floating panel
+- `.main-container` - flex container with left padding for sidebar space
+
+### January 24, 2026 (Session 1)
 
 **Session Summary:**
 - Integrated Azure OpenAI with gpt-4o-mini deployment
@@ -158,9 +187,10 @@ git push origin main
 - Added GPT disclaimer in chat header
 - Fixed security issue (removed API key from git, rotated key)
 - Migrated from Azure Functions v3 to v4 programming model
+- Implemented rate limiting (10 requests per 2 minutes)
 
 **Pending:**
-- Rate limiting for API protection
 - More training conversations from additional case studies
 - Conversation memory/context awareness across turns
+- Mobile sidebar behavior refinement (currently hidden)
 
