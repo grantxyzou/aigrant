@@ -70,6 +70,17 @@ export default function ChatInterface() {
     return "I'm Grant, a product designer at Microsoft Azure. I approach design as storytelling - blending experience and connection. The API is currently unavailable, but feel free to explore my portfolio or try again later!"
   }
 
+  const isRelevantQuestion = (question) => {
+    const grantKeywords = [
+      'grant', 'design', 'portfolio', 'project', 'ux', 'ui', 'microsoft',
+      'experience', 'work', 'skill', 'research', 'case study', 'process',
+      'hire', 'contact', 'background', 'music', 'badminton', 'you', 'your'
+    ];
+    const lowerQ = question.toLowerCase();
+    return grantKeywords.some(keyword => lowerQ.includes(keyword)) || 
+           question.length < 50; // Allow short questions, let AI handle
+  };
+
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
@@ -128,6 +139,9 @@ export default function ChatInterface() {
 
       {/* Chat Overlay */}
       <div className={`chat-overlay ${isOverlayOpen ? 'open' : ''}`}>
+        {/* Background glow layer */}
+        <div className="chat-overlay-bg-glow" />
+        
         <div className="chat-overlay-header">
           <button className="close-button" onClick={closeOverlay} aria-label="Minimize chat">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

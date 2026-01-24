@@ -840,7 +840,7 @@ html, body {
 .expand-chat-button {
   position: absolute;
   left: 40px;
-  top: 8px;
+  bottom: 32px;
   background: transparent;
   border: none;
   border-radius: 8px;
@@ -871,10 +871,10 @@ html, body {
   margin: 0 auto;
   display: flex;
   gap: 12px;
-  align-items: flex-end;
+  align-items: center;
   background: rgba(59, 59, 60, 0.3);
   border-radius: 24px;
-  padding: 8px 8px 8px 20px;
+  padding: 12px 12px 12px 20px;
   transition: box-shadow 0.2s ease;
   position: relative;
   z-index: 1;
@@ -950,7 +950,9 @@ html, body {
   resize: none;
   min-height: 24px;
   max-height: 120px;
-  padding: 4px 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
 }
 
 .chat-input-container textarea:focus {
@@ -992,7 +994,7 @@ html, body {
   left: 0;
   right: 0;
   height: 85vh;
-  background: rgba(16, 15, 15, 0.98);
+  background: rgba(16, 15, 15, 0.95);
   backdrop-filter: blur(20px);
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
@@ -1001,11 +1003,152 @@ html, body {
   flex-direction: column;
   transform: translateY(100%);
   transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
-  box-shadow: 0 -10px 50px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+/* Glowing border effect for overlay */
+.chat-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(27, 50, 77, 0.3) 0%,
+    rgba(101, 126, 149, 0.5) 20%,
+    rgba(143, 162, 176, 0.6) 40%,
+    rgba(190, 178, 147, 0.5) 60%,
+    rgba(143, 162, 176, 0.6) 80%,
+    rgba(27, 50, 77, 0.3) 100%
+  );
+  border-radius: 24px 24px 0 0;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.chat-overlay.open::before {
+  opacity: 1;
+}
+
+/* Ambient glow behind overlay */
+.chat-overlay::after {
+  content: '';
+  position: absolute;
+  top: -150px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  height: 300px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(143, 162, 176, 0.12) 0%,
+    rgba(101, 126, 149, 0.06) 40%,
+    transparent 70%
+  );
+  filter: blur(60px);
+  pointer-events: none;
+  animation: ambientPulse 10s ease-in-out infinite;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 1s ease 0.3s;
+}
+
+.chat-overlay.open::after {
+  opacity: 1;
+}
+
+/* Inner background glow */
+.chat-overlay-bg-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.chat-overlay-bg-glow::before {
+  content: '';
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  left: -25%;
+  top: 20%;
+  background: radial-gradient(
+    ellipse at 30% 80%,
+    rgba(27, 50, 77, 0.25) 0%,
+    transparent 50%
+  );
+  animation: bgGlowDrift1 15s ease-in-out infinite;
+}
+
+.chat-overlay-bg-glow::after {
+  content: '';
+  position: absolute;
+  width: 120%;
+  height: 120%;
+  right: -20%;
+  top: 40%;
+  background: radial-gradient(
+    ellipse at 70% 60%,
+    rgba(143, 162, 176, 0.15) 0%,
+    transparent 45%
+  );
+  animation: bgGlowDrift2 18s ease-in-out infinite;
+}
+
+@keyframes bgGlowDrift1 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(30px, -20px) scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+@keyframes bgGlowDrift2 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-25px, 15px) scale(1.08);
+    opacity: 0.7;
+  }
+}
+
+@keyframes glowBorderFlow {
+  0%, 100% {
+    background-position: 0% 0;
+  }
+  50% {
+    background-position: 100% 0;
+  }
+}
+
+@keyframes ambientPulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateX(-50%) scale(1.05);
+  }
 }
 
 .chat-overlay.open {
   transform: translateY(0);
+  box-shadow: 
+    0 -10px 60px rgba(0, 0, 0, 0.5),
+    0 -5px 30px rgba(143, 162, 176, 0.1),
+    inset 0 1px 0 rgba(143, 162, 176, 0.1);
 }
 
 .chat-overlay-header {
@@ -1030,6 +1173,26 @@ html, body {
   font-family: 'IBM Plex Sans', sans-serif;
   font-size: 16px;
   font-weight: 500;
+  background: linear-gradient(
+    90deg,
+    #E2E1F0 0%,
+    #8FA2B0 50%,
+    #BEB293 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: titleShimmer 16s ease-in-out infinite;
+}
+
+@keyframes titleShimmer {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 .chat-overlay-header .close-button,
@@ -1044,12 +1207,14 @@ html, body {
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
+  position: relative;
 }
 
 .chat-overlay-header .close-button:hover,
 .chat-overlay-header .clear-button:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(143, 162, 176, 0.15);
   color: white;
+  box-shadow: 0 0 15px rgba(143, 162, 176, 0.2);
 }
 
 /* Chat Messages in Overlay */
@@ -1099,30 +1264,73 @@ html, body {
 }
 
 .chat-overlay-messages .message.user .message-content {
-  background: rgba(101, 126, 149, 0.3);
+  background: linear-gradient(
+    135deg,
+    rgba(101, 126, 149, 0.3) 0%,
+    rgba(143, 162, 176, 0.2) 100%
+  );
   color: white;
   border-bottom-right-radius: 6px;
+  box-shadow: 
+    0 2px 10px rgba(101, 126, 149, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .chat-overlay-messages .message.assistant .message-content {
-  background: rgba(59, 59, 60, 0.4);
+  background: linear-gradient(
+    135deg,
+    rgba(59, 59, 60, 0.5) 0%,
+    rgba(27, 50, 77, 0.3) 100%
+  );
   color: #E2E1F0;
   border-bottom-left-radius: 6px;
+  box-shadow: 
+    0 2px 10px rgba(27, 50, 77, 0.2),
+    inset 0 1px 0 rgba(143, 162, 176, 0.08);
+  position: relative;
+}
+
+/* Subtle glow effect on assistant messages */
+.chat-overlay-messages .message.assistant .message-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(143, 162, 176, 0.2) 0%,
+    transparent 50%,
+    rgba(190, 178, 147, 0.1) 100%
+  );
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
 /* Typing Indicator */
 .typing-indicator {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   padding: 4px 0;
 }
 
 .typing-indicator span {
   width: 8px;
   height: 8px;
-  background: #ABABAB;
+  background: linear-gradient(135deg, #8FA2B0 0%, #BEB293 100%);
   border-radius: 50%;
   animation: typingBounce 1.4s infinite ease-in-out;
+  box-shadow: 0 0 8px rgba(143, 162, 176, 0.5);
 }
 
 .typing-indicator span:nth-child(1) { animation-delay: 0s; }
@@ -1130,8 +1338,16 @@ html, body {
 .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
 
 @keyframes typingBounce {
-  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-  40% { transform: scale(1); opacity: 1; }
+  0%, 80%, 100% { 
+    transform: scale(0.6); 
+    opacity: 0.4;
+    box-shadow: 0 0 4px rgba(143, 162, 176, 0.3);
+  }
+  40% { 
+    transform: scale(1); 
+    opacity: 1;
+    box-shadow: 0 0 12px rgba(143, 162, 176, 0.8);
+  }
 }
 
 /* Input inside Overlay */
@@ -1155,8 +1371,8 @@ html, body {
 
 .chat-overlay-input textarea {
   flex: 1;
-  background: rgba(59, 59, 60, 0.3);
-  border: 1px solid #3B3B3C;
+  background: rgba(27, 50, 77, 0.2);
+  border: 1px solid rgba(101, 126, 149, 0.3);
   border-radius: 20px;
   padding: 12px 18px;
   color: white;
@@ -1166,11 +1382,15 @@ html, body {
   resize: none;
   min-height: 24px;
   max-height: 120px;
+  transition: all 0.2s ease;
 }
 
 .chat-overlay-input textarea:focus {
   outline: none;
-  border-color: #657E95;
+  border-color: rgba(143, 162, 176, 0.5);
+  box-shadow: 
+    0 0 0 2px rgba(143, 162, 176, 0.1),
+    0 0 20px rgba(143, 162, 176, 0.1);
 }
 
 .chat-overlay-input textarea::placeholder {
@@ -1178,8 +1398,12 @@ html, body {
 }
 
 .chat-overlay-input button {
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
+  background: linear-gradient(
+    135deg,
+    rgba(101, 126, 149, 0.3) 0%,
+    rgba(143, 162, 176, 0.2) 100%
+  );
+  border: 1px solid rgba(143, 162, 176, 0.3);
   border-radius: 50%;
   width: 44px;
   height: 44px;
@@ -1193,11 +1417,18 @@ html, body {
 }
 
 .chat-overlay-input button:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.2);
+  background: linear-gradient(
+    135deg,
+    rgba(143, 162, 176, 0.4) 0%,
+    rgba(190, 178, 147, 0.3) 100%
+  );
+  border-color: rgba(143, 162, 176, 0.5);
+  box-shadow: 0 0 20px rgba(143, 162, 176, 0.3);
+  transform: scale(1.05);
 }
 
 .chat-overlay-input button:disabled {
-  opacity: 0.4;
+  opacity: 0.3;
   cursor: not-allowed;
 }
 
@@ -1208,7 +1439,8 @@ html, body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
   z-index: 150;
   animation: fadeIn 0.3s ease-out;
 }
