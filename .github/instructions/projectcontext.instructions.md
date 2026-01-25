@@ -146,6 +146,52 @@ git push origin main
 
 ## Development Log
 
+### January 24, 2026 (Session 3)
+
+**AI Mode Toggle:**
+- Replaced construction text with toggle switch (green on-state)
+- Toggle controls AI mode (enables chat input bar)
+- AI disclaimer text appears when toggle is on (hidden on mobile)
+- State persisted to localStorage
+
+**URL Hash Routing:**
+- `#ai` - Public AI mode (enables toggle + chat)
+- `#chat-grant2026` - Secret override for full access
+- Hash syncs with toggle state bidirectionally
+
+**About Section:**
+- Changed from dynamic AI-generated blurb to static text
+- Content: "An evolving, exploratory design portfolio where I'm learning Azure infrastructure and AI hands-on, while experimenting with AI features as new ways to tell product stories."
+- Removed title, kept description left-aligned
+- 58px top/bottom padding, no top border
+
+**Header Responsiveness:**
+- Full-width flexbox layout (removed max-width constraint)
+- Toggle stays on same row as name/title on all screen sizes
+- AI disclaimer hidden on mobile (≤768px)
+- Uses `justify-content: space-between` for symmetric alignment
+
+**Aurora Background:**
+- Made responsive with viewport units
+- Width: `150vw` (was fixed 2375px/2838px)
+- Left offset: `-25vw` (was fixed -280px/-205px)
+- Now covers full screen on ultra-wide displays
+
+**Border Standardization:**
+- All content section borders: `1px #3B3B3C solid`
+- Updated: `.section`, `.experience-section`, `.experience-border`, `.footer`
+- About section: `border-top: none`
+
+**Experience Section:**
+- Fixed equal width for all text containers
+- Uses `flex: 1` with `max-width: calc(100% - 44px)`
+- Removed flex-wrap to prevent layout shifts
+
+**Chat Input Animation:**
+- Entrance animation on page load (1.5s glow effect)
+- Background fades from transparent to semi-transparent
+- Border glow pulses then settles
+
 ### January 24, 2026 (Session 2)
 
 **Layout & Sticky Elements:**
