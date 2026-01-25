@@ -20,7 +20,17 @@ export default function App(){
   const [displayedBlurb, setDisplayedBlurb] = useState('')
   const [isLoadingBlurb, setIsLoadingBlurb] = useState(true)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [sidebarAtBottom, setSidebarAtBottom] = useState(false)
+  const [aiMode, setAiMode] = useState(() => {
+    // Check URL hash first, then localStorage
+    const hash = window.location.hash
+    if (hash === '#ai') return true
+    const saved = localStorage.getItem('aiMode')
+    return saved !== null ? saved === 'true' : false // Default to OFF
+  })
   const footerRef = useRef(null)
+  const sidebarRef = useRef(null)
+  const contentRef = useRef(null)
   
   const fullText = "you've reached the edge. i am still loading what's next..."
 
@@ -51,8 +61,14 @@ export default function App(){
     setTimeout(typeChar, 200)
   }, [introBlurb, isLoadingBlurb])
 
-  // Fetch dynamic intro blurb on page load
+  // Fetch dynamic intro blurb on page load (only if AI mode is on)
   useEffect(() => {
+    if (!aiMode) {
+      setIntroBlurb(defaultBlurb)
+      setIsLoadingBlurb(false)
+      return
+    }
+    
     const fetchIntroBlurb = async () => {
       // Check session storage first to avoid repeated calls
       const cached = sessionStorage.getItem('introBlurb')
@@ -88,7 +104,29 @@ export default function App(){
     }
 
     fetchIntroBlurb()
-  }, [])
+  }, [aiMode])
+  
+  // Persist AI mode preference and sync URL hash
+  useEffect(() => {
+    localStorage.setItem('aiMode', aiMode.toString())
+    
+    // Update URL hash (but don't override secret hash)
+    const currentHash = window.location.hash
+    if (currentHash !== '#chat-grant2026') {
+      if (aiMode) {
+        window.history.replaceState(null, '', '#ai')
+      } else {
+        window.history.replaceState(null, '', window.location.pathname)
+      }
+    }
+  }, [aiMode])
+  
+  // Toggle AI mode handler
+  const toggleAiMode = () => {
+    setAiMode(prev => !prev)
+    // Clear cached blurb when toggling
+    sessionStorage.removeItem('introBlurb')
+  }
   
   const startTypewriter = () => {
     if (hasAnimated) return
@@ -109,18 +147,31 @@ export default function App(){
     }, 50)
   }
   
-  // Secret chat access: ?chat=grant2026 OR #chat-grant2026
+  // Chat access: #ai enables chat, #chat-grant2026 is secret override
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
     const hash = window.location.hash
     
-    if (params.get('chat') === 'grant2026' || hash === '#chat-grant2026') {
+    // Secret override - always enable chat
+    if (hash === '#chat-grant2026') {
       setShowChat(true)
+      setAiMode(true)
       sessionStorage.setItem('chatEnabled', 'true')
-    } else if (sessionStorage.getItem('chatEnabled') === 'true') {
+    } 
+    // #ai hash - enable AI mode and chat
+    else if (hash === '#ai') {
+      setAiMode(true)
+      setShowChat(true)
+    }
+    // Check if AI mode is on (from localStorage)
+    else if (aiMode) {
       setShowChat(true)
     }
   }, [])
+  
+  // Sync showChat with aiMode
+  useEffect(() => {
+    setShowChat(aiMode)
+  }, [aiMode])
 
   useEffect(() => {
     // Mouse tracking for parallax effect
@@ -130,9 +181,19 @@ export default function App(){
       setMousePosition({ x, y })
     }
 
-    // Scroll tracking for sticky header
+    // Scroll tracking for sticky header and sidebar positioning
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50)
+      
+      // Check if we've reached the bottom of the page
+      if (contentRef.current) {
+        const contentBottom = contentRef.current.getBoundingClientRect().bottom
+        const chatBarHeight = aiMode ? 100 : 0 // Height of chat input bar
+        const viewportHeight = window.innerHeight
+        
+        // If content bottom is at or above viewport bottom (minus chat bar), sidebar should stop
+        setSidebarAtBottom(contentBottom <= viewportHeight - chatBarHeight + 40)
+      }
     }
 
     window.addEventListener('mousemove', handleMouseMove)
@@ -172,7 +233,7 @@ export default function App(){
     <>
       {/* Fixed Background */}
       <div 
-        className="bg-aurora"
+        className={`bg-aurora ${aiMode ? 'chat-active' : ''}`}
         style={{
           transform: `translate(${mousePosition.x * 5}px, ${mousePosition.y * 3}px)`
         }}
@@ -201,20 +262,33 @@ export default function App(){
               </div>
             </div>
             <div className="header-right">
-              <div className="construction-text">This website is still under construction</div>
-              <div className="construction-emoji">🚧</div>
+              {aiMode && (
+                <span className="ai-disclaimer">The AI is still under a lot of training. Generated information may be incorrect.</span>
+              )}
+              <label className="ai-toggle">
+                <div className="toggle-switch">
+                  <input 
+                    type="checkbox" 
+                    checked={aiMode} 
+                    onChange={toggleAiMode}
+                  />
+                  <span className="toggle-slider">
+                    <span className="toggle-knob"></span>
+                  </span>
+                </div>
+              </label>
             </div>
           </div>
         </div>
       </header>
 
       {/* Scrollable Content */}
-      <div className="responsive-container">
+      <div className={`responsive-container ${aiMode ? 'chat-active' : ''}`}>
         
         {/* Main Content */}
-        <div className="main-container">
+        <div className="main-container" ref={contentRef}>
           {/* Sidebar */}
-          <div className="sidebar">
+          <div className={`sidebar ${sidebarAtBottom ? 'at-bottom' : ''}`} ref={sidebarRef}>
             <div className="sidebar-bio">
               <div className="bio-text">
                 Grant remixes music, experiments with new technologies, and keeps rhythm in life through badminton and running. He sees design as storytelling: blending experience and connection, whether in beats, interfaces, or shared moments.
@@ -238,21 +312,11 @@ export default function App(){
           
           {/* Main Content */}
           <div className="content">
-            {/* About Me Section */}
+            {/* About Section */}
             <div className="section about-section">
-              <div className="section-title">About...me</div>
               <div className="section-content">
                 <div className="about-text">
-                  {isLoadingBlurb ? (
-                    <span className="blurb-cursor">|</span>
-                  ) : (
-                    <>
-                      {displayedBlurb}
-                      {displayedBlurb.length < introBlurb.length && (
-                        <span className="blurb-cursor">|</span>
-                      )}
-                    </>
-                  )}
+                  An evolving, exploratory design portfolio where I'm learning Azure infrastructure and AI hands-on, while experimenting with AI features as new ways to tell product stories.
                 </div>
               </div>
             </div>
@@ -277,8 +341,8 @@ export default function App(){
               </div>
             </div>
             
-            {/* Chat Interface - Now always rendered, input bar at bottom */}
-            {showChat && <ChatInterface />}
+            {/* Chat Interface - Only show when AI mode is on */}
+            {aiMode && showChat && <ChatInterface />}
             
             {/* Footer */}
             <div className="footer" ref={footerRef}>
