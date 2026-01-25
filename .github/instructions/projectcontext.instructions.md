@@ -146,6 +146,48 @@ git push origin main
 
 ## Development Log
 
+### January 25, 2026 (Session 4)
+
+**Layout Overhaul - Centered Content:**
+- Content area centered on viewport (max 824px)
+- Sidebar positioned absolutely to left of content (368px, 20px gap)
+- Total max width: 1212px when sidebar visible
+- Medium screens (≤1280px): Falls back to flex layout
+- Mobile (≤768px): Unchanged, sidebar hidden
+
+**CSS Variables:**
+```css
+--page-padding: clamp(16px, 4vw, 88px)
+--content-padding: clamp(12px, 2vw, 20px)
+--content-max-width: 1440px (legacy, main-container now 824px)
+```
+
+**Header Updates:**
+- Removed "maybe:" prefix, now just "Grant Zou"
+- AI disclaimer updated: "AI-generated content are being refined and improved"
+- Section title: "Work experience" (was "About his experience...")
+
+**Experience Section Redesign:**
+- Removed experience dots
+- Removed role titles, company/period inline as header
+- Full-width content (824px max)
+- Rich descriptions with paragraph support
+
+**Experience Content:**
+- Microsoft · Azure (2022 – Present): Cost Management → Azure Core journey
+- Jungle Scout (2020 – 2022): Analytics and data visualization
+- Visier (2018 – 2019): People analytics, two-paragraph reflection
+
+**AI Mode Behavior:**
+- Removed localStorage persistence
+- AI mode only activates with URL hash (#ai or #chat-grant2026)
+- Default: Non-AI mode on grantzou.com
+
+**Sidebar:**
+- Uses `position: absolute` with `right: calc(100% + 20px)`
+- `justify-content: flex-end` aligns content to bottom
+- Responsive: becomes relative in flex layout on medium screens
+
 ### January 24, 2026 (Session 3)
 
 **AI Mode Toggle:**
