@@ -4,10 +4,21 @@ import { FaInstagram, FaGithub, FaLinkedinIn } from 'react-icons/fa'
 import ChatInterface from './ChatInterface'
 
 const experience = [
-  { role: 'Product designer 2', company: 'Microsoft (Azure core)', period: 'Apr 2025 – Present', location: 'Remote & Vancouver, CA' },
-  { role: 'Product designer 2', company: 'Microsoft (Cost Management)', period: 'Jun 2022 – Apr 2025', location: 'Remote & Vancouver, CA' },
-  { role: 'User experience designer I', company: 'Jungle Scout', period: 'Feb 2020 – May 2022', location: 'Remote & Vancouver, CA' },
-  { role: 'User experience designer', company: 'Visier Inc.', period: 'May 2018 – Dec 2019', location: 'Vancouver, CA' },
+  { 
+    company: 'Microsoft · Azure', 
+    period: '2022 – Present', 
+    description: 'Designing across cost management, cloud infrastructure, and Copilot experiences. I began in Cost Management, focused on transparency and predictability, then moved into Azure Core to work closer to foundational infrastructure and agent-assisted workflows. Across both, the work centers on helping customers navigate complex systems where mistakes are costly and often discovered too late.'
+  },
+  { 
+    company: 'Jungle Scout', 
+    period: '2020 – 2022', 
+    description: 'Designed analytics and data visualization for e-commerce sellers, translating dense operational data into actionable insights that supported real business decisions under uncertainty.'
+  },
+  { 
+    company: 'Visier', 
+    period: '2018 – 2019', 
+    description: 'Worked on people analytics, contributing to experiences where data intersected with organizational dynamics, hiring, and performance narratives.\n\nEarly in my career, I made mistakes, learned quickly, and built resilience. Visier time allowed me develop both the judgment and relationships that continue to shape how I design today.'
+  },
 ]
 
 export default function App(){
@@ -314,14 +325,27 @@ export default function App(){
                 {experience.map((exp, i) => (
                   <div key={i} className={`experience-item ${i > 0 ? 'experience-border' : ''}`}>
                     <div className="experience-content">
-                      <div className="experience-role">{exp.role}</div>
-                      <div className="experience-details">
-                        <div className="experience-company">{exp.company}</div>
-                        <div className="experience-period">{exp.period}</div>
-                        <div className="experience-location">{exp.location}</div>
+                      <div className="experience-header">
+                        <span className="experience-company">{exp.company}</span>
+                        <span className="experience-period"> ({exp.period})</span>
                       </div>
+                      {exp.role && (
+                        <div className="experience-role">{exp.role}</div>
+                      )}
+                      {exp.description && (
+                        <div className="experience-description">{exp.description}</div>
+                      )}
+                      {exp.bullets && (
+                        <div className="experience-bullets">
+                          {exp.bullets.map((bullet, j) => (
+                            <div key={j} className="experience-bullet">→ {bullet}</div>
+                          ))}
+                        </div>
+                      )}
+                      {exp.location && (
+                        <div className="experience-location">{exp.location}</div>
+                      )}
                     </div>
-                    <div className="experience-dot" />
                   </div>
                 ))}
               </div>
