@@ -423,36 +423,31 @@ html, body {
   width: 100%;
   max-width: 1440px;
   justify-content: flex-start;
-  align-items: flex-end;
+  align-items: stretch;
   gap: 20px;
   display: flex;
   margin: 0 auto;
   position: relative;
-  padding-left: calc(368px + 20px); /* Reserve space for fixed sidebar */
 }
 
-/* Sidebar - Fixed to viewport bottom, stops at content bottom */
+/* Sidebar - Aligned to bottom of container */
 .sidebar {
-  position: fixed;
-  bottom: 100px; /* Above the chat input bar */
-  left: var(--page-padding);
+  position: relative;
   width: 100%;
   max-width: 368px;
+  height: auto;
   padding-right: 10px;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: flex-end;
   align-items: flex-start;
   display: flex;
+  flex-shrink: 0;
   z-index: 50;
-  transition: bottom 0.3s ease;
 }
 
-/* When at bottom of page, become static and align with content */
+/* at-bottom class no longer needed */
 .sidebar.at-bottom {
-  position: absolute;
-  bottom: auto;
-  left: 0;
-  top: auto;
+  /* Sticky handles this naturally */
 }
 
 .sidebar-bio {
@@ -548,6 +543,7 @@ html, body {
 .experience-section {
   border-top: 1px #3B3B3C solid;
   gap: 37px;
+  padding-top: 20px;
 }
 
 .section-title {

@@ -20,13 +20,12 @@ export default function App(){
   const [displayedBlurb, setDisplayedBlurb] = useState('')
   const [isLoadingBlurb, setIsLoadingBlurb] = useState(true)
   const [isScrolled, setIsScrolled] = useState(false)
-  const [sidebarAtBottom, setSidebarAtBottom] = useState(false)
   const [aiMode, setAiMode] = useState(() => {
-    // Check URL hash first, then localStorage
+    // Check URL hash - only enable AI mode with explicit hash
     const hash = window.location.hash
-    if (hash === '#ai') return true
-    const saved = localStorage.getItem('aiMode')
-    return saved !== null ? saved === 'true' : false // Default to OFF
+    if (hash === '#ai' || hash === '#chat-grant2026') return true
+    // Default to OFF - no AI mode without hash
+    return false
   })
   const footerRef = useRef(null)
   const sidebarRef = useRef(null)
@@ -106,10 +105,8 @@ export default function App(){
     fetchIntroBlurb()
   }, [aiMode])
   
-  // Persist AI mode preference and sync URL hash
+  // Sync URL hash with AI mode (don't persist to localStorage)
   useEffect(() => {
-    localStorage.setItem('aiMode', aiMode.toString())
-    
     // Update URL hash (but don't override secret hash)
     const currentHash = window.location.hash
     if (currentHash !== '#chat-grant2026') {
@@ -181,19 +178,9 @@ export default function App(){
       setMousePosition({ x, y })
     }
 
-    // Scroll tracking for sticky header and sidebar positioning
+    // Scroll tracking for sticky header
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50)
-      
-      // Check if we've reached the bottom of the page
-      if (contentRef.current) {
-        const contentBottom = contentRef.current.getBoundingClientRect().bottom
-        const chatBarHeight = aiMode ? 100 : 0 // Height of chat input bar
-        const viewportHeight = window.innerHeight
-        
-        // If content bottom is at or above viewport bottom (minus chat bar), sidebar should stop
-        setSidebarAtBottom(contentBottom <= viewportHeight - chatBarHeight + 40)
-      }
     }
 
     window.addEventListener('mousemove', handleMouseMove)
@@ -253,8 +240,7 @@ export default function App(){
           <div className="header-inner">
             <div className="header-left">
               <div>
-                <span className="header-maybe">maybe:</span>
-                <span className="header-name"> Grant Zou</span>
+                <span className="header-name">Grant Zou</span>
               </div>
               <div className="header-title">
                 <div className="header-ai">ai</div>
@@ -263,7 +249,7 @@ export default function App(){
             </div>
             <div className="header-right">
               {aiMode && (
-                <span className="ai-disclaimer">The AI is still under a lot of training. Generated information may be incorrect.</span>
+                <span className="ai-disclaimer">AI-generated content are being refined and improved</span>
               )}
               <label className="ai-toggle">
                 <div className="toggle-switch">
@@ -288,7 +274,7 @@ export default function App(){
         {/* Main Content */}
         <div className="main-container" ref={contentRef}>
           {/* Sidebar */}
-          <div className={`sidebar ${sidebarAtBottom ? 'at-bottom' : ''}`} ref={sidebarRef}>
+          <div className="sidebar" ref={sidebarRef}>
             <div className="sidebar-bio">
               <div className="bio-text">
                 Grant remixes music, experiments with new technologies, and keeps rhythm in life through badminton and running. He sees design as storytelling: blending experience and connection, whether in beats, interfaces, or shared moments.
@@ -323,7 +309,7 @@ export default function App(){
             
             {/* Experience Section */}
             <div className="section experience-section">
-              <div className="section-title">About his experience...</div>
+              <div className="section-title">Work experience</div>
               <div className="experience-list">
                 {experience.map((exp, i) => (
                   <div key={i} className={`experience-item ${i > 0 ? 'experience-border' : ''}`}>
