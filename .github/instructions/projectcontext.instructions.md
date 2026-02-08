@@ -146,6 +146,28 @@ git push origin main
 
 ## Development Log
 
+### February 8, 2026 (Session 5)
+
+**Sidebar Overflow Fix:**
+- Changed `.responsive-container` from `overflow-x: hidden` to `overflow-x: visible`
+- Added `overflow-x: hidden` to `html, body` to prevent horizontal scrollbar
+- Sidebar now visible at all breakpoints without clipping
+
+**Current Sidebar Behavior:**
+- **>1280px**: `position: absolute`, `right: calc(100% + 20px)` (floats left of centered content)
+- **769-1280px**: `position: relative`, flex layout with content
+- **≤768px**: `display: none`, mobile social links shown instead
+
+**Disabled Features:**
+- Dynamic intro blurb generation (code preserved, not used)
+- `/api/ask` endpoint still supports `isIntroRequest: true` requests
+
+**Pending:**
+- Test sidebar at all breakpoints in production
+- More training conversations
+- Conversation memory across turns
+- Mobile sidebar alternative (bottom sheet?)
+
 ### January 25, 2026 (Session 4)
 
 **Layout Overhaul - Centered Content:**
