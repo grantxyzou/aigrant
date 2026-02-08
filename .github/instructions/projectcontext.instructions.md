@@ -171,7 +171,7 @@ git push origin main
 **Pending (AI Training):**
 - [x] Add full Advertising Analytics to trainingContext
 - [x] Add fallback keywords for Jungle Scout, PPC, Copilot
-- [ ] Add Visier project details
+- [x] Add Visier project details
 - [ ] Clean up unused JSON files
 
 ### February 8, 2026 (Session 5)
@@ -343,8 +343,7 @@ git push origin main
 #### Phase 1: Immediate (High Impact)
 - [x] Add full Advertising Analytics project to `trainingContext`
 - [x] Add fallback keywords: "jungle scout", "advertising", "ppc", "copilot"
-- [ ] Add Visier project details to `trainingContext`
-- [ ] Update intro blurbs with more variety
+- [x] Add Visier project details to `trainingContext`
 
 #### Phase 2: Content Depth
 - [ ] Add specific design artifacts ("I created a flow diagram to map...")
