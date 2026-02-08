@@ -18,7 +18,12 @@ html, body {
   box-sizing: border-box;
 }
 
-html, body {
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
   margin: 0;
   padding: 0;
   font-family: system-ui, sans-serif;
@@ -27,6 +32,10 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden; /* Prevent horizontal scroll from sidebar */
+}
+
+#root {
+  min-height: 100%;
 }
 
 /* Custom Background with Gradient Overlays */
@@ -197,13 +206,15 @@ html, body {
   z-index: 1;
   min-height: 100vh;
   width: 100%;
-  flex-direction: column;
+  max-width: 1212px; /* 368px sidebar + 20px gap + 824px content */
+  margin: 0 auto;
+  flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
   display: flex;
   padding: 0 var(--page-padding) 60px var(--page-padding);
   background: transparent;
-  overflow-x: visible; /* Allow sidebar to show outside main container */
+  gap: 20px;
 }
 
 /* Add bottom padding when chat is active to prevent overlap */
@@ -252,6 +263,8 @@ html, body {
 /* Header Styles */
 .header-container {
   width: 100%;
+  max-width: 1212px; /* Match content area: 368px sidebar + 20px gap + 824px content */
+  margin: 0 auto;
   padding-bottom: 40px;
   justify-content: space-between;
   align-items: flex-start;
@@ -419,29 +432,29 @@ html, body {
   max-width: 200px;
 }
 
-/* Main Container - Content centered, sidebar offset left */
-.main-container {
-  width: 100%;
-  max-width: 824px;
-  margin: 0 auto;
-  position: relative;
-}
-
-/* Sidebar - Absolute positioned left of content */
+/* Sidebar - Fixed at bottom-left */
 .sidebar {
-  position: absolute;
-  right: calc(100% + 20px);
-  top: 0;
-  height: 100%;
+  position: fixed;
+  left: max(var(--page-padding), calc((100vw - 1212px) / 2));
+  bottom: 0;
   width: 368px;
   max-width: 368px;
   padding-right: 10px;
+  padding-bottom: 140px; /* Match main content bottom padding */
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-start;
   display: flex;
   flex-shrink: 0;
   z-index: 50;
+}
+
+/* Main Container - Takes remaining space */
+.main-container {
+  flex: 1;
+  max-width: 824px;
+  margin-left: 388px; /* 368px sidebar + 20px gap */
+  position: relative;
 }
 
 /* at-bottom class no longer needed */
@@ -716,32 +729,32 @@ html, body {
   }
 }
 
-/* Medium screens - sidebar goes back to flex layout */
+/* Medium screens - sidebar stays fixed at bottom-left */
 @media (max-width: 1280px) {
-  .main-container {
+  .header-container {
+    max-width: 100%; /* Remove max-width constraint on medium screens */
+  }
+  
+  .responsive-container {
     max-width: 100%;
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    padding: 0 var(--page-padding);
+    padding: 0 var(--page-padding) 60px var(--page-padding);
   }
   
   .sidebar {
-    position: relative;
-    right: auto;
-    top: auto;
-    height: auto;
+    position: fixed;
+    left: var(--page-padding);
+    bottom: 0;
     width: 280px;
     min-width: 280px;
     max-width: 280px;
     flex-shrink: 0;
-    align-self: stretch;
   }
   
-  .content {
+  .main-container {
     flex: 1;
     max-width: none;
     min-width: 0;
+    margin-left: 300px; /* 280px sidebar + 20px gap */
   }
 }
 
@@ -800,40 +813,70 @@ html, body {
   .main-container {
     flex-direction: column;
     gap: 0;
-    padding: 0 var(--page-padding);
+    padding: 0;
+    margin-left: 0; /* Reset margin since sidebar is bottom bar */
   }
   
-  /* Hide sidebar on mobile */
+  /* Fixed bottom bar on mobile */
   .sidebar {
-    display: none;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 12px var(--page-padding);
+    background: rgba(15, 15, 16, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(101, 126, 149, 0.2);
+    gap: 24px;
+    z-index: 100;
+  }
+  
+  .sidebar .sidebar-bio {
+    display: none; /* Hide bio text on mobile bottom bar */
+  }
+  
+  .sidebar .social-link {
+    padding: 8px;
+    gap: 0;
+  }
+  
+  .sidebar .social-text {
+    display: none; /* Hide text, show only icons */
+  }
+  
+  .sidebar .social-icon-svg {
+    font-size: 20px;
+  }
+  
+  .sidebar .social-link-last {
+    border: none;
+  }
+  
+  .responsive-container {
+    flex-direction: column;
+    gap: 0;
   }
   
   .content {
     width: 100%;
     max-width: 100%;
+    padding-bottom: 60px; /* Space for fixed bottom bar */
   }
-  
+
   .sidebar-bio {
     padding: 20px 0 24px 0;
     gap: 20px;
   }
   
-  /* Show mobile social links */
+  /* Hide mobile social links since sidebar is now visible */
   .social-links-mobile {
-    display: block;
-    width: 100%;
-    order: 3;
-    margin-top: 40px;
-  }
-  
-  .social-links-mobile .social-link {
-    display: flex;
-    padding: 10px 0;
-    border-top: 0.50px rgba(101, 126, 149, 0.3) solid;
-  }
-  
-  .social-links-mobile .social-link-last {
-    border-bottom: 0.50px rgba(101, 126, 149, 0.3) solid;
+    display: none;
   }
   
   .bio-text {

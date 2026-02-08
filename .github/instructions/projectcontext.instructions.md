@@ -146,6 +146,34 @@ git push origin main
 
 ## Development Log
 
+### February 8, 2026 (Session 6)
+
+**Layout Restructure:**
+- Moved sidebar outside `main-container` as sibling in `responsive-container`
+- Structure: `responsive-container` → `sidebar` + `main-container`
+- Sidebar now truly independent, fixed at bottom-left
+- Header constrained to max-width 1212px to align with content area
+
+**Sidebar Behavior (Updated):**
+- **>1280px**: `position: fixed`, `left: calc((100vw - 1212px) / 2)`, `bottom: 0`, `width: 368px`, `padding-bottom: 140px`
+- **769-1280px**: `position: fixed`, `left: var(--page-padding)`, `bottom: 0`, `width: 280px`
+- **≤768px**: Full-width bottom bar with social icons only (bio hidden)
+
+**Footer Update:**
+- Changed text to "Flip the toggle to see the version powered by AI"
+
+**AI Training Audit:**
+- Added comprehensive audit section to instructions
+- Created 4-phase improvement checklist
+- Documented how to add new projects
+- Identified unused JSON files in `/content/training/`
+
+**Pending (AI Training):**
+- [x] Add full Advertising Analytics to trainingContext
+- [x] Add fallback keywords for Jungle Scout, PPC, Copilot
+- [ ] Add Visier project details
+- [ ] Clean up unused JSON files
+
 ### February 8, 2026 (Session 5)
 
 **Sidebar Overflow Fix:**
@@ -284,6 +312,96 @@ git push origin main
 - `.header-sticky` - sticky header wrapper with `.scrolled` modifier
 - `.sidebar` - fixed bottom-left floating panel
 - `.main-container` - flex container with left padding for sidebar space
+
+---
+
+## AI Training Content Audit
+
+### Current Architecture
+
+**Actually Used (hardcoded in `ask.js`):**
+| Component | Location | Purpose |
+|-----------|----------|---------|
+| `trainingContext` | ask.js L150-200 | Profile, philosophy, projects, skills, voice |
+| `systemPrompt` | ask.js L200-240 | Personality, response rules, guardrails |
+| `generateFallbackResponse()` | ask.js L303-321 | Keyword-based fallbacks when API fails |
+| `generateIntroBlurb()` | ask.js L292-300 | Random intro taglines |
+
+**Exists but NOT Used (orphaned files):**
+| File | Status | Notes |
+|------|--------|-------|
+| `content/profile.json` | ❌ Unused | Duplicate of trainingContext |
+| `content/training/behaviors/personality-traits.json` | ❌ Unused | Voice, values, traits |
+| `content/training/conversations/portfolio-discussions.json` | ❌ Unused | Generic Q&A pairs |
+| `content/training/knowledge/design-expertise.json` | ❌ Unused | Generic methodologies |
+| `content/training/templates/response-templates.json` | ❌ Unused | Response structure rules |
+| `content/faq.json` | ❌ Empty | — |
+| `content/testimonials.json` | ❌ Empty | — |
+
+### Improvement Checklist
+
+#### Phase 1: Immediate (High Impact)
+- [x] Add full Advertising Analytics project to `trainingContext`
+- [x] Add fallback keywords: "jungle scout", "advertising", "ppc", "copilot"
+- [ ] Add Visier project details to `trainingContext`
+- [ ] Update intro blurbs with more variety
+
+#### Phase 2: Content Depth
+- [ ] Add specific design artifacts ("I created a flow diagram to map...")
+- [ ] Add "what would you do differently" learnings per project
+- [ ] Add Azure Cost Management project details
+- [ ] Add example user interview quotes/insights
+
+#### Phase 3: Cleanup
+- [ ] Delete or archive unused JSON files in `/content/training/`
+- [ ] Consolidate `profile.json` data into `ask.js` or remove
+- [ ] Populate `faq.json` with common questions OR delete
+- [ ] Populate `testimonials.json` OR delete
+
+#### Phase 4: Advanced Features
+- [ ] Add conversation memory (multi-turn context)
+- [ ] Add more guardrails for edge cases
+- [ ] Consider dynamic loading from JSON (CMS-like)
+- [ ] Add analytics on common questions
+
+### How to Add New Projects
+
+Add to `trainingContext` in `api/src/functions/ask.js`:
+
+```javascript
+// In KEY PROJECTS section:
+- [Project Name] ([Company], [Year]):
+  - Role: [Your roles]
+  - Problem: [What users struggled with]
+  - Research: [Methods and participants]
+  - Key insight: [The aha moment]
+  - Solution: [What you built/designed]
+  - Learnings: [What you'd do differently]
+  - Status: [Shipped/In progress]
+```
+
+Add fallback in `generateFallbackResponse()`:
+
+```javascript
+if (q.includes('keyword') || q.includes('project name')) {
+    return "Brief response about this project...";
+}
+```
+
+### Content Quality Guidelines
+
+**Good training content:**
+- Specific numbers (interviewed 6 users, surveyed 216)
+- Named tools and methods (FigJam, UserZoom Go)
+- Concrete outcomes (reduced abandonment, shipped Q1)
+- Reflection and learnings
+
+**Avoid:**
+- Generic phrases ("user-centered design")
+- Vague claims ("improved the experience")
+- Missing context (what was the problem?)
+
+---
 
 ### January 24, 2026 (Session 1)
 

@@ -172,8 +172,27 @@ CURRENT WORK:
 - Product design across end-to-end cloud infrastructure experiences
 
 KEY PROJECTS:
-- Azure Storage Mover: Led design exploration to reduce setup abandonment during cross-cloud migrations. Clarified mental models around agents, endpoints, and jobs. Introduced Copilot-style guidance to surface prerequisites earlier.
-- Advertising Analytics at Jungle Scout: First net new feature since 2021. Interviewed 6 Amazon sellers, surveyed 216 participants. Led brainstorming workshops and synthesis in FigJam.
+
+1. Azure Storage Mover (Microsoft, 2022–Present):
+   - Role: Product Designer
+   - Problem: Users abandoned setup during cross-cloud migrations due to unclear prerequisites
+   - Solution: Clarified mental models around agents, endpoints, and jobs; introduced Copilot-style guidance to surface prerequisites earlier
+   - Focus: Enterprise cloud infrastructure, agentic UX patterns
+   - Status: Ongoing
+
+2. Advertising Analytics (Jungle Scout, 2021–2022):
+   - Role: Design Owner, Researcher, Workshop Facilitator
+   - Collaboration: Product, Engineering, Marketing, Content, Video teams
+   - Problem: Amazon sellers struggled to interpret PPC metrics and translate data into clear actions
+   - Research: Interviewed 6 Amazon sellers (qualitative), surveyed 216 participants with 17% drop-off (quantitative)
+   - Key insight: Customers were overwhelmed by PPC metrics and lacked clarity on what actions to take to improve ad performance
+   - Key themes: Analyzing PPC performance, generating meaningful insights, learning recommended strategies
+   - Strategy: Ship incrementally—focused v1, then iterate with real usage data
+   - Workshops: Facilitated 60-minute remote brainstorming sessions to align cross-functional stakeholders
+   - Solution: Three-tab structure—Overview (company-level), Sales Activity (ASIN-level), Advertising Analytics (campaign-agnostic insights)
+   - Data viz: Translated complex advertising datasets into actionable visualizations; validated with Amazon sellers using UserZoom Go
+   - Learnings: Proactive stakeholder collaboration prevents late-stage friction; challenging solution-first briefs ensures solving validated problems
+   - Status: Shipped Q1 2022 (first net-new feature since 2021)
 
 RESEARCH APPROACH:
 - Maps hidden decisions users are making without realizing it
@@ -182,9 +201,9 @@ RESEARCH APPROACH:
 - Two-part methodology: qualitative first (interviews), then quantitative (surveys)
 
 SKILLS:
-- Design: Systems thinking, interaction design for complex workflows, agentic UX, human-AI interaction
-- Tools: Figma, FigJam, Azure Portal, React (working knowledge)
-- Domains: Enterprise cloud infrastructure, data migration, developer tools, Copilot and AI products
+- Design: Systems thinking, interaction design for complex workflows, agentic UX, human-AI interaction, data visualization
+- Tools: Figma, FigJam, Azure Portal, React (working knowledge), UserZoom Go
+- Domains: Enterprise cloud infrastructure, data migration, developer tools, Copilot and AI products, B2C SaaS, advertising analytics
 
 VOICE/PERSONALITY:
 - Tone: Warm, thoughtful, quietly confident
@@ -306,13 +325,19 @@ function generateFallbackResponse(question) {
         return "I usually start by mapping the hidden decisions users are making without realizing it. Once those are visible, I validate assumptions with lightweight research, then design guardrails that help users succeed even when they don't fully understand the system.";
     }
     if (q.includes('research')) {
-        return "I take a two-part research approach—qualitative first with interviews, then quantitative validation with surveys. For Advertising Analytics at Jungle Scout, I interviewed 6 Amazon sellers and surveyed 216 participants.";
+        return "I take a two-part research approach—qualitative first with interviews, then quantitative validation with surveys. For Advertising Analytics at Jungle Scout, I interviewed 6 Amazon sellers and surveyed 216 participants to prioritize the most valuable analytics needs.";
     }
-    if (q.includes('microsoft') || q.includes('work') || q.includes('azure')) {
+    if (q.includes('jungle scout') || q.includes('advertising') || q.includes('ppc') || q.includes('analytics')) {
+        return "At Jungle Scout, I led the design for Advertising Analytics—the first net-new feature since 2021. I interviewed 6 Amazon sellers, surveyed 216 participants, and facilitated workshops to translate PPC insights into actionable visualizations. The key insight: sellers were overwhelmed by metrics and needed clarity on what actions to take.";
+    }
+    if (q.includes('copilot') || q.includes('ai') || q.includes('agentic')) {
+        return "I'm currently designing Copilot and agentic experiences within the Azure portal—using AI-assisted patterns to guide users through complex setup, validation, and migration workflows. The focus is on surfacing prerequisites earlier and reducing false completion.";
+    }
+    if (q.includes('microsoft') || q.includes('azure')) {
         return "I'm a Product Designer at Microsoft Azure on the Storage & Cloud Infrastructure team. My recent work focuses on Copilot and agentic experiences—using AI-assisted design patterns to guide users through complex decisions.";
     }
-    if (q.includes('project') || q.includes('recent')) {
-        return "I led design exploration for Azure Storage Mover to reduce setup abandonment during cross-cloud migrations. The work focused on clarifying mental models around agents, endpoints, and jobs, while introducing Copilot-style guidance to surface prerequisites earlier.";
+    if (q.includes('project') || q.includes('recent') || q.includes('work')) {
+        return "My two key projects are **Azure Storage Mover** at Microsoft, where I'm reducing setup abandonment in cross-cloud migrations with Copilot-style guidance, and **Advertising Analytics** at Jungle Scout, where I helped Amazon sellers understand PPC performance through research-driven data visualization.";
     }
     if (q.includes('hello') || q.includes('hi')) {
         return "Hey! I'm Grant—a product designer at Microsoft Azure focused on making complex systems legible. Ask me about my design process, projects, or experience. What would you like to know?";

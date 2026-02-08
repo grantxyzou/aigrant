@@ -42,7 +42,7 @@ export default function App(){
   const sidebarRef = useRef(null)
   const contentRef = useRef(null)
   
-  const fullText = "you've reached the edge. i am still loading what's next..."
+  const fullText = "Flip the toggle to see the version powered by AI"
 
   const API_URL = import.meta.env.DEV 
     ? 'http://localhost:7071/api/ask' 
@@ -282,32 +282,31 @@ export default function App(){
       {/* Scrollable Content */}
       <div className={`responsive-container ${aiMode ? 'chat-active' : ''}`}>
         
-        {/* Main Content */}
-        <div className="main-container" ref={contentRef}>
-          {/* Sidebar */}
-          <div className="sidebar" ref={sidebarRef}>
-            <div className="sidebar-bio">
-              <div className="bio-text">
-                Grant remixes music, experiments with new technologies, and keeps rhythm in life through badminton and running. He sees design as storytelling: blending experience and connection, whether in beats, interfaces, or shared moments.
-              </div>
-            </div>
-            
-            {/* Desktop Social Links */}
-            <div className="social-link">
-              <FaInstagram className="social-icon-svg" />
-              <a href="https://instagram.com/granitez" target="_blank" rel="noopener noreferrer" className="social-text">@granitez</a>
-            </div>
-            <div className="social-link">
-              <FaLinkedinIn className="social-icon-svg" />
-              <a href="https://www.linkedin.com/in/grantxyzou" target="_blank" rel="noopener noreferrer" className="social-text">linkedin.com/in/grantxyzou</a>
-            </div>
-            <div className="social-link social-link-last">
-              <FaGithub className="social-icon-svg" />
-              <a href="https://github.com/grantxyzou" target="_blank" rel="noopener noreferrer" className="social-text">github.com/grantxyzou</a>
+        {/* Sidebar - Now sibling to main-container */}
+        <div className="sidebar" ref={sidebarRef}>
+          <div className="sidebar-bio">
+            <div className="bio-text">
+              Grant remixes music, experiments with new technologies, and keeps rhythm in life through badminton and running. He sees design as storytelling: blending experience and connection, whether in beats, interfaces, or shared moments.
             </div>
           </div>
           
-          {/* Main Content */}
+          {/* Desktop Social Links */}
+          <div className="social-link">
+            <FaInstagram className="social-icon-svg" />
+            <a href="https://instagram.com/granitez" target="_blank" rel="noopener noreferrer" className="social-text">@granitez</a>
+          </div>
+          <div className="social-link">
+            <FaLinkedinIn className="social-icon-svg" />
+            <a href="https://www.linkedin.com/in/grantxyzou" target="_blank" rel="noopener noreferrer" className="social-text">linkedin.com/in/grantxyzou</a>
+          </div>
+          <div className="social-link social-link-last">
+            <FaGithub className="social-icon-svg" />
+            <a href="https://github.com/grantxyzou" target="_blank" rel="noopener noreferrer" className="social-text">github.com/grantxyzou</a>
+          </div>
+        </div>
+        
+        {/* Main Content */}
+        <div className="main-container" ref={contentRef}>
           <div className="content">
             {/* About Section */}
             <div className="section about-section">
