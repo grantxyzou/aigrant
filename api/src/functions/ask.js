@@ -86,15 +86,17 @@ app.http('ask', {
             let userQuestion = 'Hello';
             let isIntroRequest = false;
             
+            let conversationMessages = null;
             if (request.method === 'POST') {
                 const body = await request.json();
-                userQuestion = body?.question || body?.message || 'Hello';
                 isIntroRequest = body?.isIntroRequest === true;
+                conversationMessages = body?.messages?.length > 0 ? body.messages : null;
+                userQuestion = body?.question || body?.message || conversationMessages?.at(-1)?.content || 'Hello';
             } else {
                 userQuestion = request.query.get('question') || 'Hello';
             }
-            
-            context.log('User question:', userQuestion, 'isIntroRequest:', isIntroRequest);
+
+            context.log('Request type:', isIntroRequest ? 'intro' : conversationMessages ? 'conversation' : 'legacy');
 
             // Get Azure OpenAI config from environment
             const endpoint = process.env.AZURE_OPENAI_ENDPOINT;
@@ -118,7 +120,7 @@ app.http('ask', {
             if (isIntroRequest) {
                 const introPrompt = `Write a one-sentence playful intro about Grant for his portfolio. Max 15 words. Be witty and intriguing. Don't use quotes. Examples of tone: "Making cloud feel less cloudy at Azure." or "Designs for the confused, works at Microsoft."`;
 
-                const apiUrl = `${endpoint}/openai/deployments/${deployment}/chat/completions?api-version=2024-08-01-preview`;
+                const apiUrl = `${endpoint}/openai/deployments/${deployment}/chat/completions?api-version=2024-10-21`;
                 
                 const response = await fetch(apiUrl, {
                     method: 'POST',
@@ -257,7 +259,7 @@ Example decline response:
 ${trainingContext}`;
 
             // Call Azure OpenAI
-            const apiUrl = `${endpoint}/openai/deployments/${deployment}/chat/completions?api-version=2024-08-01-preview`;
+            const apiUrl = `${endpoint}/openai/deployments/${deployment}/chat/completions?api-version=2024-10-21`;
             
             const response = await fetch(apiUrl, {
                 method: 'POST',
@@ -268,7 +270,7 @@ ${trainingContext}`;
                 body: JSON.stringify({
                     messages: [
                         { role: 'system', content: systemPrompt },
-                        { role: 'user', content: userQuestion }
+                        ...(conversationMessages || [{ role: 'user', content: userQuestion }])
                     ],
                     max_tokens: 500,
                     temperature: 0.7
