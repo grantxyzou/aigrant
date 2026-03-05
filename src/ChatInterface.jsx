@@ -1,8 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-
-const API_URL = import.meta.env.DEV 
-  ? 'http://localhost:7071/api/ask' 
-  : '/api/ask'
+import { API_URL } from './config'
 
 export default function ChatInterface() {
   const [messages, setMessages] = useState([])
@@ -36,8 +33,7 @@ export default function ChatInterface() {
     } else {
       document.body.style.overflow = ''
     }
-    
-    // Cleanup on unmount
+
     return () => {
       document.body.style.overflow = ''
     }
@@ -50,11 +46,11 @@ export default function ChatInterface() {
         setShowPrompts(false)
       }
     }
-    
+
     if (showPrompts) {
       document.addEventListener('mousedown', handleClickOutside)
     }
-    
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
@@ -70,30 +66,29 @@ export default function ChatInterface() {
     if (!inputValue.trim()) return
 
     const userMessage = { role: 'user', content: inputValue }
-    setMessages(prev => [...prev, userMessage])
-    const question = inputValue
+    const updatedMessages = [...messages, userMessage]
+    setMessages(updatedMessages)
     setInputValue('')
     setIsLoading(true)
-    setIsOverlayOpen(true) // Open overlay when sending
+    setIsOverlayOpen(true)
 
     try {
       const response = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question })
+        body: JSON.stringify({ messages: updatedMessages })
       })
 
       const data = await response.json()
-      
-      // Handle rate limiting
+
       if (response.status === 429) {
-        setMessages(prev => [...prev, { 
-          role: 'assistant', 
+        setMessages(prev => [...prev, {
+          role: 'assistant',
           content: data.error || "Slow down! You're asking too many questions. Try again in a couple minutes."
         }])
         return
       }
-      
+
       if (data.success) {
         setMessages(prev => [...prev, { role: 'assistant', content: data.response }])
       } else {
@@ -101,29 +96,16 @@ export default function ChatInterface() {
       }
     } catch (error) {
       console.error('Chat error:', error)
-      const fallbackResponse = generateFallbackResponse(question)
-      setMessages(prev => [...prev, { role: 'assistant', content: fallbackResponse }])
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: "I'm Grant, a product designer at Microsoft Azure. I approach design as storytelling - blending experience and connection. The API is currently unavailable, but feel free to explore my portfolio or try again later!"
+      }])
     } finally {
       setIsLoading(false)
     }
   }
 
-  const generateFallbackResponse = (question) => {
-    return "I'm Grant, a product designer at Microsoft Azure. I approach design as storytelling - blending experience and connection. The API is currently unavailable, but feel free to explore my portfolio or try again later!"
-  }
-
-  const isRelevantQuestion = (question) => {
-    const grantKeywords = [
-      'grant', 'design', 'portfolio', 'project', 'ux', 'ui', 'microsoft',
-      'experience', 'work', 'skill', 'research', 'case study', 'process',
-      'hire', 'contact', 'background', 'music', 'badminton', 'you', 'your'
-    ];
-    const lowerQ = question.toLowerCase();
-    return grantKeywords.some(keyword => lowerQ.includes(keyword)) || 
-           question.length < 50; // Allow short questions, let AI handle
-  };
-
-  const handleKeyPress = (e) => {
+  const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       sendMessage()
@@ -143,22 +125,19 @@ export default function ChatInterface() {
     setIsOverlayOpen(true)
   }
 
-  // Format message content with basic markdown support
   const formatMessage = (content) => {
     if (!content) return null
-    
-    // Split into paragraphs
+
     const paragraphs = content.split(/\n\n+/)
-    
+
     return paragraphs.map((paragraph, pIndex) => {
-      // Check if it's a bullet list
       const lines = paragraph.split('\n')
-      const isBulletList = lines.every(line => 
-        line.trim().startsWith('- ') || 
-        line.trim().startsWith('• ') || 
+      const isBulletList = lines.every(line =>
+        line.trim().startsWith('- ') ||
+        line.trim().startsWith('• ') ||
         line.trim() === ''
       )
-      
+
       if (isBulletList && lines.some(l => l.trim())) {
         return (
           <ul key={pIndex} className="message-list">
@@ -170,12 +149,11 @@ export default function ChatInterface() {
           </ul>
         )
       }
-      
-      // Check for numbered list
-      const isNumberedList = lines.every(line => 
+
+      const isNumberedList = lines.every(line =>
         /^\d+[.)]\s/.test(line.trim()) || line.trim() === ''
       )
-      
+
       if (isNumberedList && lines.some(l => l.trim())) {
         return (
           <ol key={pIndex} className="message-list">
@@ -187,21 +165,17 @@ export default function ChatInterface() {
           </ol>
         )
       }
-      
-      // Regular paragraph
+
       return <p key={pIndex}>{formatInlineText(paragraph)}</p>
     })
   }
-  
-  // Format inline text (bold, italic)
+
   const formatInlineText = (text) => {
-    // Handle **bold** and *italic*
     const parts = []
     let remaining = text
     let key = 0
-    
+
     while (remaining) {
-      // Check for bold
       const boldMatch = remaining.match(/\*\*(.+?)\*\*/)
       if (boldMatch) {
         const index = remaining.indexOf(boldMatch[0])
@@ -212,14 +186,20 @@ export default function ChatInterface() {
         remaining = remaining.slice(index + boldMatch[0].length)
         continue
       }
-      
-      // No more formatting, add rest
+
       parts.push(<span key={key++}>{remaining}</span>)
       break
     }
-    
+
     return parts.length > 0 ? parts : text
   }
+
+  const SendIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="22" y1="2" x2="11" y2="13"></line>
+      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+    </svg>
+  )
 
   return (
     <>
@@ -231,7 +211,7 @@ export default function ChatInterface() {
             <div className="prompts-popup" ref={promptsRef}>
               <div className="prompts-header">Try asking...</div>
               {suggestedPrompts.map((prompt, index) => (
-                <button 
+                <button
                   key={index}
                   className="prompt-chip"
                   onClick={() => handlePromptClick(prompt)}
@@ -241,9 +221,9 @@ export default function ChatInterface() {
               ))}
             </div>
           )}
-          
+
           <div className={`chat-input-container ${showPrompts ? 'prompts-open' : ''}`}>
-            <button 
+            <button
               className="prompts-toggle-button"
               onClick={() => setShowPrompts(!showPrompts)}
               aria-label="Show suggested prompts"
@@ -255,29 +235,26 @@ export default function ChatInterface() {
                 <path d="M19 2l1 3 3 1-3 1-1 3-1-3-3-1 3-1z" fill="currentColor" stroke="none"></path>
               </svg>
             </button>
-            
+
             <textarea
               ref={inputRef}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyDown}
               placeholder="Ask anything about Grant..."
               disabled={isLoading}
               rows={1}
-          />
-          <button 
-            onClick={sendMessage} 
-            disabled={isLoading || !inputValue.trim()}
-            aria-label="Send message"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="22" y1="2" x2="11" y2="13"></line>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
-          </button>
+            />
+            <button
+              onClick={sendMessage}
+              disabled={isLoading || !inputValue.trim()}
+              aria-label="Send message"
+            >
+              <SendIcon />
+            </button>
           </div>
         </div>
-        
+
         {/* Expand button - shows when there are messages and overlay is closed */}
         {messages.length > 0 && (
           <button className="expand-chat-button" onClick={openOverlay} aria-label="Expand chat">
@@ -290,9 +267,8 @@ export default function ChatInterface() {
 
       {/* Chat Overlay */}
       <div className={`chat-overlay ${isOverlayOpen ? 'open' : ''}`}>
-        {/* Background glow layer */}
         <div className="chat-overlay-bg-glow" />
-        
+
         <div className="chat-overlay-header">
           <button className="close-button" onClick={closeOverlay} aria-label="Minimize chat">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -319,7 +295,7 @@ export default function ChatInterface() {
               </div>
             </div>
           ))}
-          
+
           {isLoading && (
             <div className="message assistant loading">
               <div className="message-content">
@@ -331,7 +307,7 @@ export default function ChatInterface() {
               </div>
             </div>
           )}
-          
+
           <div ref={messagesEndRef} />
         </div>
 
@@ -340,20 +316,17 @@ export default function ChatInterface() {
           <textarea
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            onKeyPress={handleKeyPress}
+            onKeyDown={handleKeyDown}
             placeholder="Ask a follow-up question..."
             disabled={isLoading}
             rows={1}
           />
-          <button 
-            onClick={sendMessage} 
+          <button
+            onClick={sendMessage}
             disabled={isLoading || !inputValue.trim()}
             aria-label="Send message"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="22" y1="2" x2="11" y2="13"></line>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
+            <SendIcon />
           </button>
         </div>
       </div>
