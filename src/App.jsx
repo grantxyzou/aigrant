@@ -4,121 +4,58 @@ import { FaInstagram, FaGithub, FaLinkedinIn } from 'react-icons/fa'
 import ChatInterface from './ChatInterface'
 
 const experience = [
-  { 
-    company: 'Microsoft · Azure', 
-    period: '2022 – Present', 
+  {
+    company: 'Microsoft · Azure',
+    period: '2022 – Present',
     description: 'Designing across cost management, cloud infrastructure, and Copilot experiences. I began in Cost Management, focused on transparency and predictability, then moved into Azure Core to work closer to foundational infrastructure and agent-assisted workflows. Across both, the work centers on helping customers navigate complex systems where mistakes are costly and often discovered too late.'
   },
-  { 
-    company: 'Jungle Scout', 
-    period: '2020 – 2022', 
+  {
+    company: 'Jungle Scout',
+    period: '2020 – 2022',
     description: 'Designed analytics and data visualization for e-commerce sellers, translating dense operational data into actionable insights that supported real business decisions under uncertainty.'
   },
-  { 
-    company: 'Visier', 
-    period: '2018 – 2019', 
-    description: 'Worked on people analytics, contributing to experiences where data intersected with organizational dynamics, hiring, and performance narratives.\n\nEarly in my career, I made mistakes, learned quickly, and built resilience. Visier time allowed me develop both the judgment and relationships that continue to shape how I design today.'
+  {
+    company: 'Visier',
+    period: '2018 – 2019',
+    description: 'Worked on people analytics, contributing to experiences where data intersected with organizational dynamics, hiring, and performance narratives.\n\nEarly in my career, I made mistakes, learned quickly, and built resilience. Visier allowed me to develop both the judgment and relationships that continue to shape how I design today.'
   },
 ]
+
+const SocialLinks = () => (
+  <>
+    <div className="social-link">
+      <FaInstagram className="social-icon-svg" />
+      <a href="https://instagram.com/granitez" target="_blank" rel="noopener noreferrer" className="social-text">@granitez</a>
+    </div>
+    <div className="social-link">
+      <FaLinkedinIn className="social-icon-svg" />
+      <a href="https://www.linkedin.com/in/grantxyzou" target="_blank" rel="noopener noreferrer" className="social-text">linkedin.com/in/grantxyzou</a>
+    </div>
+    <div className="social-link social-link-last">
+      <FaGithub className="social-icon-svg" />
+      <a href="https://github.com/grantxyzou" target="_blank" rel="noopener noreferrer" className="social-text">github.com/grantxyzou</a>
+    </div>
+  </>
+)
 
 export default function App(){
   const [typewriterText, setTypewriterText] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const [hasAnimated, setHasAnimated] = useState(false)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const [showChat, setShowChat] = useState(false)
-  const [introBlurb, setIntroBlurb] = useState('')
-  const [displayedBlurb, setDisplayedBlurb] = useState('')
-  const [isLoadingBlurb, setIsLoadingBlurb] = useState(true)
   const [isScrolled, setIsScrolled] = useState(false)
   const [aiMode, setAiMode] = useState(() => {
-    // Check URL hash - only enable AI mode with explicit hash
     const hash = window.location.hash
     if (hash === '#ai' || hash === '#chat-grant2026') return true
-    // Default to OFF - no AI mode without hash
     return false
   })
   const footerRef = useRef(null)
-  const sidebarRef = useRef(null)
-  const contentRef = useRef(null)
-  
+
   const fullText = "Flip the toggle to see the version powered by AI"
 
-  const API_URL = import.meta.env.DEV 
-    ? 'http://localhost:7071/api/ask' 
-    : '/api/ask'
 
-  const defaultBlurb = "Designing for the confused at Microsoft Azure."
-
-  // Typewriter effect for blurb
+  // Sync URL hash with AI mode
   useEffect(() => {
-    if (!introBlurb || isLoadingBlurb) return
-    
-    let index = 0
-    setDisplayedBlurb('')
-    
-    const typeChar = () => {
-      if (index < introBlurb.length) {
-        setDisplayedBlurb(introBlurb.slice(0, index + 1))
-        index++
-        // Random delay between 30-80ms for organic feel
-        const delay = 30 + Math.random() * 50
-        setTimeout(typeChar, delay)
-      }
-    }
-    
-    // Small initial delay before starting
-    setTimeout(typeChar, 200)
-  }, [introBlurb, isLoadingBlurb])
-
-  // Fetch dynamic intro blurb on page load (only if AI mode is on)
-  useEffect(() => {
-    if (!aiMode) {
-      setIntroBlurb(defaultBlurb)
-      setIsLoadingBlurb(false)
-      return
-    }
-    
-    const fetchIntroBlurb = async () => {
-      // Check session storage first to avoid repeated calls
-      const cached = sessionStorage.getItem('introBlurb')
-      if (cached) {
-        setIntroBlurb(cached)
-        setIsLoadingBlurb(false)
-        return
-      }
-
-      try {
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            question: '__INTRO_BLURB__',
-            isIntroRequest: true 
-          })
-        })
-        
-        const data = await response.json()
-        if (data.success && data.response) {
-          setIntroBlurb(data.response)
-          sessionStorage.setItem('introBlurb', data.response)
-        } else {
-          setIntroBlurb(defaultBlurb)
-        }
-      } catch (error) {
-        console.error('Failed to fetch intro:', error)
-        setIntroBlurb(defaultBlurb)
-      } finally {
-        setIsLoadingBlurb(false)
-      }
-    }
-
-    fetchIntroBlurb()
-  }, [aiMode])
-  
-  // Sync URL hash with AI mode (don't persist to localStorage)
-  useEffect(() => {
-    // Update URL hash (but don't override secret hash)
     const currentHash = window.location.hash
     if (currentHash !== '#chat-grant2026') {
       if (aiMode) {
@@ -128,22 +65,19 @@ export default function App(){
       }
     }
   }, [aiMode])
-  
-  // Toggle AI mode handler
+
   const toggleAiMode = () => {
     setAiMode(prev => !prev)
-    // Clear cached blurb when toggling
-    sessionStorage.removeItem('introBlurb')
   }
-  
+
   const startTypewriter = () => {
     if (hasAnimated) return
-    
+
     setHasAnimated(true)
     setIsTyping(true)
     let index = 0
     setTypewriterText('')
-    
+
     const typeInterval = setInterval(() => {
       if (index < fullText.length) {
         setTypewriterText(fullText.slice(0, index + 1))
@@ -154,42 +88,14 @@ export default function App(){
       }
     }, 50)
   }
-  
-  // Chat access: #ai enables chat, #chat-grant2026 is secret override
-  useEffect(() => {
-    const hash = window.location.hash
-    
-    // Secret override - always enable chat
-    if (hash === '#chat-grant2026') {
-      setShowChat(true)
-      setAiMode(true)
-      sessionStorage.setItem('chatEnabled', 'true')
-    } 
-    // #ai hash - enable AI mode and chat
-    else if (hash === '#ai') {
-      setAiMode(true)
-      setShowChat(true)
-    }
-    // Check if AI mode is on (from localStorage)
-    else if (aiMode) {
-      setShowChat(true)
-    }
-  }, [])
-  
-  // Sync showChat with aiMode
-  useEffect(() => {
-    setShowChat(aiMode)
-  }, [aiMode])
 
   useEffect(() => {
-    // Mouse tracking for parallax effect
     const handleMouseMove = (e) => {
       const x = (e.clientX / window.innerWidth - 0.5) * 2
       const y = (e.clientY / window.innerHeight - 0.5) * 2
       setMousePosition({ x, y })
     }
 
-    // Scroll tracking for sticky header
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50)
     }
@@ -197,7 +103,6 @@ export default function App(){
     window.addEventListener('mousemove', handleMouseMove)
     window.addEventListener('scroll', handleScroll)
 
-    // Intersection observer for typewriter
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -208,18 +113,17 @@ export default function App(){
       },
       { threshold: 0.1 }
     )
-    
+
     if (footerRef.current) {
       observer.observe(footerRef.current)
     }
-    
-    // Fallback: start animation after 2 seconds if not triggered by intersection
+
     const fallbackTimer = setTimeout(() => {
       if (!hasAnimated) {
         startTypewriter()
       }
     }, 2000)
-    
+
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('scroll', handleScroll)
@@ -227,24 +131,24 @@ export default function App(){
       clearTimeout(fallbackTimer)
     }
   }, [])
+
   return (
     <>
       {/* Fixed Background */}
-      <div 
+      <div
         className={`bg-aurora ${aiMode ? 'chat-active' : ''}`}
         style={{
           transform: `translate(${mousePosition.x * 5}px, ${mousePosition.y * 3}px)`
         }}
       >
-        {/* Additional gradient layer */}
-        <div 
+        <div
           className="gradient-layer"
           style={{
             transform: `rotate(-58deg) translate(${mousePosition.x * -8}px, ${mousePosition.y * 6}px)`
           }}
         ></div>
       </div>
-      
+
       {/* Sticky Header */}
       <header className={`header-sticky ${isScrolled ? 'scrolled' : ''}`}>
         <div className="header-container">
@@ -264,9 +168,9 @@ export default function App(){
               )}
               <label className="ai-toggle">
                 <div className="toggle-switch">
-                  <input 
-                    type="checkbox" 
-                    checked={aiMode} 
+                  <input
+                    type="checkbox"
+                    checked={aiMode}
                     onChange={toggleAiMode}
                   />
                   <span className="toggle-slider">
@@ -281,32 +185,19 @@ export default function App(){
 
       {/* Scrollable Content */}
       <div className={`responsive-container ${aiMode ? 'chat-active' : ''}`}>
-        
-        {/* Sidebar - Now sibling to main-container */}
-        <div className="sidebar" ref={sidebarRef}>
+
+        {/* Sidebar */}
+        <div className="sidebar">
           <div className="sidebar-bio">
             <div className="bio-text">
               Grant remixes music, experiments with new technologies, and keeps rhythm in life through badminton and running. He sees design as storytelling: blending experience and connection, whether in beats, interfaces, or shared moments.
             </div>
           </div>
-          
-          {/* Desktop Social Links */}
-          <div className="social-link">
-            <FaInstagram className="social-icon-svg" />
-            <a href="https://instagram.com/granitez" target="_blank" rel="noopener noreferrer" className="social-text">@granitez</a>
-          </div>
-          <div className="social-link">
-            <FaLinkedinIn className="social-icon-svg" />
-            <a href="https://www.linkedin.com/in/grantxyzou" target="_blank" rel="noopener noreferrer" className="social-text">linkedin.com/in/grantxyzou</a>
-          </div>
-          <div className="social-link social-link-last">
-            <FaGithub className="social-icon-svg" />
-            <a href="https://github.com/grantxyzou" target="_blank" rel="noopener noreferrer" className="social-text">github.com/grantxyzou</a>
-          </div>
+          <SocialLinks />
         </div>
-        
+
         {/* Main Content */}
-        <div className="main-container" ref={contentRef}>
+        <div className="main-container">
           <div className="content">
             {/* About Section */}
             <div className="section about-section">
@@ -316,7 +207,7 @@ export default function App(){
                 </div>
               </div>
             </div>
-            
+
             {/* Experience Section */}
             <div className="section experience-section">
               <div className="section-title">Work experience</div>
@@ -349,10 +240,10 @@ export default function App(){
                 ))}
               </div>
             </div>
-            
+
             {/* Chat Interface - Only show when AI mode is on */}
-            {aiMode && showChat && <ChatInterface />}
-            
+            {aiMode && <ChatInterface />}
+
             {/* Footer */}
             <div className="footer" ref={footerRef}>
               <div className="footer-content">
@@ -363,21 +254,10 @@ export default function App(){
               </div>
             </div>
           </div>
-          
-          {/* Social Links - Mobile Bottom */}
+
+          {/* Social Links - Mobile */}
           <div className="social-links-mobile">
-            <div className="social-link">
-              <FaInstagram className="social-icon-svg" />
-              <a href="https://instagram.com/granitez" target="_blank" rel="noopener noreferrer" className="social-text">@granitez</a>
-            </div>
-            <div className="social-link">
-              <FaLinkedinIn className="social-icon-svg" />
-              <a href="https://www.linkedin.com/in/grantxyzou" target="_blank" rel="noopener noreferrer" className="social-text">linkedin.com/in/grantxyzou</a>
-            </div>
-            <div className="social-link social-link-last">
-              <FaGithub className="social-icon-svg" />
-              <a href="https://github.com/grantxyzou" target="_blank" rel="noopener noreferrer" className="social-text">github.com/grantxyzou</a>
-            </div>
+            <SocialLinks />
           </div>
         </div>
       </div>
