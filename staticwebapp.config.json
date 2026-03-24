@@ -5,6 +5,11 @@
   },
   "routes": [
     {
+      "route": "/bpm",
+      "redirect": "https://badminton-app-gzendxb6fzefafgm.canadacentral-01.azurewebsites.net/bpm",
+      "statusCode": 302
+    },
+    {
       "route": "/api/*",
       "allowedRoles": ["anonymous"]
     }
