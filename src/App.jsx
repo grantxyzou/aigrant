@@ -1,25 +1,49 @@
 import './App.css'
 import { useState, useEffect, useRef } from 'react'
-import { FaInstagram, FaGithub, FaLinkedinIn } from 'react-icons/fa'
+import { FaInstagram, FaGithub, FaLinkedinIn, FaRegFileAlt } from 'react-icons/fa'
 import ChatInterface from './ChatInterface'
 
 const experience = [
   {
     company: 'Microsoft · Azure',
     period: '2022 – Present',
-    description: 'Designing across cost management, cloud infrastructure, and Copilot experiences. I began in Cost Management, focused on transparency and predictability, then moved into Azure Core to work closer to foundational infrastructure and agent-assisted workflows. Across both, the work centers on helping customers navigate complex systems where mistakes are costly and often discovered too late.'
+    description: 'Designing across cost management, cloud infrastructure, and Copilot experiences. I began in Cost Management, focused on transparency and predictability, then moved into Azure Core to work closer to foundational infrastructure and agent-assisted workflows. Across both, the work centers on helping customers navigate complex systems where mistakes are costly and often discovered too late.',
+    tags: ['Azure Portal', 'Copilot / AI', 'Cloud Infrastructure', 'Enterprise UX', 'Agentic Design'],
+    viewWork: null
   },
   {
     company: 'Jungle Scout',
     period: '2020 – 2022',
-    description: 'Designed analytics and data visualization for e-commerce sellers, translating dense operational data into actionable insights that supported real business decisions under uncertainty.'
+    description: 'Designed analytics and data visualization for e-commerce sellers, translating dense operational data into actionable insights that supported real business decisions under uncertainty.',
+    tags: ['Analytics UX', 'Data Visualization', 'User Research', 'E-commerce', 'B2C SaaS'],
+    viewWork: null
   },
   {
     company: 'Visier',
     period: '2018 – 2019',
-    description: 'Worked on people analytics, contributing to experiences where data intersected with organizational dynamics, hiring, and performance narratives.\n\nEarly in my career, I made mistakes, learned quickly, and built resilience. Visier allowed me to develop both the judgment and relationships that continue to shape how I design today.'
+    description: 'Worked on people analytics, contributing to experiences where data intersected with organizational dynamics, hiring, and performance narratives.\n\nEarly in my career, I made mistakes, learned quickly, and built resilience. Visier allowed me to develop both the judgment and relationships that continue to shape how I design today.',
+    tags: ['People Analytics', 'Data Viz', 'Information Architecture', 'B2B SaaS', 'HR Tech'],
+    viewWork: null
   },
 ]
+
+const TooltipLink = ({ href, tooltip, external, linkClass, children }) => (
+  <span className="tooltip-link-wrapper">
+    {href ? (
+      <a
+        href={href}
+        className={`dotted-link${linkClass ? ` ${linkClass}` : ''}`}
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noopener noreferrer' : undefined}
+      >
+        {children}
+      </a>
+    ) : (
+      <span className={`dotted-link${linkClass ? ` ${linkClass}` : ''}`}>{children}</span>
+    )}
+    <span className="tooltip-glass">{tooltip}</span>
+  </span>
+)
 
 const SocialLinks = () => (
   <>
@@ -31,9 +55,13 @@ const SocialLinks = () => (
       <FaLinkedinIn className="social-icon-svg" />
       <a href="https://www.linkedin.com/in/grantxyzou" target="_blank" rel="noopener noreferrer" className="social-text">linkedin.com/in/grantxyzou</a>
     </div>
-    <div className="social-link social-link-last">
+    <div className="social-link">
       <FaGithub className="social-icon-svg" />
       <a href="https://github.com/grantxyzou" target="_blank" rel="noopener noreferrer" className="social-text">github.com/grantxyzou</a>
+    </div>
+    <div className="social-link social-link-last social-link-disabled">
+      <FaRegFileAlt className="social-icon-svg" />
+      <span className="social-text">Resume</span>
     </div>
   </>
 )
@@ -51,7 +79,7 @@ export default function App(){
   })
   const footerRef = useRef(null)
 
-  const fullText = "Flip the toggle to see the version powered by AI"
+  const fullText = "A portfolio of design process, research, and complex systems work."
 
 
   // Sync URL hash with AI mode
@@ -163,9 +191,6 @@ export default function App(){
               </div>
             </div>
             <div className="header-right">
-              {aiMode && (
-                <span className="ai-disclaimer">AI-generated content are being refined and improved</span>
-              )}
               <label className="ai-toggle">
                 <div className="toggle-switch">
                   <input
@@ -190,7 +215,7 @@ export default function App(){
         <div className="sidebar">
           <div className="sidebar-bio">
             <div className="bio-text">
-              Grant remixes music, experiments with new technologies, and keeps rhythm in life through badminton and running. He sees design as storytelling: blending experience and connection, whether in beats, interfaces, or shared moments.
+              Grant <TooltipLink tooltip="coming soon">remixes music</TooltipLink>, <TooltipLink tooltip="coming soon">experiments with new technologies</TooltipLink>, and keeps rhythm in life through <TooltipLink href="/bpm" tooltip="BPM ↗" external linkClass="dotted-link-court">badminton</TooltipLink> and running. He sees design as storytelling: blending experience and connection, whether in beats, interfaces, or shared moments.
             </div>
           </div>
           <SocialLinks />
@@ -234,6 +259,16 @@ export default function App(){
                       )}
                       {exp.location && (
                         <div className="experience-location">{exp.location}</div>
+                      )}
+                      {exp.tags && (
+                        <div className="experience-tags">
+                          {exp.tags.map((tag, k) => (
+                            <span key={k} className="experience-tag">{tag}</span>
+                          ))}
+                        </div>
+                      )}
+                      {exp.viewWork && (
+                        <a href={exp.viewWork} className="experience-view-work">→ View work</a>
                       )}
                     </div>
                   </div>

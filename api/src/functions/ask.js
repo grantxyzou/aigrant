@@ -1,4 +1,5 @@
 const { app } = require('@azure/functions');
+const { personality, fewShotExamples } = require('../../training');
 
 // Simple in-memory rate limiter
 const rateLimitStore = new Map();
@@ -101,7 +102,7 @@ app.http('ask', {
             // Get Azure OpenAI config from environment
             const endpoint = process.env.AZURE_OPENAI_ENDPOINT;
             const apiKey = process.env.AZURE_OPENAI_API_KEY;
-            const deployment = process.env.AZURE_OPENAI_DEPLOYMENT || 'gpt-4o';
+            const deployment = process.env.AZURE_OPENAI_DEPLOYMENT || 'gpt-4o-mini';
 
             if (!endpoint || !apiKey) {
                 // Fallback to local response if not configured
@@ -168,14 +169,16 @@ DESIGN PHILOSOPHY:
 
 CURRENT WORK (Microsoft Azure, 2022–Present):
 - Product design for enterprise cloud infrastructure experiences
-- Designing for complex setup flows and onboarding in technical products
-- Reducing friction in multi-step workflows
+- Designing Copilot and agentic experiences within the Azure portal
+- Shaping AI-assisted guidance for setup, validation, and migration workflows
+- Reducing false completion in complex enterprise flows
 - Making technical systems more legible for users
-- Note: Specific project details are confidential
+- Partnering closely with PM and engineering on AI-driven features
+- Note: Specific project names and details are confidential
 
 KEY PROJECTS:
 
-1. Advertising Analytics (Jungle Scout, 2021–2022):
+1. Advertising Analytics (Jungle Scout, 2020–2022):
    - Role: Design Owner, Researcher, Workshop Facilitator
    - Collaboration: Product, Engineering, Marketing, Content, Video teams
    - Problem: Amazon sellers struggled to interpret PPC metrics and translate data into clear actions
@@ -260,7 +263,12 @@ ${trainingContext}`;
 
             // Call Azure OpenAI
             const apiUrl = `${endpoint}/openai/deployments/${deployment}/chat/completions?api-version=2024-10-21`;
-            
+
+            const fewShots = fewShotExamples.flatMap(ex => [
+                { role: 'user', content: ex.user },
+                { role: 'assistant', content: ex.assistant }
+            ]);
+
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
@@ -270,6 +278,7 @@ ${trainingContext}`;
                 body: JSON.stringify({
                     messages: [
                         { role: 'system', content: systemPrompt },
+                        ...fewShots,
                         ...(conversationMessages || [{ role: 'user', content: userQuestion }])
                     ],
                     max_tokens: 500,
@@ -333,7 +342,7 @@ function generateFallbackResponse(question) {
     if (q.includes('research')) {
         return "I take a two-part research approach—qualitative first with interviews, then quantitative validation with surveys. For Advertising Analytics at Jungle Scout, I interviewed 6 Amazon sellers and surveyed 216 participants to prioritize the most valuable analytics needs.";
     }
-    if (q.includes('jungle scout') || q.includes('advertising') || q.includes('ppc') || q.includes('analytics')) {
+    if (q.includes('jungle') || q.includes('advertising') || q.includes('ppc') || q.includes('analytics')) {
         return "At Jungle Scout, I led the design for Advertising Analytics—the first net-new feature since 2021. I interviewed 6 Amazon sellers, surveyed 216 participants, and facilitated workshops to translate PPC insights into actionable visualizations. The key insight: sellers were overwhelmed by metrics and needed clarity on what actions to take.";
     }
     if (q.includes('visier') || q.includes('people analytics') || q.includes('hr analytics')) {

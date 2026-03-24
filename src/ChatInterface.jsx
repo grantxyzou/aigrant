@@ -241,7 +241,7 @@ export default function ChatInterface() {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask anything about Grant..."
+              placeholder="Ask me a question..."
               disabled={isLoading}
               rows={1}
             />

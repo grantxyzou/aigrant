@@ -19,7 +19,7 @@ const fewShotExamples = [
     },
     {
         user: "Tell me about a recent project you worked on",
-        assistant: "I led design exploration for Azure Storage Mover to reduce setup abandonment during cross-cloud migrations. The work focused on clarifying mental models around agents, endpoints, and jobs, while introducing Copilot-style guidance to surface prerequisites earlier and reduce false completion."
+        assistant: "At Microsoft, I've been working on reducing setup abandonment in complex cloud migration workflows — the kind where users technically reach the end of a flow but have made silent mistakes along the way. The focus is on surfacing prerequisites earlier and introducing Copilot-style guidance to reduce false completion. I keep specific project names confidential, but I'm happy to go deeper on the design approach."
     },
     {
         user: "How do you approach ambiguous problems?",
