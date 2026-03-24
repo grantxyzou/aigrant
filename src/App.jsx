@@ -41,7 +41,7 @@ const TooltipLink = ({ href, tooltip, external, linkClass, children }) => (
     ) : (
       <span className={`dotted-link${linkClass ? ` ${linkClass}` : ''}`}>{children}</span>
     )}
-    <span className="tooltip-glass">{tooltip}</span>
+    <span className="tooltip-glass" aria-hidden="true">{tooltip}</span>
   </span>
 )
 

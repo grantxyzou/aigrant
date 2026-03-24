@@ -476,6 +476,7 @@ body {
   width: 100%;
   flex: 1 1 0;
   max-width: 420px;
+  color: rgba(232, 228, 220, 0.55);
   color: rgba(255, 255, 255, 0.80);
   font-size: 16px;
   font-family: 'IBM Plex Sans', sans-serif;
@@ -491,14 +492,14 @@ body {
 }
 
 .dotted-link {
-  color: inherit;
+  color: rgba(232, 228, 220, 0.75);
   text-decoration: underline;
   text-decoration-style: dotted;
   text-decoration-color: rgba(255, 255, 255, 0.45);
   text-decoration-thickness: 2px;
   text-underline-offset: 5px;
   cursor: default;
-  transition: text-decoration-color 0.15s ease;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
 }
 
 a.dotted-link {
@@ -506,14 +507,17 @@ a.dotted-link {
 }
 
 .tooltip-link-wrapper:hover .dotted-link {
+  color: rgba(232, 228, 220, 0.95);
   text-decoration-color: rgba(255, 255, 255, 0.85);
 }
 
 .dotted-link-court {
+  color: #52a850;
   text-decoration-color: rgba(82, 168, 80, 0.6);
 }
 
 .tooltip-link-wrapper:hover .dotted-link-court {
+  color: #6dc46b;
   text-decoration-color: rgba(82, 168, 80, 0.95);
 }
 
@@ -978,6 +982,15 @@ a.dotted-link {
   .bio-text {
     font-size: 14px;
     line-height: 19.60px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 3px 5px;
+  }
+
+  /* No tooltips on touch — suppress entirely */
+  .tooltip-glass {
+    display: none;
   }
   
   .content {
