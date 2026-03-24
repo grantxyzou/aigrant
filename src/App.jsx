@@ -45,6 +45,14 @@ const TooltipLink = ({ href, tooltip, external, linkClass, children }) => (
   </span>
 )
 
+const SocialIcons = () => (
+  <div className="social-icons-row">
+    <a href="https://instagram.com/granitez" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><FaInstagram /></a>
+    <a href="https://www.linkedin.com/in/grantxyzou" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><FaLinkedinIn /></a>
+    <a href="https://github.com/grantxyzou" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><FaGithub /></a>
+  </div>
+)
+
 const SocialLinks = () => (
   <>
     <div className="social-link">
@@ -286,13 +294,9 @@ export default function App(){
                   {typewriterText || fullText}
                   {typewriterText && <span className={`cursor ${isTyping ? 'blinking' : 'steady'}`}>|</span>}
                 </div>
+                <SocialIcons />
               </div>
             </div>
-          </div>
-
-          {/* Social Links - Mobile */}
-          <div className="social-links-mobile">
-            <SocialLinks />
           </div>
         </div>
       </div>
