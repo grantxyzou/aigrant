@@ -1,0 +1,29 @@
+{
+  "recruiter": {
+    "tagline": "Reading as: Recruiter",
+    "intro": "6+ years designing enterprise AI products at Microsoft Azure, Jungle Scout, and Visier. Currently focused on agentic interfaces, cost transparency UX, and AI-native product design.",
+    "workTags": {
+      "Microsoft · Azure": ["Agentic Design", "Copilot / AI", "Enterprise UX", "Systems Thinking", "0→1 Products"],
+      "Jungle Scout": ["Analytics UX", "Data Visualization", "User Research", "B2C SaaS"],
+      "Visier": ["People Analytics", "Information Architecture", "B2B SaaS", "HR Tech"]
+    }
+  },
+  "collaborator": {
+    "tagline": "Reading as: Collaborator",
+    "intro": "I'm deep in AI-native design — building on Azure, experimenting with agentic UX patterns, and always open to creative cross-disciplinary projects that push the edges of what interfaces can do.",
+    "workTags": {
+      "Microsoft · Azure": ["Agentic Interfaces", "AI Tooling", "Design Systems", "Research Ops", "Prototyping"],
+      "Jungle Scout": ["Data Storytelling", "Cross-functional", "Iterative Design", "Growth"],
+      "Visier": ["Complex Data UX", "Stakeholder Alignment", "Enterprise UX"]
+    }
+  },
+  "client": {
+    "tagline": "Reading as: Client",
+    "intro": "I help teams design AI-powered products that feel intuitive and trustworthy. From early research to shipped interfaces — I work across the full design process.",
+    "workTags": {
+      "Microsoft · Azure": ["AI Product Design", "Cloud UX", "Enterprise Scale", "Copilot"],
+      "Jungle Scout": ["E-commerce Analytics", "SaaS Design", "User Research"],
+      "Visier": ["HR Analytics", "Data Products", "B2B UX"]
+    }
+  }
+}

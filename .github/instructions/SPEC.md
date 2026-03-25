@@ -246,18 +246,18 @@ Current SPA renders blank HTML to crawlers. `grantzou.com` is not indexed. For a
 - [x] Patch npm vulnerabilities — 6 high/moderate fixed (March 2026)
 
 ### 🤖 AI Feature (Perspectives toggle) — Priority #1
-- [ ] Redesign toggle as segmented control — Recruiter · Collaborator · Client
-- [ ] Build static Perspectives config (JSON map: audience → tags + tagline variant)
-- [ ] Wire content swap with 150ms crossfade transition
-- [ ] Add `?as=` URL param persistence
-- [ ] Remove chat input entirely (replace with Perspectives output)
+- [x] Redesign toggle as segmented control — Recruiter · Collaborator · Client
+- [x] Build static Perspectives config (`src/perspectives.json` — audience → tags + intro variant)
+- [x] Wire content swap with 150ms crossfade transition (`perspective-fade` animation)
+- [x] Add `?as=` URL param persistence
+- [x] Remove chat input entirely
 - [ ] [Phase 2] Add Claude API route handler for dynamic copy
 
 ### ✍️ Content
 - [ ] Write at least 1 Azure case study at `/work/azure-*`
 - [ ] Jungle Scout case study at `/work/jungle-scout`
 - [ ] Visier case study at `/work/visier`
-- [ ] Confirm intro blurb is still current and accurate
+- [x] Confirm intro blurb is still current and accurate
 - [ ] Add availability signal to left column
 - [ ] Fill `content/faq.json` and `content/testimonials.json`
 

@@ -52,9 +52,6 @@ body {
   will-change: transform;
 }
 
-.bg-aurora.chat-active {
-  height: calc(100vh + 24px);
-}
 
 .bg-aurora::before {
   content: '';
@@ -217,10 +214,6 @@ body {
   gap: 20px;
 }
 
-/* Add bottom padding when chat is active to prevent overlap */
-.responsive-container.chat-active {
-  padding-bottom: 140px;
-}
 
 /* Sticky Header Wrapper */
 .header-sticky {
@@ -342,94 +335,58 @@ body {
   display: flex;
 }
 
-.ai-disclaimer {
-  color: #666;
-  font-size: 12px;
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-weight: 400;
-  max-width: 280px;
-  text-align: right;
-  line-height: 1.4;
-  transition: opacity 0.3s ease;
-}
 
-/* AI Mode Toggle */
-.ai-toggle {
+/* Perspectives Toggle */
+.perspectives-toggle {
   display: flex;
   align-items: center;
-  cursor: pointer;
-  user-select: none;
-}
-
-.toggle-switch {
-  position: relative;
-  width: 36px;
-  height: 20px;
-}
-
-.toggle-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.toggle-slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #2a2a2a;
-  border: 1px solid #3a3a3a;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 3px;
 }
 
-.toggle-knob {
-  position: absolute;
-  height: 14px;
-  width: 14px;
-  left: 2px;
-  bottom: 2px;
-  background: #555;
-  border-radius: 50%;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.perspectives-option {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  color: rgba(232, 228, 220, 0.45);
+  background: transparent;
+  border: none;
+  border-radius: 16px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+  white-space: nowrap;
 }
 
-/* ON State - Green */
-.toggle-switch input:checked + .toggle-slider {
-  background: #1a3d2e;
-  border-color: #2d5a45;
+.perspectives-option:hover {
+  color: rgba(232, 228, 220, 0.75);
 }
 
-.toggle-switch input:checked + .toggle-slider .toggle-knob {
-  transform: translateX(16px);
-  background: #4ade80;
+.perspectives-option.active {
+  background: rgba(232, 114, 74, 0.15);
+  color: #e8724a;
+  border: 1px solid rgba(232, 114, 74, 0.25);
 }
 
-.toggle-switch input:focus + .toggle-slider {
-  outline: none;
+/* Crossfade on perspective-driven content */
+.perspective-fade {
+  animation: perspectiveFadeIn 0.15s ease forwards;
 }
 
-/* Scrolled state for toggle */
-.header-sticky.scrolled .toggle-switch {
-  width: 32px;
-  height: 18px;
-}
-
-.header-sticky.scrolled .toggle-knob {
-  height: 12px;
-  width: 12px;
-}
-
-.header-sticky.scrolled .toggle-switch input:checked + .toggle-slider .toggle-knob {
-  transform: translateX(14px);
-}
-
-.header-sticky.scrolled .ai-disclaimer {
-  font-size: 10px;
-  max-width: 200px;
+@keyframes perspectiveFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Sidebar - Fixed at bottom-left */
@@ -843,10 +800,6 @@ a.dotted-link {
   .header-right {
     flex-shrink: 0;
   }
-  
-  .ai-disclaimer {
-    display: none;
-  }
 }
 
 /* Medium screens - sidebar stays fixed at bottom-left */
@@ -907,29 +860,16 @@ a.dotted-link {
     flex-shrink: 0;
   }
   
-  .ai-disclaimer {
-    display: none;
+  .perspectives-toggle {
+    gap: 1px;
+    padding: 2px;
   }
-  
-  .toggle-switch {
-    width: 32px;
-    height: 18px;
-  }
-  
-  .toggle-knob {
-    height: 12px;
-    width: 12px;
-  }
-  
-  .toggle-switch input:checked + .toggle-slider .toggle-knob {
-    transform: translateX(14px);
-  }
-  
-  .ai-disclaimer {
+
+  .perspectives-option {
     font-size: 10px;
-    max-width: 180px;
+    padding: 3px 8px;
   }
-  
+
   .main-container {
     flex-direction: column;
     gap: 0;
@@ -1114,10 +1054,6 @@ a.dotted-link {
 @media (min-width: 1600px) {
   .header-right {
     gap: 16px;
-  }
-  
-  .ai-disclaimer {
-    max-width: 320px;
   }
 }
 

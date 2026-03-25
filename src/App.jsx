@@ -1,7 +1,7 @@
 import './App.css'
 import { useState, useEffect, useRef } from 'react'
 import { FaInstagram, FaGithub, FaLinkedinIn, FaRegFileAlt } from 'react-icons/fa'
-import ChatInterface from './ChatInterface'
+import perspectives from './perspectives.json'
 
 const experience = [
   {
@@ -80,31 +80,26 @@ export default function App(){
   const [hasAnimated, setHasAnimated] = useState(false)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isScrolled, setIsScrolled] = useState(false)
-  const [aiMode, setAiMode] = useState(() => {
-    const hash = window.location.hash
-    if (hash === '#ai' || hash === '#chat-grant2026') return true
-    return false
+  const [perspective, setPerspective] = useState(() => {
+    const params = new URLSearchParams(window.location.search)
+    const as = params.get('as')
+    return ['recruiter', 'collaborator', 'client'].includes(as) ? as : null
   })
   const footerRef = useRef(null)
 
   const fullText = "A portfolio of design process, research, and complex systems work."
 
 
-  // Sync URL hash with AI mode
+  // Sync URL param with perspective
   useEffect(() => {
-    const currentHash = window.location.hash
-    if (currentHash !== '#chat-grant2026') {
-      if (aiMode) {
-        window.history.replaceState(null, '', '#ai')
-      } else {
-        window.history.replaceState(null, '', window.location.pathname)
-      }
+    const url = new URL(window.location)
+    if (perspective) {
+      url.searchParams.set('as', perspective)
+    } else {
+      url.searchParams.delete('as')
     }
-  }, [aiMode])
-
-  const toggleAiMode = () => {
-    setAiMode(prev => !prev)
-  }
+    window.history.replaceState(null, '', perspective ? url : url.pathname)
+  }, [perspective])
 
   const startTypewriter = () => {
     if (hasAnimated) return
@@ -172,7 +167,7 @@ export default function App(){
     <>
       {/* Fixed Background */}
       <div
-        className={`bg-aurora ${aiMode ? 'chat-active' : ''}`}
+        className="bg-aurora"
         style={{
           transform: `translate(${mousePosition.x * 5}px, ${mousePosition.y * 3}px)`
         }}
@@ -199,25 +194,25 @@ export default function App(){
               </div>
             </div>
             <div className="header-right">
-              <label className="ai-toggle">
-                <div className="toggle-switch">
-                  <input
-                    type="checkbox"
-                    checked={aiMode}
-                    onChange={toggleAiMode}
-                  />
-                  <span className="toggle-slider">
-                    <span className="toggle-knob"></span>
-                  </span>
-                </div>
-              </label>
+              <div className="perspectives-toggle" role="group" aria-label="Reading perspective">
+                {['recruiter', 'collaborator', 'client'].map(p => (
+                  <button
+                    key={p}
+                    className={`perspectives-option${perspective === p ? ' active' : ''}`}
+                    onClick={() => setPerspective(prev => prev === p ? null : p)}
+                    aria-pressed={perspective === p}
+                  >
+                    {p}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </header>
 
       {/* Scrollable Content */}
-      <div className={`responsive-container ${aiMode ? 'chat-active' : ''}`}>
+      <div className="responsive-container">
 
         {/* Sidebar */}
         <div className="sidebar">
@@ -235,8 +230,11 @@ export default function App(){
             {/* About Section */}
             <div className="section about-section">
               <div className="section-content">
-                <div className="about-text">
-                  An evolving, exploratory design portfolio where I'm learning Azure infrastructure and AI hands-on, while experimenting with AI features as new ways to tell product stories.
+                <div className={`about-text${perspective ? ' perspective-fade' : ''}`}>
+                  {perspective
+                    ? perspectives[perspective].intro
+                    : 'An evolving, exploratory design portfolio where I\'m learning Azure infrastructure and AI hands-on, while experimenting with AI features as new ways to tell product stories.'
+                  }
                 </div>
               </div>
             </div>
@@ -268,13 +266,18 @@ export default function App(){
                       {exp.location && (
                         <div className="experience-location">{exp.location}</div>
                       )}
-                      {exp.tags && (
-                        <div className="experience-tags">
-                          {exp.tags.map((tag, k) => (
-                            <span key={k} className="experience-tag">{tag}</span>
-                          ))}
-                        </div>
-                      )}
+                      {(() => {
+                        const activeTags = perspective
+                          ? perspectives[perspective].workTags[exp.company]
+                          : exp.tags
+                        return activeTags && (
+                          <div className={`experience-tags${perspective ? ' perspective-fade' : ''}`}>
+                            {activeTags.map((tag, k) => (
+                              <span key={k} className="experience-tag">{tag}</span>
+                            ))}
+                          </div>
+                        )
+                      })()}
                       {exp.viewWork && (
                         <a href={exp.viewWork} className="experience-view-work">→ View work</a>
                       )}
@@ -283,9 +286,6 @@ export default function App(){
                 ))}
               </div>
             </div>
-
-            {/* Chat Interface - Only show when AI mode is on */}
-            {aiMode && <ChatInterface />}
 
             {/* Footer */}
             <div className="footer" ref={footerRef}>
