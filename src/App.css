@@ -368,33 +368,37 @@ body {
 }
 
 .perspectives-option.active {
-  background: rgba(232, 114, 74, 0.15);
-  color: #e8724a;
-  border: 1px solid rgba(232, 114, 74, 0.25);
+  background: rgba(201, 168, 76, 0.12);
+  color: #c9a84c;
+  border: 1px solid rgba(201, 168, 76, 0.25);
 }
 
 /* Crossfade on perspective-driven content */
+/* About text — glow slide-up on perspective switch */
 .perspective-fade {
-  animation: perspectiveFadeIn 0.5s ease forwards;
-  border-radius: 4px;
+  animation: perspectiveGlowIn 0.6s ease-out forwards;
 }
 
-@keyframes perspectiveFadeIn {
+@keyframes perspectiveGlowIn {
   0% {
     opacity: 0;
-    transform: translateY(4px);
-    background-color: rgba(232, 114, 74, 0.12);
+    transform: translateY(14px);
+    text-shadow: 0 0 24px rgba(201, 168, 76, 0.7);
   }
-  40% {
-    opacity: 1;
-    transform: translateY(0);
-    background-color: rgba(232, 114, 74, 0.12);
+  50% {
+    text-shadow: 0 0 12px rgba(201, 168, 76, 0.35);
   }
   100% {
     opacity: 1;
     transform: translateY(0);
-    background-color: transparent;
+    text-shadow: 0 0 0px transparent;
   }
+}
+
+/* Tags fade out during transition */
+.tags-exiting {
+  opacity: 0;
+  transition: opacity 0.18s ease;
 }
 
 /* Sidebar - Fixed at bottom-left */

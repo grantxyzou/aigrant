@@ -75,6 +75,59 @@ const SocialLinks = () => (
   </>
 )
 
+function TypewriterTag({ text, delay = 0, className }) {
+  const [displayed, setDisplayed] = useState('')
+  const [started, setStarted] = useState(false)
+
+  useEffect(() => {
+    setDisplayed('')
+    const startTimer = setTimeout(() => setStarted(true), delay)
+    return () => clearTimeout(startTimer)
+  }, [text, delay])
+
+  useEffect(() => {
+    if (!started) return
+    let i = 0
+    const interval = setInterval(() => {
+      i++
+      setDisplayed(text.slice(0, i))
+      if (i >= text.length) clearInterval(interval)
+    }, 25)
+    return () => clearInterval(interval)
+  }, [started, text])
+
+  return <span className={className}>{displayed}</span>
+}
+
+function PerspectiveTags({ tags, perspective }) {
+  const [shownTags, setShownTags] = useState(tags)
+  const [isExiting, setIsExiting] = useState(false)
+  const [renderKey, setRenderKey] = useState(0)
+
+  useEffect(() => {
+    setIsExiting(true)
+    const t = setTimeout(() => {
+      setShownTags(tags)
+      setIsExiting(false)
+      setRenderKey(k => k + 1)
+    }, 220)
+    return () => clearTimeout(t)
+  }, [perspective])
+
+  return (
+    <div className={`experience-tags${isExiting ? ' tags-exiting' : ''}`}>
+      {!isExiting && shownTags.map((tag, k) => (
+        <TypewriterTag
+          key={`${renderKey}-${k}`}
+          text={tag}
+          delay={k * 100}
+          className="experience-tag"
+        />
+      ))}
+    </div>
+  )
+}
+
 export default function App(){
   const [typewriterText, setTypewriterText] = useState('')
   const [isTyping, setIsTyping] = useState(false)
@@ -275,15 +328,10 @@ export default function App(){
                           ? perspectives[perspective].workTags[exp.company]
                           : exp.tags
                         return activeTags && (
-                          <div
-                            key={perspective}
-                            className={`experience-tags${perspective && perspective !== 'ask' ? ' perspective-fade' : ''}`}
-                            style={perspective && perspective !== 'ask' ? { animationDelay: `${i * 80}ms` } : {}}
-                          >
-                            {activeTags.map((tag, k) => (
-                              <span key={k} className="experience-tag">{tag}</span>
-                            ))}
-                          </div>
+                          <PerspectiveTags
+                            tags={activeTags}
+                            perspective={perspective}
+                          />
                         )
                       })()}
                       {exp.viewWork && (
