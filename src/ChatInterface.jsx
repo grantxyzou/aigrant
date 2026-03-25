@@ -98,7 +98,7 @@ export default function ChatInterface() {
       console.error('Chat error:', error)
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: "I'm Grant, a product designer at Microsoft Azure. I approach design as storytelling - blending experience and connection. The API is currently unavailable, but feel free to explore my portfolio or try again later!"
+        content: "I'm Grant, a product designer at Microsoft Azure. I design for the moments where products technically work but still fail users. The API is currently unavailable — feel free to explore my portfolio or try again shortly."
       }])
     } finally {
       setIsLoading(false)

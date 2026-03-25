@@ -190,11 +190,14 @@ NAV — wordmark left · Work · About · Resume · [dark toggle] right · [Pers
 ### Principle
 The site already has appropriate restraint. Don't add animation for its own sake. The Perspectives toggle is the one interaction that should be impeccably polished — everything else is supporting cast.
 
-### Perspectives toggle — interaction detail
-- **Selection:** 200ms background fill + text color flip. Unselected options fade to opacity 0.45.
-- **Content swap:** 150ms crossfade. No layout shift. `opacity` + `translateY(4px)` transition.
-- **First-time hint:** Subtle pulse ring after 2s on first visit. Once. Never again.
-- **URL param:** `?as=recruiter` — enables shareable pre-filtered links.
+### Perspectives toggle — interaction detail (as implemented)
+- **Selection:** 200ms CSS transition on color + background. Active pill: gold (#c9a84c) fill. Unselected: opacity 0.45.
+- **Intro text swap:** 300ms clean crossfade (opacity only — no translation, no glow).
+- **Tag swap sequence:** Tags fade out (200ms) → 240ms wait → new tag pills fade in at full width (200ms, 120ms stagger) → text types in at 48ms/char starting 200ms after pill appears.
+- **Tag width:** Ghost text (transparent) holds bounding box at full width. Typewriter overlays absolutely — pill never resizes.
+- **URL param:** `?as=recruiter` — synced bidirectionally, enables shareable pre-filtered links.
+- **Toggle off:** Clicking active pill deactivates (returns to default content).
+- **First-time hint:** Not yet implemented.
 
 ### Other interactions
 
@@ -246,20 +249,29 @@ Current SPA renders blank HTML to crawlers. `grantzou.com` is not indexed. For a
 - [x] Patch npm vulnerabilities — 6 high/moderate fixed (March 2026)
 
 ### 🤖 AI Feature (Perspectives toggle) — Priority #1
-- [x] Redesign toggle as segmented control — Recruiter · Collaborator · Client
+- [x] Redesign toggle as segmented control — `recruiter · collaborator · ask` (client replaced with ask/chat)
 - [x] Build static Perspectives config (`src/perspectives.json` — audience → tags + intro variant)
-- [x] Wire content swap with 150ms crossfade transition (`perspective-fade` animation)
 - [x] Add `?as=` URL param persistence
-- [x] Remove chat input entirely
+- [x] `ask` tab mounts ChatInterface; other tabs swap content with crossfade
+- [x] Intro text: clean 300ms crossfade on perspective switch
+- [x] Tags: fade out → pill fades in at full width → typewriter reveals text (48ms/char, 120ms stagger)
+- [x] Toggle active color matches tag gold (#c9a84c)
 - [ ] [Phase 2] Add Claude API route handler for dynamic copy
 
-### ✍️ Content
+### 🔧 API & Backend — Priority #1.5
+- [ ] **Wire `content/training/` into `api/training.js`** — 4 JSON files (design expertise, conversations, personality traits, response templates) exist but are never imported; AI is missing this context
+- [ ] **Consolidate training context in `ask.js`** — bio/context is hardcoded inline in the function instead of pulling from `api/training.js`; the two can drift out of sync
+- [ ] **Wire Resume link** — currently a disabled placeholder with no href
+- [ ] Remove dead documentation from `content/training/README.md` — promises Azure AI Search integration that doesn't exist
+- [ ] Fill `content/faq.json` and `content/testimonials.json` or delete them
+- [ ] Fix ChatInterface fallback message — doesn't match the function's fallback responses (low priority)
+
+### ✍️ Content — Priority #2
 - [ ] Write at least 1 Azure case study at `/work/azure-*`
 - [ ] Jungle Scout case study at `/work/jungle-scout`
 - [ ] Visier case study at `/work/visier`
 - [x] Confirm intro blurb is still current and accurate
 - [ ] Add availability signal to left column
-- [ ] Fill `content/faq.json` and `content/testimonials.json`
 
 ### 🔍 SEO & Performance — Priority #3
 - [ ] Migrate to Next.js 14+ (SSG) — site currently invisible to Google crawlers

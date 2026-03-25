@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import { FaInstagram, FaGithub, FaLinkedinIn, FaRegFileAlt } from 'react-icons/fa'
 import perspectives from './perspectives.json'
 import ChatInterface from './ChatInterface'
+import { PERSPECTIVES_URL } from './config'
 
 const experience = [
   {
@@ -152,6 +153,8 @@ export default function App(){
     return ['recruiter', 'collaborator', 'ask'].includes(as) ? as : null
   })
   const footerRef = useRef(null)
+  const perspectiveCache = useRef({})
+  const [perspectiveCopy, setPerspectiveCopy] = useState({})
 
   const fullText = "A portfolio of design process, research, and complex systems work."
 
@@ -165,6 +168,21 @@ export default function App(){
       url.searchParams.delete('as')
     }
     window.history.replaceState(null, '', perspective ? url : url.pathname)
+  }, [perspective])
+
+  // Fetch dynamic copy for recruiter/collaborator perspectives
+  useEffect(() => {
+    if (!perspective || perspective === 'ask') return
+    if (perspectiveCache.current[perspective]) return
+    fetch(`${PERSPECTIVES_URL}?as=${perspective}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.success && data.copy) {
+          perspectiveCache.current[perspective] = data.copy
+          setPerspectiveCopy(prev => ({ ...prev, [perspective]: data.copy }))
+        }
+      })
+      .catch(() => {})
   }, [perspective])
 
   const startTypewriter = () => {
@@ -301,7 +319,7 @@ export default function App(){
                   className={`about-text${perspective && perspective !== 'ask' ? ' perspective-fade' : ''}`}
                 >
                   {perspective && perspective !== 'ask'
-                    ? perspectives[perspective].intro
+                    ? (perspectiveCopy[perspective] || perspectives[perspective].intro)
                     : 'An evolving, exploratory design portfolio where I\'m learning Azure infrastructure and AI hands-on, while experimenting with AI features as new ways to tell product stories.'
                   }
                 </div>
