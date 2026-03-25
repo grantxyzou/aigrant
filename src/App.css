@@ -374,25 +374,14 @@ body {
 }
 
 /* Crossfade on perspective-driven content */
-/* About text — glow slide-up on perspective switch */
+/* About text — clean crossfade on perspective switch */
 .perspective-fade {
-  animation: perspectiveGlowIn 0.6s ease-out forwards;
+  animation: perspectiveCrossfade 0.3s ease forwards;
 }
 
-@keyframes perspectiveGlowIn {
-  0% {
-    opacity: 0;
-    transform: translateY(14px);
-    text-shadow: 0 0 24px rgba(201, 168, 76, 0.7);
-  }
-  50% {
-    text-shadow: 0 0 12px rgba(201, 168, 76, 0.35);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-    text-shadow: 0 0 0px transparent;
-  }
+@keyframes perspectiveCrossfade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* Tags fade out during transition */
