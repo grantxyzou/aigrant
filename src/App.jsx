@@ -231,7 +231,10 @@ export default function App(){
             {/* About Section */}
             <div className="section about-section">
               <div className="section-content">
-                <div className={`about-text${perspective && perspective !== 'ask' ? ' perspective-fade' : ''}`}>
+                <div
+                  key={perspective}
+                  className={`about-text${perspective && perspective !== 'ask' ? ' perspective-fade' : ''}`}
+                >
                   {perspective && perspective !== 'ask'
                     ? perspectives[perspective].intro
                     : 'An evolving, exploratory design portfolio where I\'m learning Azure infrastructure and AI hands-on, while experimenting with AI features as new ways to tell product stories.'
@@ -272,7 +275,11 @@ export default function App(){
                           ? perspectives[perspective].workTags[exp.company]
                           : exp.tags
                         return activeTags && (
-                          <div className={`experience-tags${perspective && perspective !== 'ask' ? ' perspective-fade' : ''}`}>
+                          <div
+                            key={perspective}
+                            className={`experience-tags${perspective && perspective !== 'ask' ? ' perspective-fade' : ''}`}
+                            style={perspective && perspective !== 'ask' ? { animationDelay: `${i * 80}ms` } : {}}
+                          >
                             {activeTags.map((tag, k) => (
                               <span key={k} className="experience-tag">{tag}</span>
                             ))}

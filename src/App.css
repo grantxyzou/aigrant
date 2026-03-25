@@ -375,17 +375,25 @@ body {
 
 /* Crossfade on perspective-driven content */
 .perspective-fade {
-  animation: perspectiveFadeIn 0.15s ease forwards;
+  animation: perspectiveFadeIn 0.5s ease forwards;
+  border-radius: 4px;
 }
 
 @keyframes perspectiveFadeIn {
-  from {
+  0% {
     opacity: 0;
     transform: translateY(4px);
+    background-color: rgba(232, 114, 74, 0.12);
   }
-  to {
+  40% {
     opacity: 1;
     transform: translateY(0);
+    background-color: rgba(232, 114, 74, 0.12);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    background-color: transparent;
   }
 }
 
