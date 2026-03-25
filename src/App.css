@@ -398,13 +398,13 @@ body {
 /* Tags fade out during transition */
 .tags-exiting {
   opacity: 0;
-  transition: opacity 0.18s ease;
+  transition: opacity 0.2s ease;
 }
 
 /* Tag two-step: fade in pill, then text types */
 .tag-fade-in {
   opacity: 0;
-  transition: opacity 0.18s ease;
+  transition: opacity 0.2s ease;
 }
 
 .tag-fade-in.tag-visible {

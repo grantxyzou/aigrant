@@ -93,8 +93,8 @@ function TypewriterTag({ text, delay = 0, className }) {
         i++
         setDisplayed(text.slice(0, i))
         if (i >= text.length) clearInterval(typeInterval)
-      }, 28)
-    }, delay + 180)
+      }, 48)
+    }, delay + 200)
 
     return () => {
       clearTimeout(fadeTimer)
@@ -122,7 +122,7 @@ function PerspectiveTags({ tags, perspective }) {
       setShownTags(tags)
       setIsExiting(false)
       setRenderKey(k => k + 1)
-    }, 220)
+    }, 240)
     return () => clearTimeout(t)
   }, [perspective])
 
@@ -132,7 +132,7 @@ function PerspectiveTags({ tags, perspective }) {
         <TypewriterTag
           key={`${renderKey}-${k}`}
           text={tag}
-          delay={k * 100}
+          delay={k * 120}
           className="experience-tag"
         />
       ))}
