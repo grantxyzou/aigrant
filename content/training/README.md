@@ -1,44 +1,52 @@
-# AI Training Data Structure
+# AI Training Data — Source Files
 
-This directory contains training data for Grant's AI agent, organized into specialized categories for effective AI behavior and knowledge training.
+This directory contains the source training data for Grant's AI chat (`ask` tab on grantzou.com). These files are **not deployed** — only `api/training.js` is deployed with the Azure Function.
 
-## Directory Structure
+## How it works
 
-### `/conversations/`
-Training conversations that demonstrate desired interaction patterns, conversation flow, and response styles. These help the AI learn Grant's communication tone and preferred interaction patterns.
+These files are the **source of truth**. When you update them, you must also update `api/training.js` manually — that's the compiled file the AI actually reads at runtime.
 
-**Example files:**
-- `portfolio-discussions.json` - Conversations about Grant's design work
-- `career-guidance.json` - Professional advice conversations  
-- `creative-process.json` - Discussions about design methodology
+> `content/training/` → edit here → copy relevant content into `api/training.js` → deploy
 
-### `/behaviors/`
-Behavioral training data that defines personality traits, response patterns, and interaction preferences. This shapes how the AI agent embodies Grant's professional persona.
+---
 
-**Example files:**
-- `personality-traits.json` - Core personality characteristics
-- `communication-style.json` - Tone, voice, and communication preferences
-- `professional-values.json` - Work philosophy and values
+## Files
 
-### `/knowledge/`
-Domain-specific knowledge that the AI should reference when answering questions. This includes expertise, methodologies, and specialized information.
+### `knowledge/design-expertise.json`
+Design philosophy, expertise areas, methodologies, and tools. The key fields (`design_philosophy`, `expertise_areas`, `methodologies`, `tools_and_technologies`) are compiled into the `trainingContext` string in `api/training.js`.
 
-**Example files:**
-- `design-expertise.json` - Design knowledge and methodologies
-- `tool-proficiency.json` - Software and tool expertise
-- `industry-insights.json` - Design industry knowledge
+### `behaviors/personality-traits.json`
+Voice, tone, values, traits, and signature phrases. Mirrors the `personality` export in `api/training.js`.
 
-### `/templates/`
-Response templates and structured formats for common interaction types. These ensure consistent and well-formatted responses.
+### `templates/response-templates.json`
+Two response structure templates:
+- `project_explanation` — context → role → challenge → decision → impact
+- `reflection` — insight → tradeoff → next time
 
-**Example files:**
-- `project-showcase.json` - Template for presenting design projects
-- `advice-responses.json` - Structure for giving professional advice
-- `question-handling.json` - Templates for different question types
+These are included in `api/training.js` under the `RESPONSE STRUCTURE TEMPLATES` section of `trainingContext`.
 
-## Usage Notes
+### `conversations/portfolio-discussions.json`
+9 structured training conversations covering design process, tool expertise, project walkthroughs, research methodology, and stakeholder collaboration. The best examples are compiled into `fewShotExamples` in `api/training.js`.
 
-- All JSON files should follow consistent schema patterns
-- Files will be automatically indexed by Azure AI Search for retrieval
-- Keep training data focused and relevant to Grant's professional domain
-- Update regularly as the AI agent evolves and learns
+### `conversations/case-study-raw.txt`
+Raw case study content for the Jungle Scout Advertising Analytics project. Key facts from this are incorporated into the `KEY PROJECTS` section of `trainingContext` in `api/training.js`.
+
+---
+
+## What's currently wired (as of March 2026)
+
+| File | Status |
+|---|---|
+| `knowledge/design-expertise.json` | ✅ Key content compiled into `api/training.js` |
+| `behaviors/personality-traits.json` | ✅ Mirrors `personality` export in `api/training.js` |
+| `templates/response-templates.json` | ✅ Compiled into `trainingContext` |
+| `conversations/portfolio-discussions.json` | ✅ Best examples in `fewShotExamples` (7 total) |
+| `conversations/case-study-raw.txt` | ✅ Key facts in `trainingContext` under KEY PROJECTS |
+
+---
+
+## When to update
+
+- Adding a new project → update `case-study-raw.txt` and compile into `api/training.js`
+- Changing voice/tone → update `personality-traits.json` and `api/training.js`
+- Adding FAQ or testimonials → update `content/faq.json` and `content/testimonials.json` (not yet wired)

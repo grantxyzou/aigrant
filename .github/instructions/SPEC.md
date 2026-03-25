@@ -27,16 +27,19 @@ Goals: Land new roles · Attract freelance clients · Showcase personal projects
 
 ### Element status
 
-| Element | Action |
+| Element | Status |
 |---|---|
-| "ai product designer" title | ✅ Keep |
-| Dark gradient aesthetic | ✅ Keep & refine |
-| Personal bio | ✅ Keep — fix layout detachment |
-| Work experience section | 🔄 Add skill tags + case study links |
-| AI toggle ("Flip to AI version") | 🔄 Reframe as "Perspectives" |
-| Chat bar "Ask anything about Grant" | ❌ Remove |
-| Case studies / project pages | 🆕 Build |
-| Resume link in nav | 🆕 Add |
+| "ai product designer" title | ✅ Live |
+| Dark gradient aesthetic | ✅ Live |
+| Personal bio with tooltip links | ✅ Live |
+| Work experience + skill tags | ✅ Live — tags per company, perspective-aware |
+| Perspectives toggle (recruiter · collaborator · ask) | ✅ Live — replaced old binary toggle |
+| AI toggle disclaimer | ✅ Removed |
+| Chat bar placeholder text | ✅ Updated to neutral copy |
+| `ask` tab → ChatInterface | ✅ Live |
+| Dynamic perspective copy (`/api/perspectives`) | ✅ Live — Azure OpenAI generates intro per audience |
+| Resume link | ⏳ Placeholder only — needs PDF URL |
+| Case studies / project pages | 🆕 Not started |
 
 ---
 
@@ -256,15 +259,14 @@ Current SPA renders blank HTML to crawlers. `grantzou.com` is not indexed. For a
 - [x] Intro text: clean 300ms crossfade on perspective switch
 - [x] Tags: fade out → pill fades in at full width → typewriter reveals text (48ms/char, 120ms stagger)
 - [x] Toggle active color matches tag gold (#c9a84c)
-- [ ] [Phase 2] Add Claude API route handler for dynamic copy
+- [x] [Phase 2] `/api/perspectives?as=recruiter` — Azure Function using Azure OpenAI generates dynamic 2-sentence intro; falls back silently to static `perspectives.json`; frontend caches per perspective
 
 ### 🔧 API & Backend — Priority #1.5
-- [ ] **Wire `content/training/` into `api/training.js`** — 4 JSON files (design expertise, conversations, personality traits, response templates) exist but are never imported; AI is missing this context
-- [ ] **Consolidate training context in `ask.js`** — bio/context is hardcoded inline in the function instead of pulling from `api/training.js`; the two can drift out of sync
+- [x] **Consolidate training context** — `trainingContext` moved from `ask.js` into `api/training.js`; single source of truth; added expertise areas, methodologies, tools, response templates, 2 new few-shot examples
+- [x] **Fix ChatInterface fallback message** — updated to match `ask.js` tone
 - [ ] **Wire Resume link** — currently a disabled placeholder with no href
-- [ ] Remove dead documentation from `content/training/README.md` — promises Azure AI Search integration that doesn't exist
-- [ ] Fill `content/faq.json` and `content/testimonials.json` or delete them
-- [ ] Fix ChatInterface fallback message — doesn't match the function's fallback responses (low priority)
+- [ ] Fill `content/faq.json` and `content/testimonials.json` (format provided — waiting on content)
+- [ ] Clean up `content/training/README.md` — remove dead Azure AI Search reference
 
 ### ✍️ Content — Priority #2
 - [ ] Write at least 1 Azure case study at `/work/azure-*`
