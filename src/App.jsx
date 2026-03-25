@@ -2,6 +2,7 @@ import './App.css'
 import { useState, useEffect, useRef } from 'react'
 import { FaInstagram, FaGithub, FaLinkedinIn, FaRegFileAlt } from 'react-icons/fa'
 import perspectives from './perspectives.json'
+import ChatInterface from './ChatInterface'
 
 const experience = [
   {
@@ -83,7 +84,7 @@ export default function App(){
   const [perspective, setPerspective] = useState(() => {
     const params = new URLSearchParams(window.location.search)
     const as = params.get('as')
-    return ['recruiter', 'collaborator', 'client'].includes(as) ? as : null
+    return ['recruiter', 'collaborator', 'ask'].includes(as) ? as : null
   })
   const footerRef = useRef(null)
 
@@ -195,7 +196,7 @@ export default function App(){
             </div>
             <div className="header-right">
               <div className="perspectives-toggle" role="group" aria-label="Reading perspective">
-                {['recruiter', 'collaborator', 'client'].map(p => (
+                {['recruiter', 'collaborator', 'ask'].map(p => (
                   <button
                     key={p}
                     className={`perspectives-option${perspective === p ? ' active' : ''}`}
@@ -230,8 +231,8 @@ export default function App(){
             {/* About Section */}
             <div className="section about-section">
               <div className="section-content">
-                <div className={`about-text${perspective ? ' perspective-fade' : ''}`}>
-                  {perspective
+                <div className={`about-text${perspective && perspective !== 'ask' ? ' perspective-fade' : ''}`}>
+                  {perspective && perspective !== 'ask'
                     ? perspectives[perspective].intro
                     : 'An evolving, exploratory design portfolio where I\'m learning Azure infrastructure and AI hands-on, while experimenting with AI features as new ways to tell product stories.'
                   }
@@ -267,11 +268,11 @@ export default function App(){
                         <div className="experience-location">{exp.location}</div>
                       )}
                       {(() => {
-                        const activeTags = perspective
+                        const activeTags = perspective && perspective !== 'ask'
                           ? perspectives[perspective].workTags[exp.company]
                           : exp.tags
                         return activeTags && (
-                          <div className={`experience-tags${perspective ? ' perspective-fade' : ''}`}>
+                          <div className={`experience-tags${perspective && perspective !== 'ask' ? ' perspective-fade' : ''}`}>
                             {activeTags.map((tag, k) => (
                               <span key={k} className="experience-tag">{tag}</span>
                             ))}
@@ -286,6 +287,9 @@ export default function App(){
                 ))}
               </div>
             </div>
+
+            {/* Chat — shown when "ask" perspective is active */}
+            {perspective === 'ask' && <ChatInterface />}
 
             {/* Footer */}
             <div className="footer" ref={footerRef}>

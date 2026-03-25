@@ -17,13 +17,4 @@
       "Visier": ["Complex Data UX", "Stakeholder Alignment", "Enterprise UX"]
     }
   },
-  "client": {
-    "tagline": "Reading as: Client",
-    "intro": "I help teams design AI-powered products that feel intuitive and trustworthy. From early research to shipped interfaces — I work across the full design process.",
-    "workTags": {
-      "Microsoft · Azure": ["AI Product Design", "Cloud UX", "Enterprise Scale", "Copilot"],
-      "Jungle Scout": ["E-commerce Analytics", "SaaS Design", "User Research"],
-      "Visier": ["HR Analytics", "Data Products", "B2B UX"]
-    }
-  }
 }
