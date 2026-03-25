@@ -401,6 +401,16 @@ body {
   transition: opacity 0.18s ease;
 }
 
+/* Tag two-step: fade in pill, then text types */
+.tag-fade-in {
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.tag-fade-in.tag-visible {
+  opacity: 1;
+}
+
 /* Sidebar - Fixed at bottom-left */
 .sidebar {
   position: fixed;

@@ -77,26 +77,37 @@ const SocialLinks = () => (
 
 function TypewriterTag({ text, delay = 0, className }) {
   const [displayed, setDisplayed] = useState('')
-  const [started, setStarted] = useState(false)
+  const [visible, setVisible] = useState(false)
 
   useEffect(() => {
     setDisplayed('')
-    const startTimer = setTimeout(() => setStarted(true), delay)
-    return () => clearTimeout(startTimer)
+    setVisible(false)
+
+    let typeInterval = null
+    // Step 1: fade in the tag pill
+    const fadeTimer = setTimeout(() => setVisible(true), delay)
+    // Step 2: start typing after the fade-in settles (~180ms)
+    const typeTimer = setTimeout(() => {
+      let i = 0
+      typeInterval = setInterval(() => {
+        i++
+        setDisplayed(text.slice(0, i))
+        if (i >= text.length) clearInterval(typeInterval)
+      }, 28)
+    }, delay + 180)
+
+    return () => {
+      clearTimeout(fadeTimer)
+      clearTimeout(typeTimer)
+      if (typeInterval) clearInterval(typeInterval)
+    }
   }, [text, delay])
 
-  useEffect(() => {
-    if (!started) return
-    let i = 0
-    const interval = setInterval(() => {
-      i++
-      setDisplayed(text.slice(0, i))
-      if (i >= text.length) clearInterval(interval)
-    }, 25)
-    return () => clearInterval(interval)
-  }, [started, text])
-
-  return <span className={className}>{displayed}</span>
+  return (
+    <span className={`${className} tag-fade-in${visible ? ' tag-visible' : ''}`}>
+      {displayed || '\u00a0'}
+    </span>
+  )
 }
 
 function PerspectiveTags({ tags, perspective }) {
