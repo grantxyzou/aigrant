@@ -760,6 +760,24 @@ a.dotted-link {
   border-radius: 4px;
   background: rgba(201, 168, 76, 0.07);
   letter-spacing: 0.01em;
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Ghost text locks the pill to full width; typer overlays it */
+.tag-sizer {
+  color: transparent;
+  display: block;
+}
+
+.tag-typer {
+  position: absolute;
+  left: 8px;
+  top: 3px;
+  right: 8px;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .experience-view-work {

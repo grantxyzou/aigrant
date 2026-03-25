@@ -105,7 +105,8 @@ function TypewriterTag({ text, delay = 0, className }) {
 
   return (
     <span className={`${className} tag-fade-in${visible ? ' tag-visible' : ''}`}>
-      {displayed || '\u00a0'}
+      <span className="tag-sizer" aria-hidden="true">{text}</span>
+      <span className="tag-typer">{displayed}</span>
     </span>
   )
 }
