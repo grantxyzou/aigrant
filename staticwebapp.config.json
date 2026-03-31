@@ -15,6 +15,12 @@
     }
   ],
   "globalHeaders": {
-    "Cache-Control": "public, max-age=0, must-revalidate"
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "X-Frame-Options": "DENY",
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.cognitiveservices.azure.com; img-src 'self' data:; font-src 'self'",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "Permissions-Policy": "geolocation=(), microphone=(), camera=()"
   }
 }

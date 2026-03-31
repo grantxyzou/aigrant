@@ -49,4 +49,4 @@ Raw case study content for the Jungle Scout Advertising Analytics project. Key f
 
 - Adding a new project → update `case-study-raw.txt` and compile into `api/training.js`
 - Changing voice/tone → update `personality-traits.json` and `api/training.js`
-- Adding FAQ or testimonials → update `content/faq.json` and `content/testimonials.json` (not yet wired)
+- Adding FAQ or testimonials → update `content/faq.json` and `content/testimonials.json` (deferred — files exist but are empty, not currently prioritized)

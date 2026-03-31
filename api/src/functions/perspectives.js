@@ -1,4 +1,5 @@
 const { app } = require('@azure/functions');
+const { checkRateLimit, getClientIp, getCorsHeaders } = require('../../rate-limiter');
 
 const audiencePrompts = {
     recruiter: `Write a 2-sentence portfolio intro for Grant Zou addressing a recruiter. Grant is an AI product designer at Microsoft Azure with 6+ years experience across Azure, Jungle Scout, and Visier. He specializes in agentic interfaces, enterprise UX, and AI-native product design. Be specific, confident, and results-oriented. First person. No quotes.`,
@@ -16,15 +17,35 @@ app.http('perspectives', {
     handler: async (request, context) => {
         context.log('Perspectives - Processing request');
 
-        const headers = {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type',
-            'Content-Type': 'application/json'
-        };
+        const headers = getCorsHeaders(request);
 
         if (request.method === 'OPTIONS') {
             return { status: 204, headers };
+        }
+
+        // Rate limiting — fall back to localhost in dev so local testing works
+        const clientIp = getClientIp(request)
+            || (process.env.NODE_ENV !== 'production' ? '127.0.0.1' : null);
+
+        if (!clientIp) {
+            return {
+                status: 400,
+                headers,
+                jsonBody: { success: false, error: 'Unable to identify client.' }
+            };
+        }
+
+        const rateCheck = checkRateLimit(clientIp, { limit: 20, windowMs: 2 * 60 * 1000 });
+
+        if (!rateCheck.allowed) {
+            return {
+                status: 429,
+                headers: {
+                    ...headers,
+                    'Retry-After': rateCheck.retryAfter.toString()
+                },
+                jsonBody: { success: false, error: 'Too many requests. Try again shortly.' }
+            };
         }
 
         const audience = request.query.get('as');
@@ -70,11 +91,13 @@ app.http('perspectives', {
             });
 
             if (!response.ok) {
+                context.error('Perspectives API error:', response.status);
                 throw new Error(`API error: ${response.status}`);
             }
 
             const data = await response.json();
-            const copy = data.choices[0].message.content.trim();
+            const copy = data?.choices?.[0]?.message?.content?.trim();
+            if (!copy) throw new Error('Empty response from Azure OpenAI');
 
             return {
                 status: 200,
@@ -83,7 +106,7 @@ app.http('perspectives', {
             };
 
         } catch (error) {
-            context.error('Perspectives error:', error);
+            context.error('Perspectives error:', error.message);
             return {
                 status: 200,
                 headers,
