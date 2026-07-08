@@ -56,37 +56,40 @@ body {
 .bg-aurora.mood-tide   { --blob-a: #1B324D; --blob-b: #657E95; } /* slate stack */
 .bg-aurora.mood-hearth { --blob-a: #BEB293; --blob-b: #c9a84c; } /* tan + mustard */
 
-/* Weather — bottom-anchored bell curve, breathing (blob A) */
+/* Weather — bottom-anchored bell, color A. Both colors share the page and
+   sweep past each other in a coordinated dance (same tempo, mirrored). */
 .bg-aurora::before {
   content: '';
   position: absolute;
   left: 50%;
   bottom: -8%;
-  width: 130vw;
-  height: 88vh;
+  width: 108vw;
+  height: 84vh;
   transform: translateX(-50%);
   transform-origin: bottom center;
-  opacity: 0.55;
-  background: radial-gradient(ellipse 60% 100% at 50% 100%, var(--blob-a) 0%, transparent 72%);
+  opacity: 0.6;
+  background: radial-gradient(ellipse 58% 100% at 50% 100%, var(--blob-a) 0%, transparent 72%);
   filter: blur(60px);
-  animation: breathe-a 13s ease-in-out infinite;
+  mix-blend-mode: screen;
+  animation: dance-a 20s ease-in-out infinite;
   will-change: transform, opacity;
 }
 
-/* Bell curve B — narrower, breathes in counterpoint (asymmetric duration) */
+/* Bell, color B — same size/opacity as A (neither dominates), mirrored dance */
 .bg-aurora::after {
   content: '';
   position: absolute;
   left: 50%;
   bottom: -8%;
-  width: 92vw;
-  height: 72vh;
+  width: 108vw;
+  height: 84vh;
   transform: translateX(-50%);
   transform-origin: bottom center;
-  opacity: 0.7;
-  background: radial-gradient(ellipse 55% 100% at 50% 100%, var(--blob-b) 0%, transparent 70%);
+  opacity: 0.6;
+  background: radial-gradient(ellipse 58% 100% at 50% 100%, var(--blob-b) 0%, transparent 72%);
   filter: blur(60px);
-  animation: breathe-b 17s ease-in-out infinite;
+  mix-blend-mode: screen;
+  animation: dance-b 20s ease-in-out infinite;
   will-change: transform, opacity;
 }
 
@@ -96,15 +99,16 @@ body {
   .bg-aurora::after { animation: none; }
 }
 
-/* Breathing — bottom-anchored rise/fall; asymmetric, in counterpoint */
-@keyframes breathe-a {
-  0%, 100% { transform: translateX(-50%) scaleY(1);    opacity: 0.5; }
-  50%      { transform: translateX(-50%) scaleY(1.1);  opacity: 0.72; }
+/* Coordinated dance — same 20s tempo, mirrored: the two colors sweep past
+   each other (A left→right while B right→left) and breathe together. */
+@keyframes dance-a {
+  0%, 100% { transform: translateX(-57%) scaleY(1);    opacity: 0.5; }
+  50%      { transform: translateX(-43%) scaleY(1.08); opacity: 0.66; }
 }
 
-@keyframes breathe-b {
-  0%, 100% { transform: translateX(-50%) scaleY(1.06); opacity: 0.66; }
-  50%      { transform: translateX(-50%) scaleY(0.97); opacity: 0.48; }
+@keyframes dance-b {
+  0%, 100% { transform: translateX(-43%) scaleY(1.08); opacity: 0.66; }
+  50%      { transform: translateX(-57%) scaleY(1);    opacity: 0.5; }
 }
 
 @keyframes breathe {
