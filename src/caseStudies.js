@@ -12,6 +12,7 @@ export const caseStudies = {
   'advertising-analytics': {
     slug: 'advertising-analytics',
     accent: 'gold',
+    mood: 'hearth',
     navLabel: 'Advertising Analytics',
     title: 'Advertising Analytics',
     subtitle: 'Helping Amazon sellers monitor performance and discover insights',
@@ -98,6 +99,7 @@ export const caseStudies = {
   'azure-storage-mover-s3': {
     slug: 'azure-storage-mover-s3',
     accent: 'azure',
+    mood: 'tide',
     navLabel: 'Azure Storage Mover',
     title: 'Azure Storage Mover — S3 Redesign',
     subtitle: "Making cross-cloud migration setup honest about what it can and can't promise",

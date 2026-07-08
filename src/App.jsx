@@ -162,7 +162,6 @@ export default function App(){
   const [typewriterText, setTypewriterText] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const [hasAnimated, setHasAnimated] = useState(false)
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isScrolled, setIsScrolled] = useState(false)
   const [perspective, setPerspective] = useState(() => {
     const params = new URLSearchParams(window.location.search)
@@ -231,17 +230,10 @@ export default function App(){
   }
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 2
-      const y = (e.clientY / window.innerHeight - 0.5) * 2
-      setMousePosition({ x, y })
-    }
-
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50)
     }
 
-    window.addEventListener('mousemove', handleMouseMove)
     window.addEventListener('scroll', handleScroll)
 
     const observer = new IntersectionObserver(
@@ -266,7 +258,6 @@ export default function App(){
     }, 2000)
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('scroll', handleScroll)
       observer.disconnect()
       clearTimeout(fallbackTimer)
@@ -278,7 +269,7 @@ export default function App(){
   if (caseSlug && caseStudies[caseSlug]) {
     return (
       <>
-        <div className="bg-aurora"><div className="gradient-layer" /></div>
+        <div className={`bg-aurora mood-${caseStudies[caseSlug].mood || 'dawn'}`} aria-hidden="true" />
         <CaseStudy data={caseStudies[caseSlug]} onBack={() => navigate('/')} />
       </>
     )
@@ -286,20 +277,8 @@ export default function App(){
 
   return (
     <>
-      {/* Fixed Background */}
-      <div
-        className="bg-aurora"
-        style={{
-          transform: `translate(${mousePosition.x * 5}px, ${mousePosition.y * 3}px)`
-        }}
-      >
-        <div
-          className="gradient-layer"
-          style={{
-            transform: `rotate(-58deg) translate(${mousePosition.x * -8}px, ${mousePosition.y * 6}px)`
-          }}
-        ></div>
-      </div>
+      {/* Fixed weather background */}
+      <div className="bg-aurora mood-dawn" aria-hidden="true" />
 
       {/* Sticky Header */}
       <header className={`header-sticky ${isScrolled ? 'scrolled' : ''}`}>

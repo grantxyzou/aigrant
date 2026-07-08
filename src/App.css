@@ -39,109 +39,68 @@ body {
 }
 
 /* Custom Background with Gradient Overlays */
+/* Weather background — two radial blobs. "Color is weather, not decoration."
+   Spec: 60px blur · alpha 0.4-0.85 · asymmetric loops · drift <8% · scale <1.1 */
 .bg-aurora {
   background: #100F0F;
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
   overflow: hidden;
   z-index: -1;
-  transition: transform 0.1s ease-out, height 0.5s ease-out;
-  will-change: transform;
+  /* mood: DAWN (mist + tan) is the default */
+  --blob-a: #8FA2B0;
+  --blob-b: #BEB293;
 }
 
+.bg-aurora.mood-dawn   { --blob-a: #8FA2B0; --blob-b: #BEB293; } /* mist + tan */
+.bg-aurora.mood-tide   { --blob-a: #1B324D; --blob-b: #657E95; } /* slate stack */
+.bg-aurora.mood-hearth { --blob-a: #BEB293; --blob-b: #c9a84c; } /* tan + mustard */
 
+/* Weather blob A */
 .bg-aurora::before {
   content: '';
   position: absolute;
-  width: 150vw;
-  height: 1640px;
-  left: -25vw;
-  top: 659px;
-  opacity: 0.50;
-  background: linear-gradient(180deg, #8FA2B0 0%, #1B324D 56%);
-  box-shadow: 200px 200px 200px;
-  filter: blur(100px);
-  animation: breathe-gentle 6s ease-in-out infinite;
-  transition: transform 0.3s ease-out;
-  will-change: transform, opacity, filter;
+  width: 78vw;
+  height: 78vh;
+  top: -14%;
+  left: -10%;
+  opacity: 0.55;
+  background: radial-gradient(circle at center, var(--blob-a) 0%, transparent 62%);
+  filter: blur(60px);
+  animation: weather-a 31s ease-in-out infinite;
+  will-change: transform;
 }
 
+/* Weather blob B — asymmetric: different size, position, and duration */
 .bg-aurora::after {
   content: '';
   position: absolute;
-  width: 150vw;
-  height: 1509px;
-  left: -25vw;
-  top: 758px;
-  mix-blend-mode: darken;
-  background: linear-gradient(180deg, #BEB293 0%, black 67%);
-  box-shadow: 200px 200px 200px;
-  filter: blur(100px);
-  animation: exhale-drift 7s ease-in-out infinite;
-  transition: transform 0.3s ease-out;
-  will-change: transform, opacity, filter;
+  width: 72vw;
+  height: 72vh;
+  bottom: -16%;
+  right: -12%;
+  opacity: 0.78;
+  background: radial-gradient(circle at center, var(--blob-b) 0%, transparent 62%);
+  filter: blur(60px);
+  animation: weather-b 43s ease-in-out infinite;
+  will-change: transform;
 }
 
-/* Additional gradient layer */
-.bg-aurora .gradient-layer {
-  position: absolute;
-  width: 903.61px;
-  height: 1760.98px;
-  left: 445px;
-  top: 1535.78px;
-  transform: rotate(-58deg);
-  transform-origin: top left;
-  opacity: 0.60;
-  mix-blend-mode: hard-light;
-  background: linear-gradient(180deg, #8FA2B0 0%, #1B324D 56%);
-  box-shadow: 200px 200px 200px;
-  filter: blur(100px);
-  animation: inhale-pulse 5.5s ease-in-out infinite;
-  transition: transform 0.1s ease-out;
-  will-change: transform, opacity, filter;
+/* Rule: pause weather on prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .bg-aurora::before,
+  .bg-aurora::after { animation: none; }
 }
 
-/* Background Animation Keyframes - Breathing Effect */
-@keyframes breathe-gentle {
-  0%, 100% { 
-    transform: translate(0px, 0px) scale(1);
-    opacity: 0.45;
-    filter: blur(95px) hue-rotate(0deg);
-  }
-  50% { 
-    transform: translate(-25px, 40px) scale(1.08);
-    opacity: 0.65;
-    filter: blur(110px) hue-rotate(15deg);
-  }
+/* Weather motion — asymmetric loops, drift <8%, scale <1.1 */
+@keyframes weather-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(4%, 5%) scale(1.05); }
 }
 
-@keyframes exhale-drift {
-  0%, 100% { 
-    transform: translate(0px, 0px) rotate(0deg) scale(1);
-    opacity: 0.95;
-    filter: blur(95px) hue-rotate(0deg);
-  }
-  50% { 
-    transform: translate(-35px, -20px) rotate(1.5deg) scale(1.05);
-    opacity: 0.85;
-    filter: blur(105px) hue-rotate(-10deg);
-  }
-}
-
-@keyframes inhale-pulse {
-  0%, 100% { 
-    transform: rotate(-58deg) translate(0px, 0px) scale(1);
-    opacity: 0.55;
-    filter: blur(95px) hue-rotate(0deg);
-  }
-  50% { 
-    transform: rotate(-55deg) translate(30px, -40px) scale(1.12);
-    opacity: 0.75;
-    filter: blur(115px) hue-rotate(20deg);
-  }
+@keyframes weather-b {
+  0%, 100% { transform: translate(0, 0) scale(1.03); }
+  50%      { transform: translate(-5%, -4%) scale(1); }
 }
 
 @keyframes breathe {
@@ -213,7 +172,6 @@ body {
   background: transparent;
   gap: 20px;
 }
-
 
 /* Sticky Header Wrapper */
 .header-sticky {
@@ -334,7 +292,6 @@ body {
   gap: 12px;
   display: flex;
 }
-
 
 /* Perspectives Toggle */
 .perspectives-toggle {
