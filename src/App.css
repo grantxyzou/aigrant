@@ -56,34 +56,38 @@ body {
 .bg-aurora.mood-tide   { --blob-a: #1B324D; --blob-b: #657E95; } /* slate stack */
 .bg-aurora.mood-hearth { --blob-a: #BEB293; --blob-b: #c9a84c; } /* tan + mustard */
 
-/* Weather blob A */
+/* Weather — bottom-anchored bell curve, breathing (blob A) */
 .bg-aurora::before {
   content: '';
   position: absolute;
-  width: 78vw;
-  height: 78vh;
-  top: -14%;
-  left: -10%;
+  left: 50%;
+  bottom: -8%;
+  width: 130vw;
+  height: 88vh;
+  transform: translateX(-50%);
+  transform-origin: bottom center;
   opacity: 0.55;
-  background: radial-gradient(circle at center, var(--blob-a) 0%, transparent 62%);
+  background: radial-gradient(ellipse 60% 100% at 50% 100%, var(--blob-a) 0%, transparent 72%);
   filter: blur(60px);
-  animation: weather-a 31s ease-in-out infinite;
-  will-change: transform;
+  animation: breathe-a 13s ease-in-out infinite;
+  will-change: transform, opacity;
 }
 
-/* Weather blob B — asymmetric: different size, position, and duration */
+/* Bell curve B — narrower, breathes in counterpoint (asymmetric duration) */
 .bg-aurora::after {
   content: '';
   position: absolute;
-  width: 72vw;
+  left: 50%;
+  bottom: -8%;
+  width: 92vw;
   height: 72vh;
-  bottom: -16%;
-  right: -12%;
-  opacity: 0.78;
-  background: radial-gradient(circle at center, var(--blob-b) 0%, transparent 62%);
+  transform: translateX(-50%);
+  transform-origin: bottom center;
+  opacity: 0.7;
+  background: radial-gradient(ellipse 55% 100% at 50% 100%, var(--blob-b) 0%, transparent 70%);
   filter: blur(60px);
-  animation: weather-b 43s ease-in-out infinite;
-  will-change: transform;
+  animation: breathe-b 17s ease-in-out infinite;
+  will-change: transform, opacity;
 }
 
 /* Rule: pause weather on prefers-reduced-motion */
@@ -92,15 +96,15 @@ body {
   .bg-aurora::after { animation: none; }
 }
 
-/* Weather motion — asymmetric loops, drift <8%, scale <1.1 */
-@keyframes weather-a {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50%      { transform: translate(4%, 5%) scale(1.05); }
+/* Breathing — bottom-anchored rise/fall; asymmetric, in counterpoint */
+@keyframes breathe-a {
+  0%, 100% { transform: translateX(-50%) scaleY(1);    opacity: 0.5; }
+  50%      { transform: translateX(-50%) scaleY(1.1);  opacity: 0.72; }
 }
 
-@keyframes weather-b {
-  0%, 100% { transform: translate(0, 0) scale(1.03); }
-  50%      { transform: translate(-5%, -4%) scale(1); }
+@keyframes breathe-b {
+  0%, 100% { transform: translateX(-50%) scaleY(1.06); opacity: 0.66; }
+  50%      { transform: translateX(-50%) scaleY(0.97); opacity: 0.48; }
 }
 
 @keyframes breathe {

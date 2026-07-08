@@ -6,7 +6,7 @@
   "routes": [
     {
       "route": "/bpm",
-      "redirect": "https://badminton-app-gzendxb6fzefafgm.canadacentral-01.azurewebsites.net/bpm",
+      "redirect": "https://lively-sand-0633fbd0f.7.azurestaticapps.net/#features",
       "statusCode": 302
     },
     {
