@@ -772,13 +772,24 @@ a.dotted-link {
 .experience-view-work {
   display: inline-block;
   margin-top: 12px;
-  color: #e8724a;
+  color: #c9a84c; /* default gold; per-project accent class overrides */
   font-size: 13px;
   font-family: 'IBM Plex Sans', sans-serif;
   font-weight: 500;
   text-decoration: none;
   letter-spacing: 0.01em;
   transition: opacity 0.15s ease;
+}
+
+/* Per-project accent: Azure work = Azure brand blue, personal = gold */
+.experience-view-work.accent-azure { color: #4f9bea; }
+.experience-view-work.accent-gold { color: #c9a84c; }
+
+.experience-view-work .ew-read {
+  color: rgba(255, 255, 255, 0.45);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 400;
 }
 
 .experience-view-work:hover {

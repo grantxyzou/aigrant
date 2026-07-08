@@ -7,6 +7,21 @@ import { PERSPECTIVES_URL } from './config'
 import CaseStudy from './CaseStudy'
 import { caseStudies } from './caseStudies'
 
+// Estimate reading time (~200 wpm) from a case study's text content.
+const readMinutes = (cs) => {
+  if (!cs) return 1
+  let words = 0
+  const add = (t) => { if (typeof t === 'string') words += t.trim().split(/\s+/).filter(Boolean).length }
+  add(cs.subtitle); add(cs.summary)
+  cs.sections?.forEach((b) => {
+    b.body?.forEach(add)
+    b.list?.forEach(add)
+    b.callout?.body?.forEach(add)
+    if (b.heading) add(b.heading)
+  })
+  return Math.max(1, Math.round(words / 200))
+}
+
 const experience = [
   {
     company: 'Microsoft · Azure',
@@ -386,13 +401,19 @@ export default function App(){
                           />
                         )
                       })()}
-                      {exp.viewWork && (
-                        <a
-                          href={exp.viewWork}
-                          className="experience-view-work"
-                          onClick={(e) => { e.preventDefault(); navigate(exp.viewWork) }}
-                        >→ View work</a>
-                      )}
+                      {exp.viewWork && (() => {
+                        const cs = caseStudies[exp.viewWork.replace('/work/', '').replace(/\/$/, '')]
+                        return (
+                          <a
+                            href={exp.viewWork}
+                            className={`experience-view-work accent-${cs?.accent || 'gold'}`}
+                            onClick={(e) => { e.preventDefault(); navigate(exp.viewWork) }}
+                          >
+                            {cs?.navLabel || cs?.title || 'Case study'}{' '}
+                            <span className="ew-read">({readMinutes(cs)} min read)</span>
+                          </a>
+                        )
+                      })()}
                     </div>
                   </div>
                 ))}
