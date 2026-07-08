@@ -322,6 +322,10 @@ export default function ChatInterface({ role = null, onNavigate } = {}) {
           <div className="chat-forward">
             <span className="chat-forward-label">Keep going</span>
             <div className="chat-forward-links">
+              <button
+                className="chat-forward-link chat-forward-story"
+                onClick={() => { closeOverlay(); onNavigate?.('/story/azure-storage-mover-s3?q=why%20honest%20validation') }}
+              >✦ Build the story: why honest validation? →</button>
               {Object.values(caseStudies).map(cs => (
                 <button
                   key={cs.slug}

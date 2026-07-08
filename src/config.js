@@ -5,3 +5,7 @@ export const API_URL = import.meta.env.DEV
 export const PERSPECTIVES_URL = import.meta.env.DEV
   ? 'http://localhost:7071/api/perspectives'
   : '/api/perspectives'
+
+export const STORY_URL = import.meta.env.DEV
+  ? 'http://localhost:7071/api/story'
+  : '/api/story'
