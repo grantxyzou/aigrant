@@ -54,7 +54,7 @@ export default function CaseStudy({ data, onBack }) {
   }
 
   return (
-    <div className="cs-page">
+    <div className={`cs-page cs-accent-${data.accent || 'gold'}`}>
       <div className="cs-container">
         <a href="/" className="cs-back" onClick={handleBack}>← Back</a>
 

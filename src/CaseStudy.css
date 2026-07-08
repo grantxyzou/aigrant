@@ -1,12 +1,21 @@
-/* Case-study page styles — strictly follows design.md tokens for grantzou.com.
-   Color discipline:
-     #e8e4dc  primary text (--ink)      rgba(255,255,255,.55–.80) muted text
-     #1a1918  card surface              #3B3B3C  borders / dividers
-     #c9a84c  mustard — SKILL TAGS ONLY #52a850  court green — badminton only
-     #e8724a  orange — INTERACTIVE / CTA ONLY (not used decoratively here)
-   Sits above the fixed .bg-aurora (page background stays transparent). */
+/* Case-study page styles — colors from the authoritative Azure Brand token file.
+   Token map (values inlined so this file is self-contained):
+     --gz-ink #e8e4dc · --gz-ink-subtle #ABABAB · --gz-border #3B3B3C
+     --gz-mustard #c9a84c (personal gold accent) · --gz-tan #BEB293
+     --az-brand #0078D4 · --az-brand-hi #4f9bea (legible on dark)
+     card surface --az-bg-dark-3 #1a1a1a · ground #100f0f
+   Accent is per case study via .cs-accent-gold / .cs-accent-azure.
+   Orange is retired from these pages. Sits above the fixed .bg-aurora. */
 
 .cs-page {
+  --gz-ink: #e8e4dc;
+  --gz-ink-subtle: #ABABAB;
+  --gz-border: #3B3B3C;
+  --gz-mustard: #c9a84c;
+  --az-brand-hi: #4f9bea;
+  --cs-card: #1a1a1a;
+  --cs-accent: var(--gz-mustard); /* default: personal gold */
+
   position: relative;
   z-index: 1;
   min-height: 100vh;
@@ -15,12 +24,16 @@
   justify-content: center;
 }
 
+/* Per-case-study accent: Azure work uses the Azure brand blue */
+.cs-page.cs-accent-azure { --cs-accent: var(--az-brand-hi); }
+.cs-page.cs-accent-gold  { --cs-accent: var(--gz-mustard); }
+
 .cs-container {
   width: 100%;
   max-width: 760px;
 }
 
-/* Back links — muted utility nav (design.md muted-text token), not orange ---- */
+/* Back links — muted utility nav ------------------------------------------ */
 .cs-back {
   display: inline-block;
   color: rgba(255, 255, 255, 0.55);
@@ -31,7 +44,7 @@
   letter-spacing: 0.02em;
   transition: color 0.15s ease;
 }
-.cs-back:hover { color: rgba(255, 255, 255, 0.85); }
+.cs-back:hover { color: var(--gz-ink); }
 .cs-back-bottom { margin-top: 64px; }
 
 /* Hero -------------------------------------------------------------------- */
@@ -39,7 +52,7 @@
 
 .cs-title {
   margin: 0;
-  color: #e8e4dc;
+  color: var(--gz-ink);
   font-size: clamp(28px, 4vw, 40px);
   font-family: 'IBM Plex Sans', sans-serif;
   font-weight: 600;
@@ -59,7 +72,7 @@
 .cs-summary {
   margin: 24px 0 0;
   padding-left: 16px;
-  border-left: 1px solid #3B3B3C;
+  border-left: 2px solid var(--cs-accent);
   color: rgba(255, 255, 255, 0.7);
   font-size: 16px;
   font-family: 'IBM Plex Sans', sans-serif;
@@ -88,10 +101,10 @@
 }
 .cs-meta-row dd {
   margin: 0;
-  color: #ABABAB;
+  color: var(--gz-ink-subtle);
 }
 
-/* Skill tags — mustard pills, exactly per design.md .experience-tag --------- */
+/* Skill tags — neutral pills (matches the screenshot's gray pills) --------- */
 .cs-tags {
   margin-top: 22px;
   display: flex;
@@ -99,13 +112,13 @@
   gap: 6px;
 }
 .cs-tag {
-  color: #c9a84c;
+  color: var(--gz-ink-subtle);
   font-size: 12px;
   font-family: 'IBM Plex Mono', monospace;
   padding: 3px 8px;
-  border: 1px solid rgba(201, 168, 76, 0.3);
+  border: 1px solid var(--gz-border);
   border-radius: 4px;
-  background: rgba(201, 168, 76, 0.07);
+  background: rgba(255, 255, 255, 0.02);
   letter-spacing: 0.01em;
 }
 
@@ -113,14 +126,14 @@
 .cs-body-blocks {
   margin-top: 44px;
   padding-top: 8px;
-  border-top: 1px solid #3B3B3C;
+  border-top: 1px solid var(--gz-border);
 }
 
 .cs-section { margin-top: 40px; }
 
 .cs-heading {
   margin: 0 0 14px;
-  color: #e8e4dc;
+  color: var(--gz-ink);
   font-size: 16px;
   font-family: 'IBM Plex Sans', sans-serif;
   font-weight: 600;
@@ -136,7 +149,7 @@
   line-height: 1.6;
 }
 
-/* List — muted, matches .experience-bullet (arrow is not a CTA) ------------- */
+/* List — muted marker ----------------------------------------------------- */
 .cs-list {
   margin: 4px 0 0;
   padding: 0;
@@ -160,16 +173,16 @@
   color: rgba(255, 255, 255, 0.45);
 }
 
-/* Callout — card surface + divider border (NOT mustard/orange) -------------- */
+/* Callout — card surface, accent label ------------------------------------ */
 .cs-callout {
   margin-top: 40px;
   padding: 22px 24px;
-  border: 1px solid #3B3B3C;
+  border: 1px solid var(--gz-border);
   border-radius: 10px;
-  background: #1a1918;
+  background: var(--cs-card);
 }
 .cs-callout-label {
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--cs-accent);
   font-size: 12px;
   font-family: 'IBM Plex Mono', monospace;
   letter-spacing: 0.04em;
@@ -185,14 +198,14 @@
 }
 .cs-callout-body:last-child { margin-bottom: 0; }
 
-/* Figure placeholder — neutral dashed divider ----------------------------- */
+/* Figure placeholder ------------------------------------------------------ */
 .cs-figure {
   margin: 32px 0 0;
   min-height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px dashed #3B3B3C;
+  border: 1px dashed var(--gz-border);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.015);
 }
