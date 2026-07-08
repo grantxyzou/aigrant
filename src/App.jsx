@@ -166,7 +166,7 @@ export default function App(){
   const [perspective, setPerspective] = useState(() => {
     const params = new URLSearchParams(window.location.search)
     const as = params.get('as')
-    return ['recruiter', 'collaborator', 'ask'].includes(as) ? as : null
+    return ['recruiter', 'collaborator', 'client'].includes(as) ? as : null
   })
   const footerRef = useRef(null)
   const perspectiveCache = useRef({})
@@ -195,9 +195,9 @@ export default function App(){
     window.history.replaceState(null, '', perspective ? url : url.pathname)
   }, [perspective])
 
-  // Fetch dynamic copy for recruiter/collaborator perspectives
+  // Fetch AI-polished hero copy for the active role (recruiter/collaborator/client)
   useEffect(() => {
-    if (!perspective || perspective === 'ask') return
+    if (!perspective) return
     if (perspectiveCache.current[perspective]) return
     fetch(`${PERSPECTIVES_URL}?as=${perspective}`)
       .then(r => r.json())
@@ -295,7 +295,7 @@ export default function App(){
             </div>
             <div className="header-right">
               <div className="perspectives-toggle" role="group" aria-label="Reading perspective">
-                {['recruiter', 'collaborator', 'ask'].map(p => (
+                {['recruiter', 'collaborator', 'client'].map(p => (
                   <button
                     key={p}
                     className={`perspectives-option${perspective === p ? ' active' : ''}`}
@@ -332,9 +332,9 @@ export default function App(){
               <div className="section-content">
                 <div
                   key={perspective}
-                  className={`about-text${perspective && perspective !== 'ask' ? ' perspective-fade' : ''}`}
+                  className={`about-text${perspective ? ' perspective-fade' : ''}`}
                 >
-                  {perspective && perspective !== 'ask'
+                  {perspective
                     ? (perspectiveCopy[perspective] || perspectives[perspective].intro)
                     : 'An evolving, exploratory design portfolio where I\'m learning Azure infrastructure and AI hands-on, while experimenting with AI features as new ways to tell product stories.'
                   }
@@ -356,9 +356,16 @@ export default function App(){
                       {exp.role && (
                         <div className="experience-role">{exp.role}</div>
                       )}
-                      {exp.description && (
-                        <div className="experience-description">{exp.description}</div>
-                      )}
+                      {(() => {
+                        const roleBlurb = perspective ? perspectives[perspective]?.workBlurb?.[exp.company] : null
+                        const shownDescription = roleBlurb || exp.description
+                        return shownDescription && (
+                          <div
+                            key={perspective}
+                            className={`experience-description${perspective ? ' perspective-fade' : ''}`}
+                          >{shownDescription}</div>
+                        )
+                      })()}
                       {exp.bullets && (
                         <div className="experience-bullets">
                           {exp.bullets.map((bullet, j) => (
@@ -370,7 +377,7 @@ export default function App(){
                         <div className="experience-location">{exp.location}</div>
                       )}
                       {(() => {
-                        const activeTags = perspective && perspective !== 'ask'
+                        const activeTags = perspective
                           ? perspectives[perspective].workTags[exp.company]
                           : exp.tags
                         return activeTags && (
@@ -399,8 +406,19 @@ export default function App(){
               </div>
             </div>
 
-            {/* Chat — shown when "ask" perspective is active */}
-            {perspective === 'ask' && <ChatInterface />}
+            {/* Role CTA — a forward nudge toward contact when a lens is active */}
+            {perspective && perspectives[perspective]?.cta && (
+              <a
+                key={perspective}
+                className="role-cta perspective-fade"
+                href={perspectives[perspective].cta.href}
+              >
+                {perspectives[perspective].cta.label} <span aria-hidden="true">→</span>
+              </a>
+            )}
+
+            {/* Ask — always available, seeded per active role */}
+            <ChatInterface role={perspective} onNavigate={navigate} />
 
             {/* Footer */}
             <div className="footer" ref={footerRef}>

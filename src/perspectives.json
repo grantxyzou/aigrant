@@ -1,20 +1,74 @@
 {
   "recruiter": {
-    "tagline": "Reading as: Recruiter",
-    "intro": "6+ years designing enterprise AI products at Microsoft Azure, Jungle Scout, and Visier. Currently focused on agentic interfaces, cost transparency UX, and AI-native product design.",
+    "label": "Recruiter",
+    "intro": "6+ years designing enterprise AI products at Microsoft Azure, Jungle Scout, and Visier — from 0→1 features to shipped, measured outcomes. Currently focused on agentic interfaces and AI-native product design in the Azure portal.",
+    "workBlurb": {
+      "Microsoft · Azure": "Product designer on Azure's cloud infrastructure, designing Copilot and agentic experiences for setting up and migrating enterprise workloads. Shipped the public Storage Mover S3 redesign — a unified readiness model that cut setup abandonment, plus validation that never overstates what was actually checked.",
+      "Jungle Scout": "Owned Advertising Analytics end-to-end — the first net-new feature for the consumer product since 2021. Drove it from 6 discovery interviews and a 216-participant study to a shipped 3-tab analytics experience (Q1 2022).",
+      "Visier": "Early-career foundation in enterprise people-analytics UX. Designed chart controls (Top-N, 'Others' handling) that kept high-cardinality data honest, and led a mobile-first careers-site redesign."
+    },
     "workTags": {
       "Microsoft · Azure": ["Agentic Design", "Copilot / AI", "Enterprise UX", "Systems Thinking", "0→1 Products"],
       "Jungle Scout": ["Analytics UX", "Data Visualization", "User Research", "B2C SaaS"],
       "Visier": ["People Analytics", "Information Architecture", "B2B SaaS", "HR Tech"]
-    }
+    },
+    "cta": {
+      "label": "See how I'd fit your team — get in touch",
+      "href": "mailto:grant.zou@outlook.com?subject=Role%20opportunity"
+    },
+    "askSeeds": [
+      "What's his biggest measurable impact?",
+      "Is he senior enough to own 0→1 work?",
+      "What does he actually do at Microsoft Azure?",
+      "Why is he a strong AI-design hire?"
+    ]
   },
   "collaborator": {
-    "tagline": "Reading as: Collaborator",
-    "intro": "I'm deep in AI-native design — building on Azure, experimenting with agentic UX patterns, and always open to creative cross-disciplinary projects that push the edges of what interfaces can do.",
+    "label": "Collaborator",
+    "intro": "I'm deep in AI-native design — building on Azure, prototyping agentic UX patterns, and always up for cross-disciplinary work. I validate the real problem before designing, and keep stakeholders in the room the whole way.",
+    "workBlurb": {
+      "Microsoft · Azure": "I work close to the metal on Azure infrastructure — mapping the hidden decisions users make, prototyping Copilot-style guidance, and partnering tightly with PM and engineering. On Storage Mover I built one readiness model across every entry point instead of bolting S3 on as a special case.",
+      "Jungle Scout": "On Advertising Analytics I ran the whole process: 6 interviews, a FigJam synthesis with my PM, and a 60-minute stakeholder workshop to align cross-functionally. I pushed to strip solution-first language from the brief so we validated the problem first.",
+      "Visier": "My early-career craft foundation — fast iteration, close collaboration, and making system constraints visible so users get guided toward valid configurations instead of blocked by them."
+    },
     "workTags": {
       "Microsoft · Azure": ["Agentic Interfaces", "AI Tooling", "Design Systems", "Research Ops", "Prototyping"],
       "Jungle Scout": ["Data Storytelling", "Cross-functional", "Iterative Design", "Growth"],
       "Visier": ["Complex Data UX", "Stakeholder Alignment", "Enterprise UX"]
-    }
+    },
+    "cta": {
+      "label": "Let's build something together",
+      "href": "mailto:grant.zou@outlook.com?subject=Let's%20collaborate"
+    },
+    "askSeeds": [
+      "How does he run user research?",
+      "How does he work with engineers and PMs?",
+      "Walk me through his design process",
+      "How does he prototype agentic UX?"
+    ]
+  },
+  "client": {
+    "label": "Client",
+    "intro": "I design complex systems that explain themselves — so your users finish what they start instead of failing silently. I focus on the moments where a product technically works but still lets people down: setup, validation, and trust.",
+    "workBlurb": {
+      "Microsoft · Azure": "I design enterprise migration and setup experiences that surface prerequisites early and stay honest about what's actually been verified — so 'the job ran' never gets mistaken for 'the data is safe.' The Storage Mover S3 redesign shows how that plays out in a real product.",
+      "Jungle Scout": "I turn dense, intimidating data into decisions people can act on. For Amazon sellers, I shaped raw advertising metrics into a clear 3-tab analytics experience that answered the business questions they actually had.",
+      "Visier": "I make complex, high-stakes data legible for non-analysts — designing controls and views that keep the numbers trustworthy and the next action obvious."
+    },
+    "workTags": {
+      "Microsoft · Azure": ["Migration UX", "Setup & Onboarding", "Trust & Validation", "Enterprise"],
+      "Jungle Scout": ["Analytics Dashboards", "Data Clarity", "Actionable Insight"],
+      "Visier": ["Data Legibility", "Decision Support", "Enterprise UX"]
+    },
+    "cta": {
+      "label": "Start a project",
+      "href": "mailto:grant.zou@outlook.com?subject=Project%20inquiry"
+    },
+    "askSeeds": [
+      "How do you keep migrations from silently failing?",
+      "Can you make our complex data simple?",
+      "What does working with you look like?",
+      "How do you design for trust?"
+    ]
   }
 }

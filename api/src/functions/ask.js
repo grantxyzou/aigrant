@@ -48,6 +48,7 @@ app.http('ask', {
         try {
             const body = await request.json().catch(() => ({}));
             const isIntroRequest = body?.isIntroRequest === true;
+            const role = ['recruiter', 'collaborator', 'client'].includes(body?.role) ? body.role : null;
 
             // Sanitize conversation messages — only allow user/assistant roles, enforce length limits
             const conversationMessages = body?.messages?.length > 0 ? sanitizeMessages(body.messages) : null;
@@ -167,7 +168,7 @@ ${trainingContext}`;
                 },
                 body: JSON.stringify({
                     messages: [
-                        { role: 'system', content: systemPrompt },
+                        { role: 'system', content: systemPrompt + (role ? `\n\nThe visitor is reading as a ${role}. Frame your answer for what a ${role} cares about, keep it tight, and end by pointing them toward relevant work on the site or how to reach Grant.` : '') },
                         ...fewShots,
                         ...(conversationMessages || [{ role: 'user', content: userQuestion }])
                     ],

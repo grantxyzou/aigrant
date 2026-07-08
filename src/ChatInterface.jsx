@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
 import { API_URL } from './config'
+import perspectives from './perspectives.json'
+import { caseStudies } from './caseStudies'
 
-export default function ChatInterface() {
+export default function ChatInterface({ role = null, onNavigate } = {}) {
   const [messages, setMessages] = useState([])
   const [inputValue, setInputValue] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -11,13 +13,17 @@ export default function ChatInterface() {
   const inputRef = useRef(null)
   const promptsRef = useRef(null)
 
-  const suggestedPrompts = [
+  const defaultPrompts = [
     "Tell me about a recent project you worked on",
     "How do you approach ambiguous problems?",
     "What's your design process like?",
     "What do you work on at Microsoft?",
     "How do you work with engineers?"
   ]
+  // Seed the prompts to what this role most wants to know
+  const suggestedPrompts = (role && perspectives[role]?.askSeeds) || defaultPrompts
+  // Where every answer points next
+  const contact = (role && perspectives[role]?.cta) || { label: 'Get in touch', href: 'mailto:grant.zou@outlook.com' }
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -76,7 +82,7 @@ export default function ChatInterface() {
       const response = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: updatedMessages })
+        body: JSON.stringify({ messages: updatedMessages, role })
       })
 
       const data = await response.json()
@@ -310,6 +316,23 @@ export default function ChatInterface() {
 
           <div ref={messagesEndRef} />
         </div>
+
+        {/* Forward motion — never leave the visitor at a dead end */}
+        {messages.some(m => m.role === 'assistant') && (
+          <div className="chat-forward">
+            <span className="chat-forward-label">Keep going</span>
+            <div className="chat-forward-links">
+              {Object.values(caseStudies).map(cs => (
+                <button
+                  key={cs.slug}
+                  className="chat-forward-link"
+                  onClick={() => { closeOverlay(); onNavigate?.(`/work/${cs.slug}`) }}
+                >{cs.navLabel} →</button>
+              ))}
+              <a className="chat-forward-link chat-forward-cta" href={contact.href}>{contact.label} →</a>
+            </div>
+          </div>
+        )}
 
         {/* Input inside overlay for continued conversation */}
         <div className="chat-overlay-input">
