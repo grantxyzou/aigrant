@@ -1,4 +1,51 @@
 @import "tailwindcss";
+
+/* Self-hosted IBM Plex — avoids relying on fonts.googleapis.com, which the
+   CSP (style-src 'self') correctly blocks. No CSP change needed this way. */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 300 700; /* variable font: single file covers the whole range */
+  font-display: swap;
+  src: url('/fonts/ibm-plex-sans-var-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/ibm-plex-mono-300-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/ibm-plex-mono-400-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/ibm-plex-mono-500-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/ibm-plex-mono-600-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/ibm-plex-mono-700-latin.woff2') format('woff2');
+}
+
 /* Fix text-size-adjust browser compatibility
 html, body {
   -webkit-text-size-adjust: 100%;
@@ -39,109 +86,76 @@ body {
 }
 
 /* Custom Background with Gradient Overlays */
+/* Weather background — two radial blobs. "Color is weather, not decoration."
+   Spec: 60px blur · alpha 0.4-0.85 · asymmetric loops · drift <8% · scale <1.1 */
 .bg-aurora {
   background: #100F0F;
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
   overflow: hidden;
   z-index: -1;
-  transition: transform 0.1s ease-out, height 0.5s ease-out;
-  will-change: transform;
+  /* mood: DAWN (mist + tan) is the default */
+  --blob-a: #8FA2B0;
+  --blob-b: #BEB293;
 }
 
+.bg-aurora.mood-dawn   { --blob-a: #8FA2B0; --blob-b: #BEB293; } /* mist + tan */
+.bg-aurora.mood-tide   { --blob-a: #1B324D; --blob-b: #657E95; } /* slate stack */
+.bg-aurora.mood-hearth { --blob-a: #BEB293; --blob-b: #c9a84c; } /* tan + mustard */
 
+/* Weather — bottom-anchored bell, color A. Both colors share the page and
+   sweep past each other in a coordinated dance (same tempo, mirrored). */
 .bg-aurora::before {
   content: '';
   position: absolute;
-  width: 150vw;
-  height: 1640px;
-  left: -25vw;
-  top: 659px;
-  opacity: 0.50;
-  background: linear-gradient(180deg, #8FA2B0 0%, #1B324D 56%);
-  box-shadow: 200px 200px 200px;
-  filter: blur(100px);
-  animation: breathe-gentle 6s ease-in-out infinite;
-  transition: transform 0.3s ease-out;
-  will-change: transform, opacity, filter;
+  left: 50%;
+  bottom: -8%;
+  width: 108vw;
+  height: 84vh;
+  transform: translateX(-50%);
+  transform-origin: bottom center;
+  opacity: 0.6;
+  background: radial-gradient(ellipse 58% 100% at 50% 100%, var(--blob-a) 0%, transparent 72%);
+  filter: blur(60px);
+  mix-blend-mode: screen;
+  animation: dance-a 20s ease-in-out infinite;
+  will-change: transform, opacity;
 }
 
+/* Bell, color B — same size/opacity as A (neither dominates), mirrored dance */
 .bg-aurora::after {
   content: '';
   position: absolute;
-  width: 150vw;
-  height: 1509px;
-  left: -25vw;
-  top: 758px;
-  mix-blend-mode: darken;
-  background: linear-gradient(180deg, #BEB293 0%, black 67%);
-  box-shadow: 200px 200px 200px;
-  filter: blur(100px);
-  animation: exhale-drift 7s ease-in-out infinite;
-  transition: transform 0.3s ease-out;
-  will-change: transform, opacity, filter;
+  left: 50%;
+  bottom: -8%;
+  width: 108vw;
+  height: 84vh;
+  transform: translateX(-50%);
+  transform-origin: bottom center;
+  opacity: 0.6;
+  background: radial-gradient(ellipse 58% 100% at 50% 100%, var(--blob-b) 0%, transparent 72%);
+  filter: blur(60px);
+  mix-blend-mode: screen;
+  animation: dance-b 20s ease-in-out infinite;
+  will-change: transform, opacity;
 }
 
-/* Additional gradient layer */
-.bg-aurora .gradient-layer {
-  position: absolute;
-  width: 903.61px;
-  height: 1760.98px;
-  left: 445px;
-  top: 1535.78px;
-  transform: rotate(-58deg);
-  transform-origin: top left;
-  opacity: 0.60;
-  mix-blend-mode: hard-light;
-  background: linear-gradient(180deg, #8FA2B0 0%, #1B324D 56%);
-  box-shadow: 200px 200px 200px;
-  filter: blur(100px);
-  animation: inhale-pulse 5.5s ease-in-out infinite;
-  transition: transform 0.1s ease-out;
-  will-change: transform, opacity, filter;
+/* Rule: pause weather on prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .bg-aurora::before,
+  .bg-aurora::after { animation: none; }
 }
 
-/* Background Animation Keyframes - Breathing Effect */
-@keyframes breathe-gentle {
-  0%, 100% { 
-    transform: translate(0px, 0px) scale(1);
-    opacity: 0.45;
-    filter: blur(95px) hue-rotate(0deg);
-  }
-  50% { 
-    transform: translate(-25px, 40px) scale(1.08);
-    opacity: 0.65;
-    filter: blur(110px) hue-rotate(15deg);
-  }
+/* Coordinated dance — same 20s tempo, mirrored: the two colors sweep past
+   each other (A left→right while B right→left) and breathe together. */
+@keyframes dance-a {
+  0%, 100% { transform: translateX(-57%) scaleY(1);    opacity: 0.5; }
+  50%      { transform: translateX(-43%) scaleY(1.08); opacity: 0.66; }
 }
 
-@keyframes exhale-drift {
-  0%, 100% { 
-    transform: translate(0px, 0px) rotate(0deg) scale(1);
-    opacity: 0.95;
-    filter: blur(95px) hue-rotate(0deg);
-  }
-  50% { 
-    transform: translate(-35px, -20px) rotate(1.5deg) scale(1.05);
-    opacity: 0.85;
-    filter: blur(105px) hue-rotate(-10deg);
-  }
-}
-
-@keyframes inhale-pulse {
-  0%, 100% { 
-    transform: rotate(-58deg) translate(0px, 0px) scale(1);
-    opacity: 0.55;
-    filter: blur(95px) hue-rotate(0deg);
-  }
-  50% { 
-    transform: rotate(-55deg) translate(30px, -40px) scale(1.12);
-    opacity: 0.75;
-    filter: blur(115px) hue-rotate(20deg);
-  }
+@keyframes dance-b {
+  0%, 100% { transform: translateX(-43%) scaleY(1.08); opacity: 0.66; }
+  50%      { transform: translateX(-57%) scaleY(1);    opacity: 0.5; }
 }
 
 @keyframes breathe {
@@ -213,7 +227,6 @@ body {
   background: transparent;
   gap: 20px;
 }
-
 
 /* Sticky Header Wrapper */
 .header-sticky {
@@ -334,7 +347,6 @@ body {
   gap: 12px;
   display: flex;
 }
-
 
 /* Perspectives Toggle */
 .perspectives-toggle {
@@ -745,10 +757,10 @@ a.dotted-link {
   font-family: 'IBM Plex Mono', monospace;
   font-weight: 400;
   padding: 3px 8px;
-  border: 1px solid rgba(201, 168, 76, 0.3);
   border-radius: 4px;
-  background: rgba(201, 168, 76, 0.07);
+  background: rgba(201, 168, 76, 0.16); /* yellow elevation, no stroke */
   letter-spacing: 0.01em;
+  text-align: center;
   position: relative;
   display: inline-block;
   white-space: nowrap;
@@ -772,7 +784,7 @@ a.dotted-link {
 .experience-view-work {
   display: inline-block;
   margin-top: 12px;
-  color: #e8724a;
+  color: #c9a84c; /* default gold; per-project accent class overrides */
   font-size: 13px;
   font-family: 'IBM Plex Sans', sans-serif;
   font-weight: 500;
@@ -781,9 +793,79 @@ a.dotted-link {
   transition: opacity 0.15s ease;
 }
 
+/* Links are gold all around (Grant, 2026-07-07); classes kept for future use */
+.experience-view-work.accent-azure { color: #c9a84c; }
+.experience-view-work.accent-gold { color: #c9a84c; }
+
+.experience-view-work .ew-read {
+  color: rgba(255, 255, 255, 0.45);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 400;
+}
+
 .experience-view-work:hover {
   opacity: 0.75;
 }
+
+/* Role CTA — forward nudge toward contact when a lens is active */
+.role-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 36px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  background: rgba(201, 168, 76, 0.16);
+  color: #c9a84c;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: background 0.15s ease;
+}
+.role-cta:hover { background: rgba(201, 168, 76, 0.24); }
+
+/* Chat forward-links — every answer hands the visitor somewhere next */
+.chat-forward {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px clamp(16px, 4vw, 32px);
+  border-top: 1px solid #3B3B3C;
+}
+.chat-forward-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+.chat-forward-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chat-forward-link {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid #3B3B3C;
+  border-radius: 6px;
+  padding: 6px 12px;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+.chat-forward-link:hover { background: rgba(255, 255, 255, 0.08); }
+.chat-forward-cta {
+  background: rgba(201, 168, 76, 0.16);
+  border-color: rgba(201, 168, 76, 0.3);
+  color: #c9a84c;
+}
+.chat-forward-cta:hover { background: rgba(201, 168, 76, 0.24); }
 
 .resume-link {
   color: rgba(255, 255, 255, 0.55);

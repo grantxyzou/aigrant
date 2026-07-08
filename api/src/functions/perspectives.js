@@ -3,12 +3,14 @@ const { checkRateLimit, getClientIp, getCorsHeaders } = require('../../rate-limi
 
 const audiencePrompts = {
     recruiter: `Write a 2-sentence portfolio intro for Grant Zou addressing a recruiter. Grant is an AI product designer at Microsoft Azure with 6+ years experience across Azure, Jungle Scout, and Visier. He specializes in agentic interfaces, enterprise UX, and AI-native product design. Be specific, confident, and results-oriented. First person. No quotes.`,
-    collaborator: `Write a 2-sentence portfolio intro for Grant Zou addressing a potential collaborator. Grant is an AI product designer at Microsoft Azure who experiments with agentic UX patterns, builds with AI hands-on, and is open to creative cross-disciplinary work. Be warm, direct, and energetic. First person. No quotes.`
+    collaborator: `Write a 2-sentence portfolio intro for Grant Zou addressing a potential collaborator. Grant is an AI product designer at Microsoft Azure who experiments with agentic UX patterns, builds with AI hands-on, and is open to creative cross-disciplinary work. Be warm, direct, and energetic. First person. No quotes.`,
+    client: `Write a 2-sentence portfolio intro for Grant Zou addressing a prospective client. Grant is a product designer who makes complex systems explain themselves — so users finish what they start instead of failing silently. He focuses on setup, validation, and trust in enterprise and data-heavy products. Be reassuring, outcome-oriented, and plain-spoken. First person. No quotes.`
 };
 
 const staticFallbacks = {
     recruiter: "6+ years designing enterprise AI products at Microsoft Azure, Jungle Scout, and Visier. Currently focused on agentic interfaces, cost transparency UX, and AI-native product design.",
-    collaborator: "I'm deep in AI-native design — building on Azure, experimenting with agentic UX patterns, and always open to creative cross-disciplinary projects that push the edges of what interfaces can do."
+    collaborator: "I'm deep in AI-native design — building on Azure, experimenting with agentic UX patterns, and always open to creative cross-disciplinary projects that push the edges of what interfaces can do.",
+    client: "I design complex systems that explain themselves — so your users finish what they start instead of failing silently. I focus on the moments where a product technically works but still lets people down: setup, validation, and trust."
 };
 
 app.http('perspectives', {
@@ -50,11 +52,11 @@ app.http('perspectives', {
 
         const audience = request.query.get('as');
 
-        if (!['recruiter', 'collaborator'].includes(audience)) {
+        if (!['recruiter', 'collaborator', 'client'].includes(audience)) {
             return {
                 status: 400,
                 headers,
-                jsonBody: { success: false, error: 'Invalid audience. Use ?as=recruiter or ?as=collaborator' }
+                jsonBody: { success: false, error: 'Invalid audience. Use ?as=recruiter, ?as=collaborator, or ?as=client' }
             };
         }
 

@@ -1,0 +1,225 @@
+/* Case-study page styles — colors from the authoritative Azure Brand token file.
+   Token map (values inlined so this file is self-contained):
+     --gz-ink #e8e4dc · --gz-ink-subtle #ABABAB · --gz-border #3B3B3C
+     --gz-mustard #c9a84c (personal gold accent) · --gz-tan #BEB293
+     --az-brand #0078D4 · --az-brand-hi #4f9bea (legible on dark)
+     card surface --az-bg-dark-3 #1a1a1a · ground #100f0f
+   Accent is per case study via .cs-accent-gold / .cs-accent-azure.
+   Orange is retired from these pages. Sits above the fixed .bg-aurora. */
+
+.cs-page {
+  --gz-ink: #e8e4dc;
+  --gz-ink-subtle: #ABABAB;
+  --gz-border: #3B3B3C;
+  --gz-mustard: #c9a84c;
+  --az-brand-hi: #4f9bea;
+  --cs-card: #1a1a1a;
+  --cs-accent: var(--gz-mustard); /* default: personal gold */
+
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding: clamp(16px, 4vw, 88px);
+  display: flex;
+  justify-content: center;
+}
+
+/* Accent is gold across the board (Grant: "gold all around", 2026-07-07).
+   Classes kept so a per-project accent can be reintroduced later if wanted. */
+.cs-page.cs-accent-azure { --cs-accent: var(--gz-mustard); }
+.cs-page.cs-accent-gold  { --cs-accent: var(--gz-mustard); }
+
+.cs-container {
+  width: 100%;
+  max-width: 760px;
+}
+
+/* Back links — muted utility nav ------------------------------------------ */
+.cs-back {
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 13px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 400;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: color 0.15s ease;
+}
+.cs-back:hover { color: var(--gz-ink); }
+.cs-back-bottom { margin-top: 64px; }
+
+/* Hero -------------------------------------------------------------------- */
+.cs-hero { margin-top: 40px; }
+
+.cs-title {
+  margin: 0;
+  color: var(--gz-ink);
+  font-size: clamp(28px, 4vw, 40px);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.cs-subtitle {
+  margin: 12px 0 0;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: clamp(17px, 2.2vw, 20px);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.cs-summary {
+  margin: 24px 0 0;
+  padding-left: 16px;
+  border-left: 2px solid var(--cs-accent);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+/* Meta -------------------------------------------------------------------- */
+.cs-meta {
+  margin: 28px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cs-meta-row {
+  display: flex;
+  gap: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.cs-meta-row dt {
+  flex: 0 0 84px;
+  color: #888;
+  text-transform: lowercase;
+}
+.cs-meta-row dd {
+  margin: 0;
+  color: var(--gz-ink-subtle);
+}
+
+/* Skill tags — filled yellow elevation, no stroke, centered text ----------- */
+.cs-tags {
+  margin-top: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cs-tag {
+  color: var(--gz-mustard);
+  font-size: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: rgba(201, 168, 76, 0.16);
+  letter-spacing: 0.01em;
+  text-align: center;
+}
+
+/* Body blocks ------------------------------------------------------------- */
+.cs-body-blocks {
+  margin-top: 44px;
+  padding-top: 8px;
+  border-top: 1px solid var(--gz-border);
+}
+
+.cs-section { margin-top: 40px; }
+
+.cs-heading {
+  margin: 0 0 14px;
+  color: var(--gz-ink);
+  font-size: 16px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.cs-body {
+  margin: 0 0 14px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 16px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* List — muted marker ----------------------------------------------------- */
+.cs-list {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cs-list li {
+  position: relative;
+  padding-left: 18px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 15px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  line-height: 1.5;
+}
+.cs-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* Callout — card surface, accent label ------------------------------------ */
+.cs-callout {
+  margin-top: 40px;
+  padding: 22px 24px;
+  border: 1px solid var(--gz-border);
+  border-radius: 10px;
+  background: var(--cs-card);
+}
+.cs-callout-label {
+  color: var(--cs-accent);
+  font-size: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.cs-callout-body {
+  margin: 0 0 12px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 15.5px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  line-height: 1.6;
+}
+.cs-callout-body:last-child { margin-bottom: 0; }
+
+/* Figure placeholder ------------------------------------------------------ */
+.cs-figure {
+  margin: 32px 0 0;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--gz-border);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.015);
+}
+.cs-figure-caption {
+  color: #6a6a6a;
+  font-size: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.02em;
+  padding: 0 16px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .cs-meta-row { flex-direction: column; gap: 0; }
+  .cs-meta-row dt { flex-basis: auto; }
+}

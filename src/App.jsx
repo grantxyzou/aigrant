@@ -4,6 +4,23 @@ import { FaInstagram, FaGithub, FaLinkedinIn, FaRegFileAlt } from 'react-icons/f
 import perspectives from './perspectives.json'
 import ChatInterface from './ChatInterface'
 import { PERSPECTIVES_URL } from './config'
+import CaseStudy from './CaseStudy'
+import { caseStudies } from './caseStudies'
+
+// Estimate reading time (~200 wpm) from a case study's text content.
+const readMinutes = (cs) => {
+  if (!cs) return 1
+  let words = 0
+  const add = (t) => { if (typeof t === 'string') words += t.trim().split(/\s+/).filter(Boolean).length }
+  add(cs.subtitle); add(cs.summary)
+  cs.sections?.forEach((b) => {
+    b.body?.forEach(add)
+    b.list?.forEach(add)
+    b.callout?.body?.forEach(add)
+    if (b.heading) add(b.heading)
+  })
+  return Math.max(1, Math.round(words / 200))
+}
 
 const experience = [
   {
@@ -11,14 +28,14 @@ const experience = [
     period: '2022 – Present',
     description: 'Designing across cost management, cloud infrastructure, and Copilot experiences. I began in Cost Management, focused on transparency and predictability, then moved into Azure Core to work closer to foundational infrastructure and agent-assisted workflows. Across both, the work centers on helping customers navigate complex systems where mistakes are costly and often discovered too late.',
     tags: ['Azure Portal', 'Copilot / AI', 'Cloud Infrastructure', 'Enterprise UX', 'Agentic Design'],
-    viewWork: null
+    viewWork: '/work/azure-storage-mover-s3'
   },
   {
     company: 'Jungle Scout',
     period: '2020 – 2022',
     description: 'Designed analytics and data visualization for e-commerce sellers, translating dense operational data into actionable insights that supported real business decisions under uncertainty.',
     tags: ['Analytics UX', 'Data Visualization', 'User Research', 'E-commerce', 'B2C SaaS'],
-    viewWork: null
+    viewWork: '/work/advertising-analytics'
   },
   {
     company: 'Visier',
@@ -145,16 +162,24 @@ export default function App(){
   const [typewriterText, setTypewriterText] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const [hasAnimated, setHasAnimated] = useState(false)
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isScrolled, setIsScrolled] = useState(false)
   const [perspective, setPerspective] = useState(() => {
     const params = new URLSearchParams(window.location.search)
     const as = params.get('as')
-    return ['recruiter', 'collaborator', 'ask'].includes(as) ? as : null
+    return ['recruiter', 'collaborator', 'client'].includes(as) ? as : null
   })
   const footerRef = useRef(null)
   const perspectiveCache = useRef({})
   const [perspectiveCopy, setPerspectiveCopy] = useState({})
+
+  // Lightweight path-based routing for /work/<slug> case studies (no router dep).
+  const [path, setPath] = useState(window.location.pathname)
+  useEffect(() => {
+    const onPop = () => setPath(window.location.pathname)
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [])
+  const navigate = (to) => { window.history.pushState(null, '', to); setPath(to) }
 
   const fullText = "A portfolio of design process, research, and complex systems work."
 
@@ -170,9 +195,9 @@ export default function App(){
     window.history.replaceState(null, '', perspective ? url : url.pathname)
   }, [perspective])
 
-  // Fetch dynamic copy for recruiter/collaborator perspectives
+  // Fetch AI-polished hero copy for the active role (recruiter/collaborator/client)
   useEffect(() => {
-    if (!perspective || perspective === 'ask') return
+    if (!perspective) return
     if (perspectiveCache.current[perspective]) return
     fetch(`${PERSPECTIVES_URL}?as=${perspective}`)
       .then(r => r.json())
@@ -205,17 +230,10 @@ export default function App(){
   }
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 2
-      const y = (e.clientY / window.innerHeight - 0.5) * 2
-      setMousePosition({ x, y })
-    }
-
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50)
     }
 
-    window.addEventListener('mousemove', handleMouseMove)
     window.addEventListener('scroll', handleScroll)
 
     const observer = new IntersectionObserver(
@@ -240,29 +258,27 @@ export default function App(){
     }, 2000)
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('scroll', handleScroll)
       observer.disconnect()
       clearTimeout(fallbackTimer)
     }
   }, [])
 
+  // Case study route — render the case study instead of the home layout.
+  const caseSlug = path.startsWith('/work/') ? path.replace('/work/', '').replace(/\/$/, '') : null
+  if (caseSlug && caseStudies[caseSlug]) {
+    return (
+      <>
+        <div className={`bg-aurora mood-${caseStudies[caseSlug].mood || 'dawn'}`} aria-hidden="true" />
+        <CaseStudy data={caseStudies[caseSlug]} onBack={() => navigate('/')} />
+      </>
+    )
+  }
+
   return (
     <>
-      {/* Fixed Background */}
-      <div
-        className="bg-aurora"
-        style={{
-          transform: `translate(${mousePosition.x * 5}px, ${mousePosition.y * 3}px)`
-        }}
-      >
-        <div
-          className="gradient-layer"
-          style={{
-            transform: `rotate(-58deg) translate(${mousePosition.x * -8}px, ${mousePosition.y * 6}px)`
-          }}
-        ></div>
-      </div>
+      {/* Fixed weather background */}
+      <div className="bg-aurora mood-dawn" aria-hidden="true" />
 
       {/* Sticky Header */}
       <header className={`header-sticky ${isScrolled ? 'scrolled' : ''}`}>
@@ -279,7 +295,7 @@ export default function App(){
             </div>
             <div className="header-right">
               <div className="perspectives-toggle" role="group" aria-label="Reading perspective">
-                {['recruiter', 'collaborator', 'ask'].map(p => (
+                {['recruiter', 'collaborator', 'client'].map(p => (
                   <button
                     key={p}
                     className={`perspectives-option${perspective === p ? ' active' : ''}`}
@@ -302,7 +318,7 @@ export default function App(){
         <div className="sidebar">
           <div className="sidebar-bio">
             <div className="bio-text">
-              Grant <TooltipLink tooltip="coming soon">remixes music</TooltipLink>, <TooltipLink tooltip="coming soon">experiments with new technologies</TooltipLink>, and keeps rhythm in life through <TooltipLink href="/bpm" tooltip="BPM ↗" external linkClass="dotted-link-court">badminton</TooltipLink> and running. He sees design as storytelling: blending experience and connection, whether in beats, interfaces, or shared moments.
+              Grant <TooltipLink tooltip="coming soon">remixes music</TooltipLink>, <TooltipLink tooltip="coming soon">experiments with new technologies</TooltipLink>, and keeps rhythm in life through <TooltipLink href="https://lively-sand-0633fbd0f.7.azurestaticapps.net/#features" tooltip="BPM ↗" external linkClass="dotted-link-court">badminton</TooltipLink> and running. He sees design as storytelling: blending experience and connection, whether in beats, interfaces, or shared moments.
             </div>
           </div>
           <SocialLinks />
@@ -316,9 +332,9 @@ export default function App(){
               <div className="section-content">
                 <div
                   key={perspective}
-                  className={`about-text${perspective && perspective !== 'ask' ? ' perspective-fade' : ''}`}
+                  className={`about-text${perspective ? ' perspective-fade' : ''}`}
                 >
-                  {perspective && perspective !== 'ask'
+                  {perspective
                     ? (perspectiveCopy[perspective] || perspectives[perspective].intro)
                     : 'An evolving, exploratory design portfolio where I\'m learning Azure infrastructure and AI hands-on, while experimenting with AI features as new ways to tell product stories.'
                   }
@@ -340,9 +356,16 @@ export default function App(){
                       {exp.role && (
                         <div className="experience-role">{exp.role}</div>
                       )}
-                      {exp.description && (
-                        <div className="experience-description">{exp.description}</div>
-                      )}
+                      {(() => {
+                        const roleBlurb = perspective ? perspectives[perspective]?.workBlurb?.[exp.company] : null
+                        const shownDescription = roleBlurb || exp.description
+                        return shownDescription && (
+                          <div
+                            key={perspective}
+                            className={`experience-description${perspective ? ' perspective-fade' : ''}`}
+                          >{shownDescription}</div>
+                        )
+                      })()}
                       {exp.bullets && (
                         <div className="experience-bullets">
                           {exp.bullets.map((bullet, j) => (
@@ -354,7 +377,7 @@ export default function App(){
                         <div className="experience-location">{exp.location}</div>
                       )}
                       {(() => {
-                        const activeTags = perspective && perspective !== 'ask'
+                        const activeTags = perspective
                           ? perspectives[perspective].workTags[exp.company]
                           : exp.tags
                         return activeTags && (
@@ -364,17 +387,38 @@ export default function App(){
                           />
                         )
                       })()}
-                      {exp.viewWork && (
-                        <a href={exp.viewWork} className="experience-view-work">→ View work</a>
-                      )}
+                      {exp.viewWork && (() => {
+                        const cs = caseStudies[exp.viewWork.replace('/work/', '').replace(/\/$/, '')]
+                        return (
+                          <a
+                            href={exp.viewWork}
+                            className={`experience-view-work accent-${cs?.accent || 'gold'}`}
+                            onClick={(e) => { e.preventDefault(); navigate(exp.viewWork) }}
+                          >
+                            {cs?.navLabel || cs?.title || 'Case study'}{' '}
+                            <span className="ew-read">({readMinutes(cs)} min read)</span>
+                          </a>
+                        )
+                      })()}
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Chat — shown when "ask" perspective is active */}
-            {perspective === 'ask' && <ChatInterface />}
+            {/* Role CTA — a forward nudge toward contact when a lens is active */}
+            {perspective && perspectives[perspective]?.cta && (
+              <a
+                key={perspective}
+                className="role-cta perspective-fade"
+                href={perspectives[perspective].cta.href}
+              >
+                {perspectives[perspective].cta.label} <span aria-hidden="true">→</span>
+              </a>
+            )}
+
+            {/* Ask — always available, seeded per active role */}
+            <ChatInterface role={perspective} onNavigate={navigate} />
 
             {/* Footer */}
             <div className="footer" ref={footerRef}>
