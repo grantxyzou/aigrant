@@ -5,7 +5,11 @@ import perspectives from './perspectives.json'
 import ChatInterface from './ChatInterface'
 import { PERSPECTIVES_URL } from './config'
 import CaseStudy from './CaseStudy'
+import StoryCanvas from './StoryCanvas'
 import { caseStudies } from './caseStudies'
+
+// Projects allowed in the generative story canvas (publicly shareable only).
+const STORY_PROJECTS = ['azure-storage-mover-s3']
 
 // Estimate reading time (~200 wpm) from a case study's text content.
 const readMinutes = (cs) => {
@@ -263,6 +267,20 @@ export default function App(){
       clearTimeout(fallbackTimer)
     }
   }, [])
+
+  // Story canvas route — AI composes a live, grounded deep-dive in a split view.
+  const storySlug = path.startsWith('/story/') ? path.replace('/story/', '').replace(/\/$/, '') : null
+  if (storySlug && STORY_PROJECTS.includes(storySlug)) {
+    const q = new URLSearchParams(window.location.search).get('q') || 'Why honest validation?'
+    return (
+      <StoryCanvas
+        slug={storySlug}
+        question={q}
+        onBack={() => navigate('/')}
+        onNavigate={navigate}
+      />
+    )
+  }
 
   // Case study route — render the case study instead of the home layout.
   const caseSlug = path.startsWith('/work/') ? path.replace('/work/', '').replace(/\/$/, '') : null

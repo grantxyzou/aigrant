@@ -867,6 +867,208 @@ a.dotted-link {
 }
 .chat-forward-cta:hover { background: rgba(201, 168, 76, 0.24); }
 
+/* Story chip — entry into the generative story canvas */
+.chat-forward-story {
+  background: rgba(201, 168, 76, 0.12);
+  border-color: rgba(201, 168, 76, 0.3);
+  color: #c9a84c;
+  font-weight: 500;
+}
+.chat-forward-story:hover { background: rgba(201, 168, 76, 0.2); }
+
+/* ── Generative story canvas ─────────────────────────────────────────────
+   Split view: main pane (reuses CaseStudy renderer) + fixed story rail. */
+.story-view { position: relative; min-height: 100vh; }
+
+.story-main {
+  position: relative;
+  z-index: 1;
+  margin-right: 380px; /* room for the fixed rail */
+  min-height: 100vh;
+}
+
+.story-rail {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 380px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: clamp(20px, 3vw, 32px);
+  background: rgba(20, 20, 20, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-left: 1px solid #3B3B3C;
+  overflow-y: auto;
+}
+.story-rail-title {
+  color: #e8e4dc;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+}
+.story-rail-sub {
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+}
+.story-rail-current {
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.story-rail-current em { color: #c9a84c; font-style: normal; }
+.story-rail-prompts { display: flex; flex-direction: column; gap: 8px; }
+.story-rail-chip {
+  text-align: left;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid #3B3B3C;
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: rgba(255, 255, 255, 0.82);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.story-rail-chip:hover:not(:disabled) {
+  background: rgba(201, 168, 76, 0.12);
+  border-color: rgba(201, 168, 76, 0.3);
+}
+.story-rail-chip:disabled { opacity: 0.5; cursor: default; }
+.story-rail-input { display: flex; gap: 8px; margin-top: auto; }
+.story-rail-input input {
+  flex: 1;
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #3B3B3C;
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #e8e4dc;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+}
+.story-rail-input input:focus { outline: none; border-color: rgba(201, 168, 76, 0.4); }
+.story-rail-input button {
+  width: 40px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(201, 168, 76, 0.16);
+  color: #c9a84c;
+  font-size: 16px;
+  cursor: pointer;
+}
+.story-rail-input button:disabled { opacity: 0.4; cursor: default; }
+.story-rail-exit {
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: left;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+}
+.story-rail-exit:hover { color: #e8e4dc; }
+
+/* Composing states */
+.story-composing {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+}
+
+/* Thought process — the composer's steps, ticking through while it works */
+.story-thinking {
+  min-height: 100vh;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: clamp(16px, 4vw, 88px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+}
+.story-thinking-label {
+  margin-bottom: 6px;
+  color: #e8e4dc;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+}
+.story-thought {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  animation: story-block-in 0.4s ease both;
+}
+.story-thought.done { color: rgba(255, 255, 255, 0.4); }
+.story-thought.active { color: #c9a84c; }
+.story-thought-mark {
+  width: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(201, 168, 76, 0.7);
+}
+.story-composing-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px clamp(16px, 4vw, 88px) 48px;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+}
+.story-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #c9a84c;
+  animation: story-pulse 1s ease-in-out infinite;
+}
+@keyframes story-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+/* Block-by-block reveal — scoped to the story canvas so real case studies are unaffected */
+.story-view .cs-section,
+.story-view .cs-callout,
+.story-view .cs-figure {
+  animation: story-block-in 0.5s ease both;
+}
+@keyframes story-block-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 860px) {
+  .story-main { margin-right: 0; padding-bottom: 44vh; }
+  .story-rail {
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    max-height: 42vh;
+    border-left: none;
+    border-top: 1px solid #3B3B3C;
+  }
+}
+
 .resume-link {
   color: rgba(255, 255, 255, 0.55);
   font-size: 13px;
