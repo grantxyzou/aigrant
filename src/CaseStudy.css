@@ -1,6 +1,10 @@
-/* Case-study page styles — matches grantzou.com's design language:
-   IBM Plex Sans/Mono, #100F0F ground, #ABABAB meta, #3B3B3C rules,
-   mustard #c9a84c tags, orange #e8724a CTAs. Sits above the fixed .bg-aurora. */
+/* Case-study page styles — strictly follows design.md tokens for grantzou.com.
+   Color discipline:
+     #e8e4dc  primary text (--ink)      rgba(255,255,255,.55–.80) muted text
+     #1a1918  card surface              #3B3B3C  borders / dividers
+     #c9a84c  mustard — SKILL TAGS ONLY #52a850  court green — badminton only
+     #e8724a  orange — INTERACTIVE / CTA ONLY (not used decoratively here)
+   Sits above the fixed .bg-aurora (page background stays transparent). */
 
 .cs-page {
   position: relative;
@@ -16,20 +20,19 @@
   max-width: 760px;
 }
 
-/* Back links -------------------------------------------------------------- */
+/* Back links — muted utility nav (design.md muted-text token), not orange ---- */
 .cs-back {
   display: inline-block;
-  color: #ABABAB;
-  font-size: 14px;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 13px;
   font-family: 'IBM Plex Sans', sans-serif;
   font-weight: 400;
   text-decoration: none;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
   transition: color 0.15s ease;
 }
-.cs-back:hover { color: #e8e4dc; }
-.cs-back-bottom { margin-top: 64px; color: #e8724a; }
-.cs-back-bottom:hover { opacity: 0.75; color: #e8724a; }
+.cs-back:hover { color: rgba(255, 255, 255, 0.85); }
+.cs-back-bottom { margin-top: 64px; }
 
 /* Hero -------------------------------------------------------------------- */
 .cs-hero { margin-top: 40px; }
@@ -46,7 +49,7 @@
 
 .cs-subtitle {
   margin: 12px 0 0;
-  color: rgba(255, 255, 255, 0.82);
+  color: rgba(255, 255, 255, 0.8);
   font-size: clamp(17px, 2.2vw, 20px);
   font-family: 'IBM Plex Sans', sans-serif;
   font-weight: 400;
@@ -56,7 +59,7 @@
 .cs-summary {
   margin: 24px 0 0;
   padding-left: 16px;
-  border-left: 2px solid rgba(232, 114, 74, 0.5);
+  border-left: 1px solid #3B3B3C;
   color: rgba(255, 255, 255, 0.7);
   font-size: 16px;
   font-family: 'IBM Plex Sans', sans-serif;
@@ -88,7 +91,7 @@
   color: #ABABAB;
 }
 
-/* Tags — reuse the mustard pill language ---------------------------------- */
+/* Skill tags — mustard pills, exactly per design.md .experience-tag --------- */
 .cs-tags {
   margin-top: 22px;
   display: flex;
@@ -133,6 +136,7 @@
   line-height: 1.6;
 }
 
+/* List — muted, matches .experience-bullet (arrow is not a CTA) ------------- */
 .cs-list {
   margin: 4px 0 0;
   padding: 0;
@@ -153,19 +157,19 @@
   content: '→';
   position: absolute;
   left: 0;
-  color: #e8724a;
+  color: rgba(255, 255, 255, 0.45);
 }
 
-/* Callout — the "proud of" / takeaways block ------------------------------ */
+/* Callout — card surface + divider border (NOT mustard/orange) -------------- */
 .cs-callout {
   margin-top: 40px;
   padding: 22px 24px;
-  border: 1px solid rgba(201, 168, 76, 0.22);
+  border: 1px solid #3B3B3C;
   border-radius: 10px;
-  background: rgba(201, 168, 76, 0.05);
+  background: #1a1918;
 }
 .cs-callout-label {
-  color: #c9a84c;
+  color: rgba(255, 255, 255, 0.55);
   font-size: 12px;
   font-family: 'IBM Plex Mono', monospace;
   letter-spacing: 0.04em;
@@ -181,7 +185,7 @@
 }
 .cs-callout-body:last-child { margin-bottom: 0; }
 
-/* Figure placeholder ------------------------------------------------------ */
+/* Figure placeholder — neutral dashed divider ----------------------------- */
 .cs-figure {
   margin: 32px 0 0;
   min-height: 200px;
