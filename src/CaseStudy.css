@@ -1,0 +1,207 @@
+/* Case-study page styles — matches grantzou.com's design language:
+   IBM Plex Sans/Mono, #100F0F ground, #ABABAB meta, #3B3B3C rules,
+   mustard #c9a84c tags, orange #e8724a CTAs. Sits above the fixed .bg-aurora. */
+
+.cs-page {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding: clamp(16px, 4vw, 88px);
+  display: flex;
+  justify-content: center;
+}
+
+.cs-container {
+  width: 100%;
+  max-width: 760px;
+}
+
+/* Back links -------------------------------------------------------------- */
+.cs-back {
+  display: inline-block;
+  color: #ABABAB;
+  font-size: 14px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 400;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: color 0.15s ease;
+}
+.cs-back:hover { color: #e8e4dc; }
+.cs-back-bottom { margin-top: 64px; color: #e8724a; }
+.cs-back-bottom:hover { opacity: 0.75; color: #e8724a; }
+
+/* Hero -------------------------------------------------------------------- */
+.cs-hero { margin-top: 40px; }
+
+.cs-title {
+  margin: 0;
+  color: #e8e4dc;
+  font-size: clamp(28px, 4vw, 40px);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.cs-subtitle {
+  margin: 12px 0 0;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: clamp(17px, 2.2vw, 20px);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.cs-summary {
+  margin: 24px 0 0;
+  padding-left: 16px;
+  border-left: 2px solid rgba(232, 114, 74, 0.5);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+/* Meta -------------------------------------------------------------------- */
+.cs-meta {
+  margin: 28px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cs-meta-row {
+  display: flex;
+  gap: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.cs-meta-row dt {
+  flex: 0 0 84px;
+  color: #888;
+  text-transform: lowercase;
+}
+.cs-meta-row dd {
+  margin: 0;
+  color: #ABABAB;
+}
+
+/* Tags — reuse the mustard pill language ---------------------------------- */
+.cs-tags {
+  margin-top: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cs-tag {
+  color: #c9a84c;
+  font-size: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  padding: 3px 8px;
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-radius: 4px;
+  background: rgba(201, 168, 76, 0.07);
+  letter-spacing: 0.01em;
+}
+
+/* Body blocks ------------------------------------------------------------- */
+.cs-body-blocks {
+  margin-top: 44px;
+  padding-top: 8px;
+  border-top: 1px solid #3B3B3C;
+}
+
+.cs-section { margin-top: 40px; }
+
+.cs-heading {
+  margin: 0 0 14px;
+  color: #e8e4dc;
+  font-size: 16px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.cs-body {
+  margin: 0 0 14px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 16px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.cs-list {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cs-list li {
+  position: relative;
+  padding-left: 18px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 15px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  line-height: 1.5;
+}
+.cs-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: #e8724a;
+}
+
+/* Callout — the "proud of" / takeaways block ------------------------------ */
+.cs-callout {
+  margin-top: 40px;
+  padding: 22px 24px;
+  border: 1px solid rgba(201, 168, 76, 0.22);
+  border-radius: 10px;
+  background: rgba(201, 168, 76, 0.05);
+}
+.cs-callout-label {
+  color: #c9a84c;
+  font-size: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.cs-callout-body {
+  margin: 0 0 12px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 15.5px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  line-height: 1.6;
+}
+.cs-callout-body:last-child { margin-bottom: 0; }
+
+/* Figure placeholder ------------------------------------------------------ */
+.cs-figure {
+  margin: 32px 0 0;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed #3B3B3C;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.015);
+}
+.cs-figure-caption {
+  color: #6a6a6a;
+  font-size: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.02em;
+  padding: 0 16px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .cs-meta-row { flex-direction: column; gap: 0; }
+  .cs-meta-row dt { flex-basis: auto; }
+}

@@ -4,6 +4,8 @@ import { FaInstagram, FaGithub, FaLinkedinIn, FaRegFileAlt } from 'react-icons/f
 import perspectives from './perspectives.json'
 import ChatInterface from './ChatInterface'
 import { PERSPECTIVES_URL } from './config'
+import CaseStudy from './CaseStudy'
+import { caseStudies } from './caseStudies'
 
 const experience = [
   {
@@ -11,14 +13,14 @@ const experience = [
     period: '2022 – Present',
     description: 'Designing across cost management, cloud infrastructure, and Copilot experiences. I began in Cost Management, focused on transparency and predictability, then moved into Azure Core to work closer to foundational infrastructure and agent-assisted workflows. Across both, the work centers on helping customers navigate complex systems where mistakes are costly and often discovered too late.',
     tags: ['Azure Portal', 'Copilot / AI', 'Cloud Infrastructure', 'Enterprise UX', 'Agentic Design'],
-    viewWork: null
+    viewWork: '/work/azure-storage-mover-s3'
   },
   {
     company: 'Jungle Scout',
     period: '2020 – 2022',
     description: 'Designed analytics and data visualization for e-commerce sellers, translating dense operational data into actionable insights that supported real business decisions under uncertainty.',
     tags: ['Analytics UX', 'Data Visualization', 'User Research', 'E-commerce', 'B2C SaaS'],
-    viewWork: null
+    viewWork: '/work/advertising-analytics'
   },
   {
     company: 'Visier',
@@ -156,6 +158,15 @@ export default function App(){
   const perspectiveCache = useRef({})
   const [perspectiveCopy, setPerspectiveCopy] = useState({})
 
+  // Lightweight path-based routing for /work/<slug> case studies (no router dep).
+  const [path, setPath] = useState(window.location.pathname)
+  useEffect(() => {
+    const onPop = () => setPath(window.location.pathname)
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [])
+  const navigate = (to) => { window.history.pushState(null, '', to); setPath(to) }
+
   const fullText = "A portfolio of design process, research, and complex systems work."
 
 
@@ -246,6 +257,17 @@ export default function App(){
       clearTimeout(fallbackTimer)
     }
   }, [])
+
+  // Case study route — render the case study instead of the home layout.
+  const caseSlug = path.startsWith('/work/') ? path.replace('/work/', '').replace(/\/$/, '') : null
+  if (caseSlug && caseStudies[caseSlug]) {
+    return (
+      <>
+        <div className="bg-aurora"><div className="gradient-layer" /></div>
+        <CaseStudy data={caseStudies[caseSlug]} onBack={() => navigate('/')} />
+      </>
+    )
+  }
 
   return (
     <>
@@ -365,7 +387,11 @@ export default function App(){
                         )
                       })()}
                       {exp.viewWork && (
-                        <a href={exp.viewWork} className="experience-view-work">→ View work</a>
+                        <a
+                          href={exp.viewWork}
+                          className="experience-view-work"
+                          onClick={(e) => { e.preventDefault(); navigate(exp.viewWork) }}
+                        >→ View work</a>
                       )}
                     </div>
                   </div>
