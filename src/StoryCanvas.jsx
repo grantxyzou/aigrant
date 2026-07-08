@@ -10,6 +10,17 @@ const SUGGESTED = [
   'Why not redesign the whole flow?'
 ]
 
+// Surfaced "thought process" while composing — reflects the real steps the
+// composer takes (read the grounded source → focus the question → find the
+// decision → sequence the arc). Shown as a ticking log during generation.
+const THOUGHTS = [
+  'Reading the Storage Mover source material',
+  'Focusing on your question',
+  'Finding the decision that matters',
+  'Sequencing the story arc',
+  'Composing the blocks'
+]
+
 // A dedicated experience: the AI composes a focused, grounded deep-dive in the
 // main pane (revealed block-by-block so it feels built live) while the side rail
 // lets the visitor re-steer the story. Reuses CaseStudy as the block renderer.
@@ -20,12 +31,15 @@ export default function StoryCanvas({ slug, question: initialQuestion, onBack, o
   const [loading, setLoading] = useState(true)
   const [question, setQuestion] = useState(initialQuestion || 'Why honest validation?')
   const [input, setInput] = useState('')
+  const [thoughtN, setThoughtN] = useState(0)
   const revealTimer = useRef(null)
+  const thoughtTimer = useRef(null)
 
   const compose = async (q) => {
     setLoading(true)
     setSections([])
     setRevealCount(0)
+    setThoughtN(0)
     setQuestion(q)
     try {
       const res = await fetch(STORY_URL, {
@@ -66,6 +80,16 @@ export default function StoryCanvas({ slug, question: initialQuestion, onBack, o
     return () => clearInterval(revealTimer.current)
   }, [sections])
 
+  // Surface a "thought process" while the composer works (ticks through the steps).
+  useEffect(() => {
+    clearInterval(thoughtTimer.current)
+    if (!loading) return
+    thoughtTimer.current = setInterval(() => {
+      setThoughtN(n => (n < THOUGHTS.length - 1 ? n + 1 : n))
+    }, 900)
+    return () => clearInterval(thoughtTimer.current)
+  }, [loading])
+
   const submit = (e) => {
     e?.preventDefault()
     const q = input.trim()
@@ -83,7 +107,17 @@ export default function StoryCanvas({ slug, question: initialQuestion, onBack, o
 
       <div className="story-main">
         {sections.length === 0 ? (
-          <div className="story-composing"><span className="story-dot" /> Composing the story…</div>
+          <div className="story-thinking" aria-live="polite">
+            <div className="story-thinking-label">Composing the story</div>
+            {THOUGHTS.slice(0, thoughtN + 1).map((t, i) => (
+              <div key={i} className={`story-thought${i === thoughtN ? ' active' : ' done'}`}>
+                <span className="story-thought-mark">
+                  {i < thoughtN ? '✓' : <span className="story-dot" />}
+                </span>
+                <span>{t}{i === thoughtN ? '…' : ''}</span>
+              </div>
+            ))}
+          </div>
         ) : (
           <>
             <CaseStudy key={title} data={{ title, accent: 'azure', sections: revealed }} onBack={onBack} />
