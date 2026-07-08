@@ -745,10 +745,10 @@ a.dotted-link {
   font-family: 'IBM Plex Mono', monospace;
   font-weight: 400;
   padding: 3px 8px;
-  border: 1px solid rgba(201, 168, 76, 0.3);
   border-radius: 4px;
-  background: rgba(201, 168, 76, 0.07);
+  background: rgba(201, 168, 76, 0.16); /* yellow elevation, no stroke */
   letter-spacing: 0.01em;
+  text-align: center;
   position: relative;
   display: inline-block;
   white-space: nowrap;
@@ -781,8 +781,8 @@ a.dotted-link {
   transition: opacity 0.15s ease;
 }
 
-/* Per-project accent: Azure work = Azure brand blue, personal = gold */
-.experience-view-work.accent-azure { color: #4f9bea; }
+/* Links are gold all around (Grant, 2026-07-07); classes kept for future use */
+.experience-view-work.accent-azure { color: #c9a84c; }
 .experience-view-work.accent-gold { color: #c9a84c; }
 
 .experience-view-work .ew-read {

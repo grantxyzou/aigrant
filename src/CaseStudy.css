@@ -24,8 +24,9 @@
   justify-content: center;
 }
 
-/* Per-case-study accent: Azure work uses the Azure brand blue */
-.cs-page.cs-accent-azure { --cs-accent: var(--az-brand-hi); }
+/* Accent is gold across the board (Grant: "gold all around", 2026-07-07).
+   Classes kept so a per-project accent can be reintroduced later if wanted. */
+.cs-page.cs-accent-azure { --cs-accent: var(--gz-mustard); }
 .cs-page.cs-accent-gold  { --cs-accent: var(--gz-mustard); }
 
 .cs-container {
@@ -104,7 +105,7 @@
   color: var(--gz-ink-subtle);
 }
 
-/* Skill tags — neutral pills (matches the screenshot's gray pills) --------- */
+/* Skill tags — filled yellow elevation, no stroke, centered text ----------- */
 .cs-tags {
   margin-top: 22px;
   display: flex;
@@ -112,14 +113,14 @@
   gap: 6px;
 }
 .cs-tag {
-  color: var(--gz-ink-subtle);
+  color: var(--gz-mustard);
   font-size: 12px;
   font-family: 'IBM Plex Mono', monospace;
-  padding: 3px 8px;
-  border: 1px solid var(--gz-border);
+  padding: 4px 10px;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(201, 168, 76, 0.16);
   letter-spacing: 0.01em;
+  text-align: center;
 }
 
 /* Body blocks ------------------------------------------------------------- */
