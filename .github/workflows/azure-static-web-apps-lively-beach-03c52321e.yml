@@ -50,14 +50,30 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
     name: Close Pull Request Job
+    # This job tears down the PR's preview environment. It must authenticate
+    # exactly the way build_and_deploy_job does — the API token alone is
+    # rejected with "No matching static site found"; the OIDC token below is
+    # what actually identifies the app. Without a successful close, every
+    # merged PR strands its preview until the app hits its environment cap
+    # and all further PR deploys are rejected.
+    permissions:
+      id-token: write
+      contents: read
     steps:
+      - name: Install OIDC Client from Core Package
+        run: npm install @actions/core@1.6.0 @actions/http-client
+      - name: Get Id Token
+        uses: actions/github-script@v7
+        id: idtoken
+        with:
+           script: |
+               const coredemo = require('@actions/core')
+               return await coredemo.getIDToken()
+           result-encoding: string
       - name: Close Pull Request
         id: closepullrequest
         uses: Azure/static-web-apps-deploy@v1
         with:
-          # Without a token this job cannot authenticate, so it fails on every
-          # close and leaves the PR's preview environment behind. Those orphans
-          # accumulate until the app hits its staging-environment cap and all
-          # further PR deploys are rejected.
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_BEACH_03C52321E }}
           action: "close"
+          github_id_token: ${{ steps.idtoken.outputs.result }}
