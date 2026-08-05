@@ -8,6 +8,10 @@ import CaseStudy from './CaseStudy'
 import { caseStudies } from './caseStudies'
 import { projects } from './projects'
 
+// The bio's badminton link and the BPM project card point at the same app.
+// Read it from the project data so the two can't drift apart again.
+const BPM_URL = projects.find((p) => p.slug === 'bpm').url
+
 // Estimate reading time (~200 wpm) from a case study's text content.
 const readMinutes = (cs) => {
   if (!cs) return 1
@@ -319,7 +323,7 @@ export default function App(){
         <div className="sidebar">
           <div className="sidebar-bio">
             <div className="bio-text">
-              Grant <TooltipLink tooltip="coming soon">remixes music</TooltipLink>, <TooltipLink tooltip="coming soon">experiments with new technologies</TooltipLink>, and keeps rhythm in life through <TooltipLink href="https://lively-sand-0633fbd0f.7.azurestaticapps.net/#features" tooltip="BPM ↗" external linkClass="dotted-link-court">badminton</TooltipLink> and running. He sees design as storytelling: blending experience and connection, whether in beats, interfaces, or shared moments.
+              Grant <TooltipLink tooltip="coming soon">remixes music</TooltipLink>, <TooltipLink tooltip="coming soon">experiments with new technologies</TooltipLink>, and keeps rhythm in life through <TooltipLink href={BPM_URL} tooltip="BPM ↗" external linkClass="dotted-link-court">badminton</TooltipLink> and running. He sees design as storytelling: blending experience and connection, whether in beats, interfaces, or shared moments.
             </div>
           </div>
           <SocialLinks />
