@@ -26,9 +26,7 @@ export const projects = [
     description:
       'A volleyball playoff system that keeps score and tracks team movement through the bracket — built to replace the spreadsheet these tournaments usually run on.',
     tags: ['Consumer App', 'Live Scoring', 'Tournament Ops'],
-    // No URL yet: the address supplied for Courtside pointed at BPM. The entry
-    // renders without an outbound link until its own URL is filled in.
-    url: null,
+    url: 'https://volleyball-league-ivory.vercel.app/l/hjsc-wednesday-coed-6s',
     linkLabel: 'Open Courtside',
     caseStudy: null,
   },
