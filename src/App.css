@@ -610,6 +610,14 @@ a.dotted-link {
   padding-top: 20px;
 }
 
+/* Selected projects — same section treatment as work experience. Everything
+   inside reuses the .experience-* classes, so no further styling is needed. */
+.projects-section {
+  border-top: 1px #3B3B3C solid;
+  gap: 37px;
+  padding-top: 20px;
+}
+
 .section-title {
   width: 100%;
   min-width: 220px;
@@ -1054,10 +1062,11 @@ a.dotted-link {
     gap: 24px;
   }
   
-  .experience-section {
+  .experience-section,
+  .projects-section {
     gap: 24px;
   }
-  
+
   .about-text {
     font-size: 16px;
     line-height: 22.40px;

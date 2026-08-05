@@ -6,6 +6,7 @@ import ChatInterface from './ChatInterface'
 import { PERSPECTIVES_URL } from './config'
 import CaseStudy from './CaseStudy'
 import { caseStudies } from './caseStudies'
+import { projects } from './projects'
 
 // Estimate reading time (~200 wpm) from a case study's text content.
 const readMinutes = (cs) => {
@@ -400,6 +401,48 @@ export default function App(){
                           </a>
                         )
                       })()}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Selected projects — SPEC §02 places this between work experience
+                and the perspectives output. Built from the .experience-* class
+                vocabulary so it inherits the existing responsive behaviour. */}
+            <div className="section projects-section">
+              <div className="section-title">Selected projects</div>
+              <div className="experience-list">
+                {projects.map((p, i) => (
+                  <div key={p.slug} className={`experience-item ${i > 0 ? 'experience-border' : ''}`}>
+                    <div className="experience-content">
+                      <div className="experience-role">{p.name}</div>
+                      <div className="experience-description">{p.description}</div>
+                      <div className="experience-tags">
+                        {p.tags.map((tag, k) => (
+                          <span key={k} className="experience-tag">{tag}</span>
+                        ))}
+                      </div>
+                      {p.url && (
+                        <a
+                          href={p.url}
+                          className="experience-view-work"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {p.linkLabel} <span className="ew-read" aria-hidden="true">↗</span>
+                        </a>
+                      )}
+                      {p.caseStudy && caseStudies[p.caseStudy] && (
+                        <a
+                          href={`/work/${p.caseStudy}`}
+                          className="experience-view-work"
+                          onClick={(e) => { e.preventDefault(); navigate(`/work/${p.caseStudy}`) }}
+                        >
+                          {caseStudies[p.caseStudy].navLabel || 'Case study'}{' '}
+                          <span className="ew-read">({readMinutes(caseStudies[p.caseStudy])} min read)</span>
+                        </a>
+                      )}
                     </div>
                   </div>
                 ))}
