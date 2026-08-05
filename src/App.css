@@ -348,30 +348,6 @@ body {
   display: flex;
 }
 
-.header-nav {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-right: 12px;
-}
-
-.nav-link {
-  background: none;
-  border: none;
-  color: #FFFFFF;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-  font-family: inherit;
-}
-
-.nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
 /* Perspectives Toggle */
 .perspectives-toggle {
   display: flex;
