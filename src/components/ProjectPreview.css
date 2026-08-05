@@ -1,0 +1,101 @@
+.project-preview-section {
+  width: 100%;
+  max-width: 1200px;
+  margin: 80px auto 0;
+  padding: 0 24px;
+}
+
+.preview-header {
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.preview-title {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 12px 0;
+  color: #1F1F1F;
+}
+
+@media (prefers-color-scheme: dark) {
+  .preview-title {
+    color: #FFFFFF;
+  }
+}
+
+@media (max-width: 768px) {
+  .preview-title {
+    font-size: 24px;
+  }
+}
+
+.preview-description {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #666666;
+  margin: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .preview-description {
+    color: #CCCCCC;
+  }
+}
+
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+@media (max-width: 768px) {
+  .preview-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+.preview-footer {
+  text-align: center;
+  padding-bottom: 60px;
+}
+
+.view-all-btn {
+  display: inline-block;
+  padding: 12px 32px;
+  background-color: #0078D4;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.view-all-btn:hover {
+  background-color: #0051CC;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3);
+}
+
+@media (prefers-color-scheme: dark) {
+  .view-all-btn {
+    background-color: #00A4EF;
+    color: #FFFFFF;
+  }
+
+  .view-all-btn:hover {
+    background-color: #0088D4;
+  }
+}
+
+@media (max-width: 768px) {
+  .view-all-btn {
+    padding: 10px 24px;
+    font-size: 14px;
+  }
+}
