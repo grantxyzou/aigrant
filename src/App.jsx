@@ -6,6 +6,8 @@ import ChatInterface from './ChatInterface'
 import { PERSPECTIVES_URL } from './config'
 import CaseStudy from './CaseStudy'
 import { caseStudies } from './caseStudies'
+import ProjectsPage from './components/ProjectsPage'
+import ProjectPreview from './components/ProjectPreview'
 
 // Estimate reading time (~200 wpm) from a case study's text content.
 const readMinutes = (cs) => {
@@ -275,6 +277,35 @@ export default function App(){
     )
   }
 
+  // Projects route — render the projects page instead of the home layout.
+  if (path === '/projects' || path === '/projects/') {
+    return (
+      <>
+        <div className="bg-aurora mood-dawn" aria-hidden="true" />
+        <header className={`header-sticky ${isScrolled ? 'scrolled' : ''}`}>
+          <div className="header-container">
+            <div className="header-inner">
+              <div className="header-left">
+                <div>
+                  <span className="header-name" style={{ cursor: 'pointer' }} onClick={() => navigate('/')}>Grant Zou</span>
+                </div>
+                <div className="header-title">
+                  <div className="header-ai">ai</div>
+                  <div className="header-designer">product designer</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+        <div className="responsive-container">
+          <div className="main-container">
+            <ProjectsPage onNavigate={navigate} />
+          </div>
+        </div>
+      </>
+    )
+  }
+
   return (
     <>
       {/* Fixed weather background */}
@@ -286,7 +317,7 @@ export default function App(){
           <div className="header-inner">
             <div className="header-left">
               <div>
-                <span className="header-name">Grant Zou</span>
+                <span className="header-name" style={{ cursor: 'pointer' }} onClick={() => navigate('/')}>Grant Zou</span>
               </div>
               <div className="header-title">
                 <div className="header-ai">ai</div>
@@ -294,6 +325,9 @@ export default function App(){
               </div>
             </div>
             <div className="header-right">
+              <nav className="header-nav">
+                <button className="nav-link" onClick={() => navigate('/projects')}>Projects</button>
+              </nav>
               <div className="perspectives-toggle" role="group" aria-label="Reading perspective">
                 {['recruiter', 'collaborator', 'client'].map(p => (
                   <button
@@ -416,6 +450,9 @@ export default function App(){
                 {perspectives[perspective].cta.label} <span aria-hidden="true">→</span>
               </a>
             )}
+
+            {/* Featured Projects Preview */}
+            <ProjectPreview onNavigate={navigate} />
 
             {/* Ask — always available, seeded per active role */}
             <ChatInterface role={perspective} onNavigate={navigate} />
