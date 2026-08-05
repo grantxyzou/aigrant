@@ -6,8 +6,7 @@ import ChatInterface from './ChatInterface'
 import { PERSPECTIVES_URL } from './config'
 import CaseStudy from './CaseStudy'
 import { caseStudies } from './caseStudies'
-import ProjectsPage from './components/ProjectsPage'
-import ProjectPreview from './components/ProjectPreview'
+import { projects } from './projects'
 
 // Estimate reading time (~200 wpm) from a case study's text content.
 const readMinutes = (cs) => {
@@ -277,35 +276,6 @@ export default function App(){
     )
   }
 
-  // Projects route — render the projects page instead of the home layout.
-  if (path === '/projects' || path === '/projects/') {
-    return (
-      <>
-        <div className="bg-aurora mood-dawn" aria-hidden="true" />
-        <header className={`header-sticky ${isScrolled ? 'scrolled' : ''}`}>
-          <div className="header-container">
-            <div className="header-inner">
-              <div className="header-left">
-                <div>
-                  <span className="header-name" style={{ cursor: 'pointer' }} onClick={() => navigate('/')}>Grant Zou</span>
-                </div>
-                <div className="header-title">
-                  <div className="header-ai">ai</div>
-                  <div className="header-designer">product designer</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </header>
-        <div className="responsive-container">
-          <div className="main-container">
-            <ProjectsPage onNavigate={navigate} />
-          </div>
-        </div>
-      </>
-    )
-  }
-
   return (
     <>
       {/* Fixed weather background */}
@@ -317,7 +287,7 @@ export default function App(){
           <div className="header-inner">
             <div className="header-left">
               <div>
-                <span className="header-name" style={{ cursor: 'pointer' }} onClick={() => navigate('/')}>Grant Zou</span>
+                <span className="header-name">Grant Zou</span>
               </div>
               <div className="header-title">
                 <div className="header-ai">ai</div>
@@ -325,9 +295,6 @@ export default function App(){
               </div>
             </div>
             <div className="header-right">
-              <nav className="header-nav">
-                <button className="nav-link" onClick={() => navigate('/projects')}>Projects</button>
-              </nav>
               <div className="perspectives-toggle" role="group" aria-label="Reading perspective">
                 {['recruiter', 'collaborator', 'client'].map(p => (
                   <button
@@ -440,6 +407,48 @@ export default function App(){
               </div>
             </div>
 
+            {/* Selected projects — SPEC §02 places this between work experience
+                and the perspectives output. Built from the .experience-* class
+                vocabulary so it inherits the existing responsive behaviour. */}
+            <div className="section projects-section">
+              <div className="section-title">Selected projects</div>
+              <div className="experience-list">
+                {projects.map((p, i) => (
+                  <div key={p.slug} className={`experience-item ${i > 0 ? 'experience-border' : ''}`}>
+                    <div className="experience-content">
+                      <div className="experience-role">{p.name}</div>
+                      <div className="experience-description">{p.description}</div>
+                      <div className="experience-tags">
+                        {p.tags.map((tag, k) => (
+                          <span key={k} className="experience-tag">{tag}</span>
+                        ))}
+                      </div>
+                      {p.url && (
+                        <a
+                          href={p.url}
+                          className="experience-view-work"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {p.linkLabel} <span className="ew-read" aria-hidden="true">↗</span>
+                        </a>
+                      )}
+                      {p.caseStudy && caseStudies[p.caseStudy] && (
+                        <a
+                          href={`/work/${p.caseStudy}`}
+                          className="experience-view-work"
+                          onClick={(e) => { e.preventDefault(); navigate(`/work/${p.caseStudy}`) }}
+                        >
+                          {caseStudies[p.caseStudy].navLabel || 'Case study'}{' '}
+                          <span className="ew-read">({readMinutes(caseStudies[p.caseStudy])} min read)</span>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {/* Role CTA — a forward nudge toward contact when a lens is active */}
             {perspective && perspectives[perspective]?.cta && (
               <a
@@ -450,9 +459,6 @@ export default function App(){
                 {perspectives[perspective].cta.label} <span aria-hidden="true">→</span>
               </a>
             )}
-
-            {/* Featured Projects Preview */}
-            <ProjectPreview onNavigate={navigate} />
 
             {/* Ask — always available, seeded per active role */}
             <ChatInterface role={perspective} onNavigate={navigate} />
