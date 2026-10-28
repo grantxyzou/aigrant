@@ -186,7 +186,18 @@ export default function App(){
     window.addEventListener('popstate', onPop)
     return () => window.removeEventListener('popstate', onPop)
   }, [])
-  const navigate = (to) => { window.history.pushState(null, '', to); setPath(to) }
+  // `to` may carry a #section (a chat citation does). The path drives routing;
+  // the hash is scrolled to once the page for that path has rendered.
+  const navigate = (to) => {
+    window.history.pushState(null, '', to)
+    const url = new URL(to, window.location.origin)
+    setPath(url.pathname)
+    const hash = url.hash.slice(1)
+    setTimeout(() => {
+      const target = hash && document.getElementById(hash)
+      if (target) target.scrollIntoView({ block: 'start', behavior: 'smooth' })
+    }, 60)
+  }
 
   const fullText = "A portfolio of design process, research, and complex systems work."
 
@@ -350,7 +361,7 @@ export default function App(){
             </div>
 
             {/* Experience Section */}
-            <div className="section experience-section">
+            <div className="section experience-section" id="work">
               <div className="section-title">Work experience</div>
               <div className="experience-list">
                 {experience.map((exp, i) => (

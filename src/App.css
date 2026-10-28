@@ -2161,3 +2161,76 @@ a.dotted-link {
 .responsive-container {
   padding-bottom: 100px;
 }
+/* Chat citations — every claim points at the section it came from --------- */
+/* An answer stacks its source list under the bubble, not beside it */
+.chat-overlay-messages .message.assistant { flex-direction: column; align-items: flex-start; }
+.message-content .cite {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  margin-left: 3px;
+  padding: 0 5px;
+  border: 0;
+  border-radius: 9px;
+  background: rgba(201, 168, 76, 0.18);
+  color: #c9a84c;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  line-height: 1;
+  vertical-align: 2px;
+  cursor: pointer;
+}
+.message-content .cite:hover { background: rgba(201, 168, 76, 0.3); }
+.message-content .cite:focus-visible,
+.message-source-link:focus-visible { outline: 2px solid #c9a84c; outline-offset: 2px; }
+.message-content .cite-static {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.6);
+  cursor: default;
+}
+.message-sources {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.message-sources li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 13px;
+}
+.message-source-n {
+  min-width: 18px;
+  color: #c9a84c;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-align: center;
+}
+.message-source-link {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: rgba(255, 255, 255, 0.8);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.message-source-link:hover { color: #fff; text-decoration: underline; }
+.message-source-static { color: rgba(255, 255, 255, 0.5); }
+.message-unsourced {
+  margin-top: 8px;
+  padding: 0 4px;
+  color: rgba(255, 255, 255, 0.45);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+}
+
+/* Sections a citation can land on clear the sticky header */
+#work,
+.cs-section[id],
+.cs-callout[id] { scroll-margin-top: 96px; }

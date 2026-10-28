@@ -50,7 +50,7 @@ function Section({ block }) {
 
   if (block.callout) {
     return (
-      <aside className="cs-callout">
+      <aside className="cs-callout" id={block.id}>
         <div className="cs-callout-label">{block.callout.label}</div>
         {block.callout.body.map((p, i) => (
           <p key={i} className="cs-callout-body">{p}</p>
@@ -81,7 +81,7 @@ function Section({ block }) {
   }
 
   return (
-    <section className="cs-section">
+    <section className="cs-section" id={block.id}>
       {block.heading && <h2 className="cs-heading">{block.heading}</h2>}
       {block.body && block.body.map((p, i) => (
         <p key={i} className="cs-body">{p}</p>
@@ -97,7 +97,13 @@ function Section({ block }) {
 
 export default function CaseStudy({ data, onBack }) {
   // Restore scroll to top when a case study opens.
-  useEffect(() => { window.scrollTo(0, 0) }, [data?.slug])
+  // Open at the top, or at the section a link named (/work/<slug>#<id>):
+  // the Ask chat's citations point at sections.
+  useEffect(() => {
+    const target = window.location.hash && document.getElementById(window.location.hash.slice(1))
+    if (target) target.scrollIntoView({ block: 'start' })
+    else window.scrollTo(0, 0)
+  }, [data?.slug])
 
   if (!data) return null
 

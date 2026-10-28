@@ -108,6 +108,8 @@ aigrant/
 { "isIntroRequest": true }
 ```
 
+**Citations:** answers cite their sources inline as `[[id]]`. `api/sources.js` is the list of ids the server accepts (anything else is dropped), each pointing at a case-study section (`/work/<slug>#<section id>`). The response carries `sources: [{ id, label, href }]` in the order they're first cited, and `npm run build` fails if a source points at a section that no longer exists (`scripts/check-sources.mjs`).
+
 **Rate limit:** 10 requests / 2 min per IP (in-memory — resets on cold start)
 
 **Response:**
