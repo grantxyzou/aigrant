@@ -82,7 +82,8 @@ export default function ChatInterface({ role = null, onNavigate } = {}) {
       const response = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: updatedMessages, role })
+        // Answers go back with their [[id]] markers so the model keeps citing.
+        body: JSON.stringify({ messages: updatedMessages.map(({ role, content }) => ({ role, content })), role })
       })
 
       const data = await response.json()
@@ -90,13 +91,14 @@ export default function ChatInterface({ role = null, onNavigate } = {}) {
       if (response.status === 429) {
         setMessages(prev => [...prev, {
           role: 'assistant',
+          plain: true,
           content: data.error || "Slow down! You're asking too many questions. Try again in a couple minutes."
         }])
         return
       }
 
       if (data.success) {
-        setMessages(prev => [...prev, { role: 'assistant', content: data.response }])
+        setMessages(prev => [...prev, { role: 'assistant', content: data.response, sources: data.sources || [] }])
       } else {
         throw new Error(data.error || 'API error')
       }
@@ -104,6 +106,7 @@ export default function ChatInterface({ role = null, onNavigate } = {}) {
       console.error('Chat error:', error)
       setMessages(prev => [...prev, {
         role: 'assistant',
+        plain: true,
         content: "I'm Grant, a product designer at Microsoft Azure. I design for the moments where products technically work but still fail users. The API is currently unavailable — feel free to explore my portfolio or try again shortly."
       }])
     } finally {
@@ -131,7 +134,13 @@ export default function ChatInterface({ role = null, onNavigate } = {}) {
     setIsOverlayOpen(true)
   }
 
-  const formatMessage = (content) => {
+  // A citation opens the section it names, after the overlay gets out of the way.
+  const openSource = (href) => {
+    closeOverlay()
+    onNavigate?.(href)
+  }
+
+  const formatMessage = (content, sources = []) => {
     if (!content) return null
 
     const paragraphs = content.split(/\n\n+/)
@@ -150,7 +159,7 @@ export default function ChatInterface({ role = null, onNavigate } = {}) {
             {lines
               .filter(line => line.trim())
               .map((line, lIndex) => (
-                <li key={lIndex}>{formatInlineText(line.replace(/^[-•]\s*/, ''))}</li>
+                <li key={lIndex}>{formatInlineText(line.replace(/^[-•]\s*/, ''), sources)}</li>
               ))}
           </ul>
         )
@@ -166,30 +175,42 @@ export default function ChatInterface({ role = null, onNavigate } = {}) {
             {lines
               .filter(line => line.trim())
               .map((line, lIndex) => (
-                <li key={lIndex}>{formatInlineText(line.replace(/^\d+[.)]\s*/, ''))}</li>
+                <li key={lIndex}>{formatInlineText(line.replace(/^\d+[.)]\s*/, ''), sources)}</li>
               ))}
           </ol>
         )
       }
 
-      return <p key={pIndex}>{formatInlineText(paragraph)}</p>
+      return <p key={pIndex}>{formatInlineText(paragraph, sources)}</p>
     })
   }
 
-  const formatInlineText = (text) => {
+  // Renders **bold** and [[source-id]] citations. A citation becomes its
+  // number in this answer's source list; one the server didn't list is dropped.
+  const formatInlineText = (text, sources = []) => {
     const parts = []
     let remaining = text
     let key = 0
 
     while (remaining) {
-      const boldMatch = remaining.match(/\*\*(.+?)\*\*/)
-      if (boldMatch) {
-        const index = remaining.indexOf(boldMatch[0])
-        if (index > 0) {
-          parts.push(<span key={key++}>{remaining.slice(0, index)}</span>)
+      const match = remaining.match(/\*\*(.+?)\*\*|\s*\[\[([^\]]+)\]\]/)
+      if (match) {
+        if (match.index > 0) {
+          parts.push(<span key={key++}>{remaining.slice(0, match.index)}</span>)
         }
-        parts.push(<strong key={key++}>{boldMatch[1]}</strong>)
-        remaining = remaining.slice(index + boldMatch[0].length)
+        if (match[1] !== undefined) {
+          parts.push(<strong key={key++}>{match[1]}</strong>)
+        } else {
+          match[2].split(',').map((id) => id.trim()).forEach((id) => {
+            const n = sources.findIndex((s) => s.id === id)
+            if (n < 0) return
+            const source = sources[n]
+            parts.push(source.href
+              ? <button key={key++} type="button" className="cite" onClick={() => openSource(source.href)} aria-label={`Source ${n + 1}: ${source.label}`}>{n + 1}</button>
+              : <span key={key++} className="cite cite-static" aria-label={`Source ${n + 1}: ${source.label}`}>{n + 1}</span>)
+          })
+        }
+        remaining = remaining.slice(match.index + match[0].length)
         continue
       }
 
@@ -283,7 +304,7 @@ export default function ChatInterface({ role = null, onNavigate } = {}) {
           </button>
           <div className="chat-title-wrapper">
             <span className="chat-title">Chat with Grant's AI</span>
-            <span className="chat-disclaimer">generated by gpt-4o-mini · content may be incorrect</span>
+            <span className="chat-disclaimer">gpt-4o-mini · numbers link to the source · may be incorrect</span>
           </div>
           <button className="clear-button" onClick={clearAndClose} aria-label="Clear chat">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -297,8 +318,24 @@ export default function ChatInterface({ role = null, onNavigate } = {}) {
           {messages.map((message, index) => (
             <div key={index} className={`message ${message.role}`}>
               <div className="message-content">
-                {message.role === 'assistant' ? formatMessage(message.content) : message.content}
+                {message.role === 'assistant' ? formatMessage(message.content, message.sources) : message.content}
               </div>
+              {message.role === 'assistant' && !message.plain && (
+                message.sources?.length > 0 ? (
+                  <ol className="message-sources" aria-label="Sources">
+                    {message.sources.map((s, n) => (
+                      <li key={s.id}>
+                        <span className="message-source-n">{n + 1}</span>
+                        {s.href
+                          ? <button type="button" className="message-source-link" onClick={() => openSource(s.href)}>{s.label} →</button>
+                          : <span className="message-source-static">{s.label}</span>}
+                      </li>
+                    ))}
+                  </ol>
+                ) : (
+                  <div className="message-unsourced">No sources cited for this answer</div>
+                )
+              )}
             </div>
           ))}
 

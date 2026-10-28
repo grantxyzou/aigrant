@@ -7,6 +7,12 @@ import { PERSPECTIVES_URL } from './config'
 import CaseStudy from './CaseStudy'
 import StoryCanvas from './StoryCanvas'
 import { caseStudies } from './caseStudies'
+import { projects } from './projects'
+
+// The bio's badminton link opens the BPM case study, the same page the BPM
+// project card links to. The app itself is invite-only, so a visitor who
+// followed a link to it would only reach a sign-in screen.
+const BPM_CASE = '/work/bpm'
 
 // Projects allowed in the generative story canvas (publicly shareable only).
 const STORY_PROJECTS = ['azure-storage-mover-s3']
@@ -30,7 +36,7 @@ const experience = [
   {
     company: 'Microsoft · Azure',
     period: '2022 – Present',
-    description: 'Designing across cost management, cloud infrastructure, and Copilot experiences. I began in Cost Management, focused on transparency and predictability, then moved into Azure Core to work closer to foundational infrastructure and agent-assisted workflows. Across both, the work centers on helping customers navigate complex systems where mistakes are costly and often discovered too late.',
+    description: 'Designing across cost management, cloud infrastructure, and Copilot experiences. I began in Cost Management, focused on transparency and predictability, then moved into Azure Core to work closer to foundational infrastructure and agent-assisted workflows. Across both, the work centers on helping customers navigate complex systems where mistakes are costly and often discovered too late. My AI work spans Copilot for Azure: an AI skill for cost management, an agent that guides data migration, and the design system these experiences share.',
     tags: ['Azure Portal', 'Copilot / AI', 'Cloud Infrastructure', 'Enterprise UX', 'Agentic Design'],
     viewWork: '/work/azure-storage-mover-s3'
   },
@@ -50,12 +56,13 @@ const experience = [
   },
 ]
 
-const TooltipLink = ({ href, tooltip, external, linkClass, children }) => (
+const TooltipLink = ({ href, tooltip, external, linkClass, onClick, children }) => (
   <span className="tooltip-link-wrapper">
     {href ? (
       <a
         href={href}
         className={`dotted-link${linkClass ? ` ${linkClass}` : ''}`}
+        onClick={onClick}
         target={external ? '_blank' : undefined}
         rel={external ? 'noopener noreferrer' : undefined}
       >
@@ -183,7 +190,18 @@ export default function App(){
     window.addEventListener('popstate', onPop)
     return () => window.removeEventListener('popstate', onPop)
   }, [])
-  const navigate = (to) => { window.history.pushState(null, '', to); setPath(to) }
+  // `to` may carry a #section (a chat citation does). The path drives routing;
+  // the hash is scrolled to once the page for that path has rendered.
+  const navigate = (to) => {
+    window.history.pushState(null, '', to)
+    const url = new URL(to, window.location.origin)
+    setPath(url.pathname)
+    const hash = url.hash.slice(1)
+    setTimeout(() => {
+      const target = hash && document.getElementById(hash)
+      if (target) target.scrollIntoView({ block: 'start', behavior: 'smooth' })
+    }, 60)
+  }
 
   const fullText = "A portfolio of design process, research, and complex systems work."
 
@@ -336,7 +354,7 @@ export default function App(){
         <div className="sidebar">
           <div className="sidebar-bio">
             <div className="bio-text">
-              Grant <TooltipLink tooltip="coming soon">remixes music</TooltipLink>, <TooltipLink tooltip="coming soon">experiments with new technologies</TooltipLink>, and keeps rhythm in life through <TooltipLink href="https://lively-sand-0633fbd0f.7.azurestaticapps.net/#features" tooltip="BPM ↗" external linkClass="dotted-link-court">badminton</TooltipLink> and running. He sees design as storytelling: blending experience and connection, whether in beats, interfaces, or shared moments.
+              Grant remixes music, experiments with new technologies, and keeps rhythm in life through <TooltipLink href={BPM_CASE} tooltip="BPM case study" linkClass="dotted-link-court" onClick={(e) => { e.preventDefault(); navigate(BPM_CASE) }}>badminton</TooltipLink> and running. He sees design as storytelling: blending experience and connection, whether in beats, interfaces, or shared moments.
             </div>
           </div>
           <SocialLinks />
@@ -354,14 +372,14 @@ export default function App(){
                 >
                   {perspective
                     ? (perspectiveCopy[perspective] || perspectives[perspective].intro)
-                    : 'An evolving, exploratory design portfolio where I\'m learning Azure infrastructure and AI hands-on, while experimenting with AI features as new ways to tell product stories.'
+                    : 'I design systems that tell the truth about their state: cloud migrations at Microsoft Azure that never call an unverified job done, and BPM, a badminton app I designed, own end to end and built with AI agents.'
                   }
                 </div>
               </div>
             </div>
 
             {/* Experience Section */}
-            <div className="section experience-section">
+            <div className="section experience-section" id="work">
               <div className="section-title">Work experience</div>
               <div className="experience-list">
                 {experience.map((exp, i) => (
@@ -418,6 +436,48 @@ export default function App(){
                           </a>
                         )
                       })()}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Selected projects — SPEC §02 places this between work experience
+                and the perspectives output. Built from the .experience-* class
+                vocabulary so it inherits the existing responsive behaviour. */}
+            <div className="section projects-section">
+              <div className="section-title">Selected projects</div>
+              <div className="experience-list">
+                {projects.map((p, i) => (
+                  <div key={p.slug} className={`experience-item ${i > 0 ? 'experience-border' : ''}`}>
+                    <div className="experience-content">
+                      <div className="experience-role">{p.name}</div>
+                      <div className="experience-description">{p.description}</div>
+                      <div className="experience-tags">
+                        {p.tags.map((tag, k) => (
+                          <span key={k} className="experience-tag">{tag}</span>
+                        ))}
+                      </div>
+                      {p.url && (
+                        <a
+                          href={p.url}
+                          className="experience-view-work"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {p.linkLabel} <span className="ew-read" aria-hidden="true">↗</span>
+                        </a>
+                      )}
+                      {p.caseStudy && caseStudies[p.caseStudy] && (
+                        <a
+                          href={`/work/${p.caseStudy}`}
+                          className="experience-view-work"
+                          onClick={(e) => { e.preventDefault(); navigate(`/work/${p.caseStudy}`) }}
+                        >
+                          {caseStudies[p.caseStudy].navLabel || 'Case study'}{' '}
+                          <span className="ew-read">({readMinutes(caseStudies[p.caseStudy])} min read)</span>
+                        </a>
+                      )}
                     </div>
                   </div>
                 ))}
