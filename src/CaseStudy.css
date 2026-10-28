@@ -244,6 +244,29 @@
   text-align: left;
 }
 
+/* Sources under a composed block — each links to the section it came from */
+.cs-cites {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  margin-top: 10px;
+}
+.cs-cites-label {
+  color: rgba(255, 255, 255, 0.4);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.cs-cite {
+  color: var(--cs-accent);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  text-decoration: none;
+}
+.cs-cite:hover { text-decoration: underline; }
+
 /* Live numbers strip (BPM) ------------------------------------------------ */
 .cs-live {
   margin: 32px 0 0;

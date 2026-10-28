@@ -45,7 +45,26 @@ function BpmLiveStats() {
   )
 }
 
-function Section({ block }) {
+// A block written from other sections (a composed story) names them, each a
+// link to the section it came from.
+function Cites({ cites, onCite }) {
+  if (!cites?.length) return null
+  return (
+    <div className="cs-cites">
+      <span className="cs-cites-label">Source</span>
+      {cites.map((c) => (
+        <a
+          key={c.href}
+          href={c.href}
+          className="cs-cite"
+          onClick={(e) => { if (onCite) { e.preventDefault(); onCite(c.href) } }}
+        >{c.label} →</a>
+      ))}
+    </div>
+  )
+}
+
+function Section({ block, onCite }) {
   if (block.liveStats === 'bpm') return <BpmLiveStats />
 
   if (block.callout) {
@@ -55,6 +74,7 @@ function Section({ block }) {
         {block.callout.body.map((p, i) => (
           <p key={i} className="cs-callout-body">{p}</p>
         ))}
+        <Cites cites={block.cites} onCite={onCite} />
       </aside>
     )
   }
@@ -91,11 +111,12 @@ function Section({ block }) {
           {block.list.map((item, i) => <li key={i}>{item}</li>)}
         </ul>
       )}
+      <Cites cites={block.cites} onCite={onCite} />
     </section>
   )
 }
 
-export default function CaseStudy({ data, onBack }) {
+export default function CaseStudy({ data, onBack, onCite }) {
   // Restore scroll to top when a case study opens.
   // Open at the top, or at the section a link named (/work/<slug>#<id>):
   // the Ask chat's citations point at sections.
@@ -119,6 +140,7 @@ export default function CaseStudy({ data, onBack }) {
         <header className="cs-hero">
           <h1 className="cs-title">{data.title}</h1>
           {data.subtitle && <p className="cs-subtitle">{data.subtitle}</p>}
+          {data.notice}
           {data.summary && <p className="cs-summary">{data.summary}</p>}
 
           {data.meta && (
@@ -140,7 +162,7 @@ export default function CaseStudy({ data, onBack }) {
         </header>
 
         <div className="cs-body-blocks">
-          {data.sections.map((block, i) => <Section key={i} block={block} />)}
+          {data.sections.map((block, i) => <Section key={i} block={block} onCite={onCite} />)}
         </div>
 
         <a href="/" className="cs-back cs-back-bottom" onClick={handleBack}>← Back to portfolio</a>

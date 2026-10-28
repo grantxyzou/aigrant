@@ -5,6 +5,7 @@ import perspectives from './perspectives.json'
 import ChatInterface from './ChatInterface'
 import { PERSPECTIVES_URL } from './config'
 import CaseStudy from './CaseStudy'
+import StoryCanvas from './StoryCanvas'
 import { caseStudies } from './caseStudies'
 import { projects } from './projects'
 
@@ -12,6 +13,9 @@ import { projects } from './projects'
 // project card links to. The app itself is invite-only, so a visitor who
 // followed a link to it would only reach a sign-in screen.
 const BPM_CASE = '/work/bpm'
+
+// Any published case study can become a story; the story API writes only from
+// the published page, so a story never says more than the case study does.
 
 // Estimate reading time (~200 wpm) from a case study's text content.
 const readMinutes = (cs) => {
@@ -281,6 +285,20 @@ export default function App(){
       clearTimeout(fallbackTimer)
     }
   }, [])
+
+  // Story canvas route — AI composes a live, grounded deep-dive in a split view.
+  const storySlug = path.startsWith('/story/') ? path.replace('/story/', '').replace(/\/$/, '') : null
+  if (storySlug && caseStudies[storySlug]) {
+    const q = new URLSearchParams(window.location.search).get('q')
+    return (
+      <StoryCanvas
+        slug={storySlug}
+        question={q}
+        onBack={() => navigate('/')}
+        onNavigate={navigate}
+      />
+    )
+  }
 
   // Case study route — render the case study instead of the home layout.
   const caseSlug = path.startsWith('/work/') ? path.replace('/work/', '').replace(/\/$/, '') : null
