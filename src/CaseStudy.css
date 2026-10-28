@@ -219,6 +219,31 @@
   text-align: center;
 }
 
+/* Figure with real screenshots (phone frames, side by side) --------------- */
+.cs-figure-shots {
+  margin: 32px 0 0;
+}
+.cs-shots-row {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.cs-shot {
+  flex: 1 1 0;
+  min-width: 140px;
+  max-width: 240px;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid var(--gz-border);
+}
+.cs-figure-shots .cs-figure-caption {
+  display: block;
+  margin-top: 12px;
+  padding: 0;
+  text-align: left;
+}
+
 @media (max-width: 600px) {
   .cs-meta-row { flex-direction: column; gap: 0; }
   .cs-meta-row dt { flex-basis: auto; }

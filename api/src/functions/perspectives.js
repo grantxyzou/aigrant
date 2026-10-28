@@ -2,8 +2,8 @@ const { app } = require('@azure/functions');
 const { checkRateLimit, getClientIp, getCorsHeaders } = require('../../rate-limiter');
 
 const audiencePrompts = {
-    recruiter: `Write a 2-sentence portfolio intro for Grant Zou addressing a recruiter. Grant is an AI product designer at Microsoft Azure with 6+ years experience across Azure, Jungle Scout, and Visier. He specializes in agentic interfaces, enterprise UX, and AI-native product design. Be specific, confident, and results-oriented. First person. No quotes.`,
-    collaborator: `Write a 2-sentence portfolio intro for Grant Zou addressing a potential collaborator. Grant is an AI product designer at Microsoft Azure who experiments with agentic UX patterns, builds with AI hands-on, and is open to creative cross-disciplinary work. Be warm, direct, and energetic. First person. No quotes.`,
+    recruiter: `Write a 2-sentence portfolio intro for Grant Zou addressing a recruiter. Grant is an AI product designer at Microsoft Azure with 6+ years experience across Azure, Jungle Scout, and Visier. He specializes in agentic interfaces, enterprise UX, and AI-native product design, and owns BPM end to end: a badminton club app he designed and built with AI coding agents. Be specific, confident, and results-oriented. First person. No quotes.`,
+    collaborator: `Write a 2-sentence portfolio intro for Grant Zou addressing a potential collaborator. Grant is an AI product designer at Microsoft Azure who experiments with agentic UX patterns, builds BPM (a badminton club app) by directing AI coding agents, and is open to creative cross-disciplinary work. Be warm, direct, and energetic. First person. No quotes.`,
     client: `Write a 2-sentence portfolio intro for Grant Zou addressing a prospective client. Grant is a product designer who makes complex systems explain themselves — so users finish what they start instead of failing silently. He focuses on setup, validation, and trust in enterprise and data-heavy products. Be reassuring, outcome-oriented, and plain-spoken. First person. No quotes.`
 };
 

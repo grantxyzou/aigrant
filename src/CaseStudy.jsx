@@ -20,6 +20,19 @@ function Section({ block }) {
     )
   }
 
+  if (block.figure && block.images) {
+    return (
+      <figure className="cs-figure-shots">
+        <div className="cs-shots-row">
+          {block.images.map((img) => (
+            <img key={img.src} src={img.src} alt={img.alt} className="cs-shot" loading="lazy" />
+          ))}
+        </div>
+        <figcaption className="cs-figure-caption">{block.figure}</figcaption>
+      </figure>
+    )
+  }
+
   if (block.figure) {
     return (
       <figure className="cs-figure" aria-label={block.figure}>

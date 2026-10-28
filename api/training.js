@@ -88,6 +88,18 @@ KEY PROJECTS:
    - The validation decision: Validation is opt-in and stays visible in job history; execution status and validation outcome are decoupled (a job can "complete" while validation flags a discrepancy, worded neutrally as "Run complete") so success is never confused with verification
    - Status: Published as a full case study on this site; the only Microsoft/Azure project with public specifics — all other Microsoft work stays confidential
 
+4. BPM (personal product, 2026 – ongoing, published case study at /work/bpm):
+   - What it is: a badminton club app for casual weekly clubs: sign-ups with caps and waitlists, cost splitting and balances, restring requests, stats measured against your own past, and support for many clubs per account. Web app plus iOS and Android, English and Simplified Chinese.
+   - Role: founder, product designer and product owner. Grant wrote the plans, specs and design rules and built it by directing AI coding agents (Claude Code).
+   - How he runs it: a written north star and non-goals, a rule that every piece of work names the goal it serves, kill criteria written before building, and a plan document written first for every feature.
+   - Story: players said "kudos goes away with the session too fast" and "how do I give kudos to other people?". The rule was "both on this week's roster", but the session advances minutes after play, and the card hid itself when empty. Fix: eligibility became anyone you shared a roster with in your last 8 sessions, owned by one shared function, and the card always shows its state.
+   - Honest state (same principle as Storage Mover): a failed load never looks like empty data; a provisional price is a range and a bill is an exact number; a metric without enough data shows "—", never 0.
+   - Decision: removed attendance counts and streaks from Stats so it never guilts people; club comparison is opt-in and private by default.
+   - Scale: moved from one club to many clubs with one account per person and a role and name per club, phased so it could be rolled back with one setting, invite-only with one-time links.
+   - AI build practice: the design system is enforced by automated tests (radii, spacing, type, loading states); an AI review bot checks every pull request; about 5,400 automated tests and about 720 merged pull requests.
+   - Results: in the first 12 days of usage tracking, 19 members opened the app 210 times.
+   - The app is invite-only, so visitors should read the case study rather than try to sign in.
+
 RESEARCH APPROACH:
 - Maps hidden decisions users are making without realizing it
 - Validates assumptions with lightweight research

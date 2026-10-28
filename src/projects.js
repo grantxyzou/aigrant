@@ -14,11 +14,12 @@ export const projects = [
     slug: 'bpm',
     name: 'BPM',
     description:
-      'Badminton sign-up, admin control, and skill improvement in one app. AI is wired in to help players understand what to work on next and actually advance.',
-    tags: ['Consumer App', 'AI Coaching', 'Scheduling', 'Admin Tooling'],
-    url: 'https://vnext-badminton-app-enhcave5djcvafe9.canadacentral-01.azurewebsites.net/bpm',
-    linkLabel: 'Open BPM',
-    caseStudy: null,
+      'A badminton club app I own end to end, from strategy to store build: sign-ups and waitlists, cost splitting, stringing, stats and multi-club support, on iOS, Android and the web. Designed from written plans and built with AI coding agents.',
+    tags: ['0→1 Product', 'AI-native Workflow', 'Design Systems', 'Consumer App'],
+    // The app is invite-only, so it links to its case study instead.
+    url: null,
+    linkLabel: null,
+    caseStudy: 'bpm',
   },
   {
     slug: 'courtside',
