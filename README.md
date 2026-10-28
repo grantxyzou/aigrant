@@ -119,6 +119,17 @@ aigrant/
 
 ---
 
+## API: `/api/story`
+
+**POST** `{ "project": "<case study slug>", "question": "..." }` → a story written for the question from that one case study, shown at `/story/<slug>?q=...` (the chat's "Go deeper" link opens it).
+
+- The only source is the published case study, exported by `scripts/export-case-studies.mjs` to `api/caseStudies.generated.json` as the first step of `npm run build`. Re-run it (or the build) after editing a case study.
+- Every block must cite the section ids it draws on; blocks citing nothing real are dropped (`dropped` counts them).
+- `mode: "ai"` when gpt-4o-mini wrote it; `mode: "case-study"` (with a `reason`) when it couldn't, in which case the response is the case study itself. The page says which, every time.
+- 15 requests / 2 min per IP, counted separately from the chat.
+
+---
+
 ## Deployment
 
 Push to `main` → GitHub Actions builds with Vite → deploys to Azure Static Web Apps.

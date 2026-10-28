@@ -9,6 +9,7 @@ export const PERSPECTIVES_URL = import.meta.env.DEV
 export const STORY_URL = import.meta.env.DEV
   ? 'http://localhost:7071/api/story'
   : '/api/story'
+
 export const BPM_STATS_URL = import.meta.env.DEV
   ? 'http://localhost:7071/api/bpm-stats'
   : '/api/bpm-stats'

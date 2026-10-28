@@ -875,15 +875,6 @@ a.dotted-link {
 }
 .chat-forward-cta:hover { background: rgba(201, 168, 76, 0.24); }
 
-/* Story chip — entry into the generative story canvas */
-.chat-forward-story {
-  background: rgba(201, 168, 76, 0.12);
-  border-color: rgba(201, 168, 76, 0.3);
-  color: #c9a84c;
-  font-weight: 500;
-}
-.chat-forward-story:hover { background: rgba(201, 168, 76, 0.2); }
-
 /* ── Generative story canvas ─────────────────────────────────────────────
    Split view: main pane (reuses CaseStudy renderer) + fixed story rail. */
 .story-view { position: relative; min-height: 100vh; }
@@ -912,6 +903,7 @@ a.dotted-link {
   border-left: 1px solid #3B3B3C;
   overflow-y: auto;
 }
+.story-rail-body { display: flex; flex-direction: column; gap: 16px; flex: 1; }
 .story-rail-title {
   color: #e8e4dc;
   font-family: 'IBM Plex Sans', sans-serif;
@@ -984,20 +976,8 @@ a.dotted-link {
 }
 .story-rail-exit:hover { color: #e8e4dc; }
 
-/* Composing states */
-.story-composing {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  color: rgba(255, 255, 255, 0.6);
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 13px;
-}
-
-/* Thought process — the composer's steps, ticking through while it works */
-.story-thinking {
+/* Waiting for the story: the question, and the real seconds elapsed. */
+.story-writing {
   min-height: 100vh;
   max-width: 760px;
   margin: 0 auto;
@@ -1005,38 +985,26 @@ a.dotted-link {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: flex-start;
   gap: 12px;
 }
-.story-thinking-label {
-  margin-bottom: 6px;
+.story-writing-label {
   color: #e8e4dc;
   font-family: 'IBM Plex Sans', sans-serif;
   font-weight: 600;
   font-size: 15px;
 }
-.story-thought {
+.story-writing-q {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.75);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 15px;
+}
+.story-writing-wait {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 13px;
-  animation: story-block-in 0.4s ease both;
-}
-.story-thought.done { color: rgba(255, 255, 255, 0.4); }
-.story-thought.active { color: #c9a84c; }
-.story-thought-mark {
-  width: 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(201, 168, 76, 0.7);
-}
-.story-composing-inline {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px clamp(16px, 4vw, 88px) 48px;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.5);
   font-family: 'IBM Plex Mono', monospace;
   font-size: 12px;
 }
@@ -1052,29 +1020,90 @@ a.dotted-link {
   50% { opacity: 1; transform: scale(1); }
 }
 
-/* Block-by-block reveal — scoped to the story canvas so real case studies are unaffected */
-.story-view .cs-section,
-.story-view .cs-callout,
-.story-view .cs-figure {
-  animation: story-block-in 0.5s ease both;
+/* Who wrote what you're reading — always shown above a story. */
+.story-notice {
+  margin: 16px 0 0;
+  padding: 10px 14px;
+  border-left: 2px solid rgba(201, 168, 76, 0.6);
+  background: rgba(201, 168, 76, 0.06);
+  color: rgba(255, 255, 255, 0.72);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
 }
+.story-notice-fallback {
+  border-left-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Blocks fade in one after another. Everything is already on the page (and
+   to a screen reader) — the stagger is only how it appears. */
+.story-view .cs-body-blocks > * { animation: story-block-in 0.5s ease both; }
+.story-view .cs-body-blocks > :nth-child(2) { animation-delay: 0.12s; }
+.story-view .cs-body-blocks > :nth-child(3) { animation-delay: 0.24s; }
+.story-view .cs-body-blocks > :nth-child(4) { animation-delay: 0.36s; }
+.story-view .cs-body-blocks > :nth-child(5) { animation-delay: 0.48s; }
+.story-view .cs-body-blocks > :nth-child(n+6) { animation-delay: 0.6s; }
 @keyframes story-block-in {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: none; }
 }
+@media (prefers-reduced-motion: reduce) {
+  .story-view .cs-body-blocks > *, .story-dot { animation: none; }
+}
+
+/* The rail's fold button exists for phones only. */
+.story-rail-toggle { display: none; }
+
+/* "Go deeper" under a chat answer that cites a case study */
+.message-story { margin-top: 4px; }
+.message-story-link {
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-radius: 6px;
+  padding: 4px 10px;
+  background: rgba(201, 168, 76, 0.1);
+  color: #c9a84c;
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+.message-story-link:hover { background: rgba(201, 168, 76, 0.18); }
+.message-story-link:focus-visible { outline: 2px solid #c9a84c; outline-offset: 2px; }
 
 @media (max-width: 860px) {
-  .story-main { margin-right: 0; padding-bottom: 44vh; }
+  .story-main { margin-right: 0; padding-bottom: 64px; }
+  /* Folded, the rail is one bar along the bottom; open, it rises to 70% of the screen. */
   .story-rail {
     top: auto;
     left: 0;
     right: 0;
     bottom: 0;
     width: auto;
-    max-height: 42vh;
+    max-height: 70vh;
+    padding: 0;
+    gap: 0;
     border-left: none;
     border-top: 1px solid #3B3B3C;
   }
+  .story-rail-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    min-height: 52px;
+    padding: 0 20px;
+    border: none;
+    background: none;
+    color: #e8e4dc;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  .story-rail-body { display: none; padding: 0 20px 20px; }
+  .story-rail.open .story-rail-body { display: flex; flex-direction: column; gap: 16px; }
+  .story-rail-head { display: none; }
 }
 
 .resume-link {

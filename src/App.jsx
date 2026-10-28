@@ -14,8 +14,8 @@ import { projects } from './projects'
 // followed a link to it would only reach a sign-in screen.
 const BPM_CASE = '/work/bpm'
 
-// Projects allowed in the generative story canvas (publicly shareable only).
-const STORY_PROJECTS = ['azure-storage-mover-s3']
+// Any published case study can become a story; the story API writes only from
+// the published page, so a story never says more than the case study does.
 
 // Estimate reading time (~200 wpm) from a case study's text content.
 const readMinutes = (cs) => {
@@ -288,8 +288,8 @@ export default function App(){
 
   // Story canvas route — AI composes a live, grounded deep-dive in a split view.
   const storySlug = path.startsWith('/story/') ? path.replace('/story/', '').replace(/\/$/, '') : null
-  if (storySlug && STORY_PROJECTS.includes(storySlug)) {
-    const q = new URLSearchParams(window.location.search).get('q') || 'Why honest validation?'
+  if (storySlug && caseStudies[storySlug]) {
+    const q = new URLSearchParams(window.location.search).get('q')
     return (
       <StoryCanvas
         slug={storySlug}

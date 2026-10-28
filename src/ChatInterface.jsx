@@ -140,6 +140,17 @@ export default function ChatInterface({ role = null, onNavigate } = {}) {
     onNavigate?.(href)
   }
 
+  // "Go deeper": an answer that cites a case study can become a story about
+  // it, written for the question that was asked (StoryCanvas, /story/<slug>).
+  const storyFor = (message, index) => {
+    const slug = message.sources
+      ?.map((s) => s.href?.match(/^\/work\/([^#/?]+)/)?.[1])
+      .find((s) => s && caseStudies[s])
+    if (!slug) return null
+    const asked = messages[index - 1]?.role === 'user' ? messages[index - 1].content : ''
+    return { href: `/story/${slug}?q=${encodeURIComponent(asked)}`, name: caseStudies[slug].navLabel }
+  }
+
   const formatMessage = (content, sources = []) => {
     if (!content) return null
 
@@ -331,6 +342,16 @@ export default function ChatInterface({ role = null, onNavigate } = {}) {
                           : <span className="message-source-static">{s.label}</span>}
                       </li>
                     ))}
+                    {(() => {
+                      const story = storyFor(message, index)
+                      return story && (
+                        <li className="message-story">
+                          <button type="button" className="message-story-link" onClick={() => openSource(story.href)}>
+                            ✦ Go deeper: a {story.name} story for your question →
+                          </button>
+                        </li>
+                      )
+                    })()}
                   </ol>
                 ) : (
                   <div className="message-unsourced">No sources cited for this answer</div>
@@ -359,10 +380,6 @@ export default function ChatInterface({ role = null, onNavigate } = {}) {
           <div className="chat-forward">
             <span className="chat-forward-label">Keep going</span>
             <div className="chat-forward-links">
-              <button
-                className="chat-forward-link chat-forward-story"
-                onClick={() => { closeOverlay(); onNavigate?.('/story/azure-storage-mover-s3?q=why%20honest%20validation') }}
-              >✦ Build the story: why honest validation? →</button>
               {Object.values(caseStudies).map(cs => (
                 <button
                   key={cs.slug}
