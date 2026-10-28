@@ -1,9 +1,9 @@
 {
   "recruiter": {
     "label": "Recruiter",
-    "intro": "6+ years designing enterprise AI products at Microsoft Azure, Jungle Scout, and Visier — from 0→1 features to shipped, measured outcomes. Currently focused on agentic interfaces and AI-native product design in the Azure portal.",
+    "intro": "6+ years designing complex products at Microsoft Azure, Jungle Scout, and Visier, now focused on Copilot and agentic experiences in the Azure portal. Outside work I own BPM end to end, a badminton club app I designed and built with AI agents, from strategy to store build.",
     "workBlurb": {
-      "Microsoft · Azure": "Product designer on Azure's cloud infrastructure, designing Copilot and agentic experiences for setting up and migrating enterprise workloads. Shipped the public Storage Mover S3 redesign — a unified readiness model that cut setup abandonment, plus validation that never overstates what was actually checked.",
+      "Microsoft · Azure": "Product designer on Azure's cloud infrastructure, designing Copilot for Azure experiences: an AI skill for cost management, an agent that guides data migration, and the design system they share. Led the design of the Storage Mover S3 redesign — one readiness model so users stop abandoning setup at hidden prerequisites, plus validation that never overstates what was actually checked.",
       "Jungle Scout": "Owned Advertising Analytics end-to-end — the first net-new feature for the consumer product since 2021. Drove it from 6 discovery interviews and a 216-participant study to a shipped 3-tab analytics experience (Q1 2022).",
       "Visier": "Early-career foundation in enterprise people-analytics UX. Designed chart controls (Top-N, 'Others' handling) that kept high-cardinality data honest, and led a mobile-first careers-site redesign."
     },
@@ -20,12 +20,13 @@
       "What's his biggest measurable impact?",
       "Is he senior enough to own 0→1 work?",
       "What does he actually do at Microsoft Azure?",
-      "Why is he a strong AI-design hire?"
+      "Why is he a strong AI-design hire?",
+      "What is BPM and what did he own?"
     ]
   },
   "collaborator": {
     "label": "Collaborator",
-    "intro": "I'm deep in AI-native design — building on Azure, prototyping agentic UX patterns, and always up for cross-disciplinary work. I validate the real problem before designing, and keep stakeholders in the room the whole way.",
+    "intro": "I'm deep in AI-native design — Copilot work on Azure by day, and BPM, an app I build by directing AI coding agents, the rest of the time. I validate the real problem before designing, and keep stakeholders in the room the whole way.",
     "workBlurb": {
       "Microsoft · Azure": "I work close to the metal on Azure infrastructure — mapping the hidden decisions users make, prototyping Copilot-style guidance, and partnering tightly with PM and engineering. On Storage Mover I built one readiness model across every entry point instead of bolting S3 on as a special case.",
       "Jungle Scout": "On Advertising Analytics I ran the whole process: 6 interviews, a FigJam synthesis with my PM, and a 60-minute stakeholder workshop to align cross-functionally. I pushed to strip solution-first language from the brief so we validated the problem first.",
@@ -44,7 +45,8 @@
       "How does he run user research?",
       "How does he work with engineers and PMs?",
       "Walk me through his design process",
-      "How does he prototype agentic UX?"
+      "How does he prototype agentic UX?",
+      "How does he build BPM with AI agents?"
     ]
   },
   "client": {

@@ -8,9 +8,10 @@ import CaseStudy from './CaseStudy'
 import { caseStudies } from './caseStudies'
 import { projects } from './projects'
 
-// The bio's badminton link and the BPM project card point at the same app.
-// Read it from the project data so the two can't drift apart again.
-const BPM_URL = projects.find((p) => p.slug === 'bpm').url
+// The bio's badminton link opens the BPM case study, the same page the BPM
+// project card links to. The app itself is invite-only, so a visitor who
+// followed a link to it would only reach a sign-in screen.
+const BPM_CASE = '/work/bpm'
 
 // Estimate reading time (~200 wpm) from a case study's text content.
 const readMinutes = (cs) => {
@@ -31,7 +32,7 @@ const experience = [
   {
     company: 'Microsoft · Azure',
     period: '2022 – Present',
-    description: 'Designing across cost management, cloud infrastructure, and Copilot experiences. I began in Cost Management, focused on transparency and predictability, then moved into Azure Core to work closer to foundational infrastructure and agent-assisted workflows. Across both, the work centers on helping customers navigate complex systems where mistakes are costly and often discovered too late.',
+    description: 'Designing across cost management, cloud infrastructure, and Copilot experiences. I began in Cost Management, focused on transparency and predictability, then moved into Azure Core to work closer to foundational infrastructure and agent-assisted workflows. Across both, the work centers on helping customers navigate complex systems where mistakes are costly and often discovered too late. My AI work spans Copilot for Azure: an AI skill for cost management, an agent that guides data migration, and the design system these experiences share.',
     tags: ['Azure Portal', 'Copilot / AI', 'Cloud Infrastructure', 'Enterprise UX', 'Agentic Design'],
     viewWork: '/work/azure-storage-mover-s3'
   },
@@ -51,12 +52,13 @@ const experience = [
   },
 ]
 
-const TooltipLink = ({ href, tooltip, external, linkClass, children }) => (
+const TooltipLink = ({ href, tooltip, external, linkClass, onClick, children }) => (
   <span className="tooltip-link-wrapper">
     {href ? (
       <a
         href={href}
         className={`dotted-link${linkClass ? ` ${linkClass}` : ''}`}
+        onClick={onClick}
         target={external ? '_blank' : undefined}
         rel={external ? 'noopener noreferrer' : undefined}
       >
@@ -184,7 +186,18 @@ export default function App(){
     window.addEventListener('popstate', onPop)
     return () => window.removeEventListener('popstate', onPop)
   }, [])
-  const navigate = (to) => { window.history.pushState(null, '', to); setPath(to) }
+  // `to` may carry a #section (a chat citation does). The path drives routing;
+  // the hash is scrolled to once the page for that path has rendered.
+  const navigate = (to) => {
+    window.history.pushState(null, '', to)
+    const url = new URL(to, window.location.origin)
+    setPath(url.pathname)
+    const hash = url.hash.slice(1)
+    setTimeout(() => {
+      const target = hash && document.getElementById(hash)
+      if (target) target.scrollIntoView({ block: 'start', behavior: 'smooth' })
+    }, 60)
+  }
 
   const fullText = "A portfolio of design process, research, and complex systems work."
 
@@ -323,7 +336,7 @@ export default function App(){
         <div className="sidebar">
           <div className="sidebar-bio">
             <div className="bio-text">
-              Grant <TooltipLink tooltip="coming soon">remixes music</TooltipLink>, <TooltipLink tooltip="coming soon">experiments with new technologies</TooltipLink>, and keeps rhythm in life through <TooltipLink href={BPM_URL} tooltip="BPM ↗" external linkClass="dotted-link-court">badminton</TooltipLink> and running. He sees design as storytelling: blending experience and connection, whether in beats, interfaces, or shared moments.
+              Grant remixes music, experiments with new technologies, and keeps rhythm in life through <TooltipLink href={BPM_CASE} tooltip="BPM case study" linkClass="dotted-link-court" onClick={(e) => { e.preventDefault(); navigate(BPM_CASE) }}>badminton</TooltipLink> and running. He sees design as storytelling: blending experience and connection, whether in beats, interfaces, or shared moments.
             </div>
           </div>
           <SocialLinks />
@@ -341,14 +354,14 @@ export default function App(){
                 >
                   {perspective
                     ? (perspectiveCopy[perspective] || perspectives[perspective].intro)
-                    : 'An evolving, exploratory design portfolio where I\'m learning Azure infrastructure and AI hands-on, while experimenting with AI features as new ways to tell product stories.'
+                    : 'I design systems that tell the truth about their state: cloud migrations at Microsoft Azure that never call an unverified job done, and BPM, a badminton app I designed, own end to end and built with AI agents.'
                   }
                 </div>
               </div>
             </div>
 
             {/* Experience Section */}
-            <div className="section experience-section">
+            <div className="section experience-section" id="work">
               <div className="section-title">Work experience</div>
               <div className="experience-list">
                 {experience.map((exp, i) => (
