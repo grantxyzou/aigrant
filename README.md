@@ -54,6 +54,8 @@ Requires `api/local.settings.json` (gitignored):
 }
 ```
 
+Optional: `BPM_REPORTS_KEY` (minted on BPM's Metrics page) turns on the live numbers strip on `/work/bpm`, served by `/api/bpm-stats`. Without it the strip stays hidden and the case study keeps its dated figures.
+
 ---
 
 ## Project Structure

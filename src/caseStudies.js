@@ -167,11 +167,11 @@ export const caseStudies = {
     title: 'BPM — a badminton club, run by an app I own end to end',
     subtitle: 'What I do when I am the designer, the PM and the person who answers the group chat',
     summary:
-      'BPM started as a fix for my own Thursday night badminton: sign-ups in a chat thread, a waitlist in my head, and money in a spreadsheet. It is now an iOS, Android and web app with sign-ups, waitlists, cost splitting, stringing, stats and multi-club support. I own every decision in it, and I built it by directing AI coding agents from written plans.',
+      'BPM started as a fix for my own Thursday night badminton: sign-ups in a chat thread, a waitlist in my head, and money in a spreadsheet. It is now a web app, with iOS and Android versions in beta testing, covering sign-ups, waitlists, cost splitting, stringing, stats and multi-club support. I own every decision in it, and I don’t write code: AI coding agents build it from my written plans.',
     meta: [
       { label: 'Role', value: 'Founder · product designer · product owner' },
-      { label: 'Platforms', value: 'Web app · iOS and Android (native shell) · English and 简体中文' },
-      { label: 'Build', value: 'Written plans and specs, built with AI coding agents (Claude Code)' },
+      { label: 'Platforms', value: 'Web app · iOS and Android in beta testing · English and 简体中文' },
+      { label: 'Build', value: 'My plans, specs and design rules · all code written by AI agents (Claude Code)' },
       { label: 'Timeline', value: '2026 – ongoing, used every week' },
     ],
     tags: ['0→1 Product', 'Product Strategy', 'AI-native Workflow', 'Design Systems', 'Consumer App'],
@@ -215,7 +215,7 @@ export const caseStudies = {
         callout: {
           label: 'The thread through all my work: honest state',
           body: [
-            'At Microsoft I designed Storage Mover so that "the job ran" can never be read as "the data is verified". BPM is the same principle with nobody else to blame:',
+            'In my enterprise work on cloud migration, "the job ran" must never be read as "the data is verified". BPM is the same principle with nobody else to blame:',
             'A screen that failed to load must never look like a screen with nothing in it. An outage once looked exactly like "no data", so now every card tells the two apart, and the server answers a failed read with an error rather than an empty list.',
             'A quote is a range and a bill is a number. A restring shows "$28–32" while the price is still provisional, and the exact amount only once it is really owed. A metric without enough data shows "—", never 0. And "I don’t know yet" is never shown as "no".',
           ],
@@ -239,14 +239,14 @@ export const caseStudies = {
       {
         heading: 'From one club to many, without breaking the first',
         body: [
-          'To launch on the app stores, BPM had to serve more than my club. I chose "one account, many clubs": a person is one account, and their role and display name belong to each club separately, because the same Lin can be an organiser in one club and a player in another.',
+          'To get ready for the app stores, BPM had to serve more than my club. I chose "one account, many clubs": a person is one account, and their role and display name belong to each club separately, because the same Lin can be an organiser in one club and a player in another.',
           'I phased it so it could always be rolled back with one setting, migrated the existing club in place without changing a single record id, and made sign-up invite-only with one-time links. The rule I designed around: a name only means something inside a club.',
         ],
       },
       {
         heading: 'How I use AI to build it',
         body: [
-          'I write the plan, the design decisions and the rules, and direct AI coding agents to implement them. The craft moved up a level: what I am really designing is the system that keeps a fast-moving AI build honest.',
+          'I don’t write code. I write the plan, the design decisions and the rules, and AI coding agents implement them. The craft moved up a level: what I am really designing is the system that keeps a fast-moving AI build honest.',
         ],
         list: [
           'The design system enforces itself. Corner radii, the spacing scale, type sizes, sheet sizes and loading skeletons are checked by automated tests, so drift fails the build instead of waiting for a design review.',
@@ -262,6 +262,7 @@ export const caseStudies = {
           'BPM is my proof that the principle I bring to enterprise work holds when I also own the strategy, the trade-offs and the consequences. It is also where I learned what a designer can do when AI does the building.',
         ],
       },
+      { liveStats: 'bpm' },
     ],
   },
 }

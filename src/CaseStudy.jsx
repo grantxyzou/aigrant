@@ -1,5 +1,6 @@
 import './CaseStudy.css'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { BPM_STATS_URL } from './config'
 
 // Presentational case-study page. Framework-portable (no Vite/Next specifics),
 // so it survives the eventual Next.js migration — only the routing shim changes.
@@ -8,7 +9,45 @@ import { useEffect } from 'react'
 //   data   — one entry from caseStudies.js
 //   onBack — optional handler for the "← Back" link (SPA nav). Falls back to href="/".
 
+// Live totals from BPM, through the site's own /api/bpm-stats. It renders
+// only when real numbers arrive: while loading, or if BPM can't be read, the
+// page keeps the dated figures already written in the prose and shows nothing
+// here — no placeholder zeros.
+function BpmLiveStats() {
+  const [stats, setStats] = useState(null)
+  useEffect(() => {
+    let live = true
+    fetch(BPM_STATS_URL, { cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => { if (live && data?.success) setStats(data.stats) })
+      .catch(() => {})
+    return () => { live = false }
+  }, [])
+  if (!stats) return null
+  const tiles = [
+    [stats.rosterSize, 'members on the roster'],
+    [stats.playedLast4Sessions, 'played in the last 4 sessions'],
+    [stats.openedLast28Days, 'opened the app in the last 28 days'],
+  ].filter(([n]) => typeof n === 'number')
+  const asOf = stats.asOf ? new Date(stats.asOf).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : null
+  return (
+    <aside className="cs-live" aria-label="Live numbers from BPM">
+      <div className="cs-live-label"><span className="cs-live-dot" aria-hidden="true" />Live from BPM{asOf ? ` · ${asOf}` : ''}</div>
+      <div className="cs-live-row">
+        {tiles.map(([n, label]) => (
+          <div key={label} className="cs-live-tile">
+            <div className="cs-live-num">{n}</div>
+            <div className="cs-live-text">{label}</div>
+          </div>
+        ))}
+      </div>
+    </aside>
+  )
+}
+
 function Section({ block }) {
+  if (block.liveStats === 'bpm') return <BpmLiveStats />
+
   if (block.callout) {
     return (
       <aside className="cs-callout">

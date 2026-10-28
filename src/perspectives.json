@@ -3,7 +3,7 @@
     "label": "Recruiter",
     "intro": "6+ years designing complex products at Microsoft Azure, Jungle Scout, and Visier, now focused on Copilot and agentic experiences in the Azure portal. Outside work I own BPM end to end, a badminton club app I designed and built with AI agents, from strategy to store build.",
     "workBlurb": {
-      "Microsoft · Azure": "Product designer on Azure's cloud infrastructure, designing Copilot and agentic experiences for setting up and migrating enterprise workloads. Led the design of the Storage Mover S3 redesign — one readiness model so users stop abandoning setup at hidden prerequisites, plus validation that never overstates what was actually checked.",
+      "Microsoft · Azure": "Product designer on Azure's cloud infrastructure, designing Copilot for Azure experiences: an AI skill for cost management, an agent that guides data migration, and the design system they share. Led the design of the Storage Mover S3 redesign — one readiness model so users stop abandoning setup at hidden prerequisites, plus validation that never overstates what was actually checked.",
       "Jungle Scout": "Owned Advertising Analytics end-to-end — the first net-new feature for the consumer product since 2021. Drove it from 6 discovery interviews and a 216-participant study to a shipped 3-tab analytics experience (Q1 2022).",
       "Visier": "Early-career foundation in enterprise people-analytics UX. Designed chart controls (Top-N, 'Others' handling) that kept high-cardinality data honest, and led a mobile-first careers-site redesign."
     },

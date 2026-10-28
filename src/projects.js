@@ -14,22 +14,12 @@ export const projects = [
     slug: 'bpm',
     name: 'BPM',
     description:
-      'A badminton club app I own end to end, from strategy to store build: sign-ups and waitlists, cost splitting, stringing, stats and multi-club support, on iOS, Android and the web. Designed from written plans and built with AI coding agents.',
+      'A badminton club app I own end to end, from strategy to store build: sign-ups and waitlists, cost splitting, stringing, stats and multi-club support, on the web with iOS and Android in beta. I write the plans and design rules; AI coding agents write all the code.',
     tags: ['0→1 Product', 'AI-native Workflow', 'Design Systems', 'Consumer App'],
     // The app is invite-only, so it links to its case study instead.
     url: null,
     linkLabel: null,
     caseStudy: 'bpm',
-  },
-  {
-    slug: 'courtside',
-    name: 'Courtside',
-    description:
-      'A volleyball playoff system that keeps score and tracks team movement through the bracket — built to replace the spreadsheet these tournaments usually run on.',
-    tags: ['Consumer App', 'Live Scoring', 'Tournament Ops'],
-    url: 'https://volleyball-league-ivory.vercel.app/l/hjsc-wednesday-coed-6s',
-    linkLabel: 'Open Courtside',
-    caseStudy: null,
   },
 ]
 

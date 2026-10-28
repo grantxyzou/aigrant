@@ -32,7 +32,7 @@ const experience = [
   {
     company: 'Microsoft · Azure',
     period: '2022 – Present',
-    description: 'Designing across cost management, cloud infrastructure, and Copilot experiences. I began in Cost Management, focused on transparency and predictability, then moved into Azure Core to work closer to foundational infrastructure and agent-assisted workflows. Across both, the work centers on helping customers navigate complex systems where mistakes are costly and often discovered too late.',
+    description: 'Designing across cost management, cloud infrastructure, and Copilot experiences. I began in Cost Management, focused on transparency and predictability, then moved into Azure Core to work closer to foundational infrastructure and agent-assisted workflows. Across both, the work centers on helping customers navigate complex systems where mistakes are costly and often discovered too late. My AI work spans Copilot for Azure: an AI skill for cost management, an agent that guides data migration, and the design system these experiences share.',
     tags: ['Azure Portal', 'Copilot / AI', 'Cloud Infrastructure', 'Enterprise UX', 'Agentic Design'],
     viewWork: '/work/azure-storage-mover-s3'
   },

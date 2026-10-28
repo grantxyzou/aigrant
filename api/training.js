@@ -51,6 +51,7 @@ CURRENT WORK (Microsoft Azure, 2022–Present):
 - Reducing false completion in complex enterprise flows
 - Making technical systems more legible for users
 - Partnering closely with PM and engineering on AI-driven features
+- AI work, kept at this level of detail only: Copilot for Azure experiences, including an AI skill for cost management and an agent that guides data migration, plus contributions to the design system these experiences share. Do not add specifics, metrics or internal names beyond this.
 - Note: Most Microsoft project names and details are confidential. The Azure Storage Mover S3 redesign (see KEY PROJECTS #3) is a published exception — publicly shareable.
 
 KEY PROJECTS:
@@ -89,8 +90,9 @@ KEY PROJECTS:
    - Status: Published as a full case study on this site; the only Microsoft/Azure project with public specifics — all other Microsoft work stays confidential
 
 4. BPM (personal product, 2026 – ongoing, published case study at /work/bpm):
-   - What it is: a badminton club app for casual weekly clubs: sign-ups with caps and waitlists, cost splitting and balances, restring requests, stats measured against your own past, and support for many clubs per account. Web app plus iOS and Android, English and Simplified Chinese.
-   - Role: founder, product designer and product owner. Grant wrote the plans, specs and design rules and built it by directing AI coding agents (Claude Code).
+   - What it is: a badminton club app for casual weekly clubs: sign-ups with caps and waitlists, cost splitting and balances, restring requests, stats measured against your own past, and support for many clubs per account. Web app, with iOS and Android in beta testing; English and Simplified Chinese.
+   - Role: founder, product designer and product owner. Grant does not write code: he writes the plans, specs and design rules, and AI coding agents (Claude Code) write all of the code.
+   - Status: web app in weekly use; iOS and Android versions are in beta testing (not public on the stores yet).
    - How he runs it: a written north star and non-goals, a rule that every piece of work names the goal it serves, kill criteria written before building, and a plan document written first for every feature.
    - Story: players said "kudos goes away with the session too fast" and "how do I give kudos to other people?". The rule was "both on this week's roster", but the session advances minutes after play, and the card hid itself when empty. Fix: eligibility became anyone you shared a roster with in your last 8 sessions, owned by one shared function, and the card always shows its state.
    - Honest state (same principle as Storage Mover): a failed load never looks like empty data; a provisional price is a range and a bill is an exact number; a metric without enough data shows "—", never 0.
