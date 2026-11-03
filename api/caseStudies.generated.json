@@ -1,0 +1,120 @@
+{
+  "advertising-analytics": {
+    "title": "Advertising Analytics",
+    "navLabel": "Advertising Analytics",
+    "sections": [
+      {
+        "id": "setup",
+        "label": "The setup",
+        "text": "In early 2021, Jungle Scout shifted design resources toward Cobalt, its enterprise tool for large brands and agencies. Orange — the consumer product that Amazon sellers actually use day to day — fell behind on feature innovation as a result.\nI was given the chance to move to the Orange team. Leaving a team I’d grown to love was hard, but after talking it through with my manager I saw it as a real growth opportunity: a chance to bring my design-process and collaboration experience — plus my own background as an Amazon seller — to a product that badly needed it.\nAdvertising Analytics became the first net-new feature Orange had shipped since 2021, and I owned it end to end: customer interviews, synthesis, brainstorming workshops, and a clean spec handoff to engineering."
+      },
+      {
+        "id": "opportunity",
+        "label": "The opportunity",
+        "text": "Amazon sellers running Pay-per-click (PPC) campaigns were drowning in performance data with no way to turn it into action. They needed help understanding their advertising metrics and knowing what to do next to get their products to the top of the page.\nJungle Scout Orange offered no solution for this. So I moved into research to understand the opportunity before designing anything."
+      },
+      {
+        "id": "research-qualitative",
+        "label": "Research, part I — qualitative",
+        "text": "Goal: understand what Orange customers actually need from advertising analytics, and where Amazon’s own Campaign Manager falls short for them.\nI interviewed 6 Orange customers across a range of selling experience, all actively running Amazon campaigns. Then I ran synthesis sessions with my Product Manager in FigJam, clustering what we heard into themes. What we heard: sellers couldn’t make sense of the advertising metrics in front of them, and they wanted guidance on the moves that would actually lift their placement."
+      },
+      {
+        "id": "research-quantitative",
+        "label": "Research, part II — quantitative",
+        "text": "Qualitative research told us what mattered. A quantitative study told us what mattered most.\nI built an in-app survey asking customers to rank 7 identified needs. 216 sellers responded (17% drop-off). Combined with a read on what data we already had available, that let us focus v1 on the three highest-value themes:\n- Analyze my PPC performance\n- PPC insights\n- Recommend a PPC strategy to learn"
+      },
+      {
+        "id": "workshop",
+        "label": "The workshop",
+        "text": "Orange hadn’t had updates in a while, so a net-new feature made a lot of stakeholders eager to weigh in. Rather than fight that, I channeled it: I facilitated a 60-minute online brainstorming workshop built around the validated themes.\nI opened with a quick recap of where the opportunity came from and how we’d arrived at the themes, then opened the floor. The ideas came fast. Because everyone had been part of the process, there were no surprises at sign-off."
+      },
+      {
+        "id": "design-process",
+        "label": "Design process",
+        "text": "Personas — I adapted our existing Orange personas to fit the advertising-analytics context using what the research surfaced.\nJobs to be done — one statement kept me honest about what the feature had to do: \"As an Orange user, I want to see if there are any changes I need to make to my PPC strategy. I expect the feature to answer all of my yes/no questions and some of my what/why questions.\"\nData visualization — I took data sets that were foreign to most customers and shaped them into visualizations that answered real business questions. My PM, also an Amazon seller, and I spent a week mapping charts to the questions sellers actually ask. Then I concept-tested them on UserZoom Go with real Amazon sellers."
+      },
+      {
+        "id": "final-design",
+        "label": "The final design",
+        "text": "A three-tab feature that puts Jungle Scout’s industry expertise to work interpreting each seller’s advertising data:\n- Overview — company-level ads performance at a glance\n- Sales Activity — ASIN-level ads performance\n- Advertising Analytics — campaign-agnostic view of top-performing campaigns, ad groups, and product ads"
+      }
+    ]
+  },
+  "azure-storage-mover-s3": {
+    "title": "Azure Storage Mover — S3 Redesign",
+    "navLabel": "Azure Storage Mover",
+    "sections": [
+      {
+        "id": "problem",
+        "label": "The problem",
+        "text": "Cross-cloud migration is unforgiving at setup time. Storage Mover already handled SMB/NFS scenarios, but extending it to agentless S3-compatible sources meant users had to line up a chain of prerequisites — credential references, permissions, networking, endpoints — before anything could run.\nThe failure mode wasn’t confusion in the moment. It was late discovery: users would get deep into a flow, then hit a requirement they didn’t know existed, and drop off. And a subtler failure sat underneath it — a job could report success while the migration hadn’t actually been verified, leaving users to believe they were done when they weren’t.\nThat second problem is the one I care most about across my work: false completion — when the interface lets someone think a task is finished before it really is."
+      },
+      {
+        "id": "approach",
+        "label": "The approach",
+        "text": "I anchored the redesign on a handful of experience principles:\n- Upfront clarity without hard blocking — prerequisites are visible early, but users can still explore the flow before every requirement is satisfied.\n- One place for \"what’s next\" — no matter where you enter (project, job, endpoint, or agent), a single readiness model shows what’s still missing.\n- Inline guidance, not detours — when you need a dependency, the flow helps you create or select it in context instead of exiling you elsewhere.\n- Honest validation — validate only what can genuinely be validated; don’t imply a check the system can’t actually perform."
+      },
+      {
+        "id": "decisions",
+        "label": "Key design decisions",
+        "text": "A shared four-step mental model applied consistently across every source type, so S3 doesn’t feel like a bolted-on special case: Prerequisites → Source configuration → Target configuration → Migration job execution.\nA readiness / overview area surfaces prerequisites per source type, distinguishes required from optional, and links directly to the actions that resolve them. A first-class agentless source-creation step collects the source name, endpoint, and credential references as a real prerequisite in the job flow.\nAnd a deliberate restraint: I did not redesign the whole create-job flow. The existing structure worked; the leverage was in better prerequisite surfacing, source creation, and blocking \"Run\" until required steps are complete while still allowing preview. Knowing what to leave alone was part of the design."
+      },
+      {
+        "id": "validation",
+        "label": "The validation decision (the part I’m proudest of)",
+        "text": "Users want reassurance their migration worked. But the honest scope of what could be checked was metadata-level completeness — comparing file counts — not connectivity, corruption, or cryptographic checksums.\nThe tempting move is to let a green checkmark quietly imply more than that. I designed against it: validation is opt-in and stays visible in the job summary; execution status and validation outcome are decoupled, so a run can complete while validation flags a discrepancy, with neutral language (\"Run complete\") so success never masquerades as verification; and results are accessible, so \"something’s off\" comes with somewhere to look.\nThis is false-completion design in miniature: the interface is careful never to let \"the job ran\" be misread as \"the data is guaranteed.\""
+      },
+      {
+        "id": "why",
+        "label": "Why this work matters to me",
+        "text": "Enterprise infrastructure UX rarely gets to be flashy. Its job is to keep a competent person from failing at something consequential — moving data across clouds — because a requirement was hidden or a status was overstated. This redesign is my argument that the highest-value design move in these flows is honesty: about what you’ll need before you start, and about what the system actually verified before it tells you you’re done."
+      }
+    ]
+  },
+  "bpm": {
+    "title": "BPM — a badminton club, run by an app I own end to end",
+    "navLabel": "BPM",
+    "sections": [
+      {
+        "id": "problem",
+        "label": "The problem",
+        "text": "A casual club runs on a weekly loop: open sign-ups, cap the courts, keep a waitlist, play, split the cost, chase who has not paid. In most clubs, mine included, that loop lives in a group chat and a spreadsheet, and the organiser carries the rest in their head.\nSo the Home screen answers the only three questions people open the app for: when and where, am I in, and what do I owe. Everything else in BPM is in service of those three, or it waits."
+      },
+      {
+        "id": "running-it",
+        "label": "Running it like a product, not a side project",
+        "text": "Owning something alone makes it easy to build whatever is fun next. I put guardrails on myself that I would expect from a good product team:\n- A written north star and a list of non-goals. \"Generic court booking platform\" and \"multi-sport app\" are written down as drift, so I can say no to them quickly.\n- A change rule: every piece of work has to name the goal it serves, or it becomes a parked issue instead of a branch.\n- Kill criteria written before building. The engagement slice would be cut if fewer than 40% of early users came back to it more than once and fewer than 30% logged a game.\n- A plan document written first for every feature: the problem in the player’s own words, the kill criterion, the non-goals. Then the design, then the code, then the changelog."
+      },
+      {
+        "id": "kudos",
+        "label": "A small story: \"kudos goes away with the session too fast\"",
+        "text": "Players can send kudos to people they played with. Two pieces of feedback came in: \"kudos goes away with the session too fast\", and \"how do I give kudos to other people?\" The second one stung, because my own answer to it was wrong.\nThe rule was \"you can thank someone who is on this week’s roster\". But I advance the session to next week a few minutes after play ends, so the people you had just played with stopped being eligible almost at once. On top of that, the kudos card hid itself when there was nobody to thank, so nobody could see the rule at all.\nThe fix had two halves. Eligibility became \"anyone you shared a roster with in your last eight sessions\", owned by one shared function so the screen and the server can never disagree about it. And the card is never allowed to vanish: it always shows loading, empty, error or ready, so a person can see why they can or can’t do something."
+      },
+      {
+        "id": "honest-state",
+        "label": "The thread through all my work: honest state",
+        "text": "In my enterprise work on cloud migration, \"the job ran\" must never be read as \"the data is verified\". BPM is the same principle with nobody else to blame:\nA screen that failed to load must never look like a screen with nothing in it. An outage once looked exactly like \"no data\", so now every card tells the two apart, and the server answers a failed read with an error rather than an empty list.\nA quote is a range and a bill is a number. A restring shows \"$28–32\" while the price is still provisional, and the exact amount only once it is really owed. A metric without enough data shows \"—\", never 0. And \"I don’t know yet\" is never shown as \"no\"."
+      },
+      {
+        "id": "what-not-to-measure",
+        "label": "Choosing what not to measure",
+        "text": "The first Stats tab counted attendance and streaks. I deleted all of it. A casual player who missed three weeks does not need a broken streak telling them so. Stats now measures you against your own past, and comparing yourself with the club is opt-in, asked once, and private by default.\nThat was a product decision, not a backlog item, and I wrote it down so the AI-written weekly greeting is never even given attendance counts. That way it can’t bring the guilt back in."
+      },
+      {
+        "id": "many-clubs",
+        "label": "From one club to many, without breaking the first",
+        "text": "To get ready for the app stores, BPM had to serve more than my club. I chose \"one account, many clubs\": a person is one account, and their role and display name belong to each club separately, because the same Lin can be an organiser in one club and a player in another.\nI phased it so it could always be rolled back with one setting, migrated the existing club in place without changing a single record id, and made sign-up invite-only with one-time links. The rule I designed around: a name only means something inside a club."
+      },
+      {
+        "id": "ai-build",
+        "label": "How I use AI to build it",
+        "text": "I don’t write code. I write the plan, the design decisions and the rules, and AI coding agents implement them. The craft moved up a level: what I am really designing is the system that keeps a fast-moving AI build honest.\n- The design system enforces itself. Corner radii, the spacing scale, type sizes, sheet sizes and loading skeletons are checked by automated tests, so drift fails the build instead of waiting for a design review.\n- The project memory is a living document of decisions and the bugs behind them, so each new agent session starts from what the last one learned.\n- An AI review bot reviews every pull request against written review rules, and no change reaches production without passing the full test suite. Roughly 5,400 automated tests guard about 720 merged pull requests.\n- AI is also in the product: a weekly read of your game, a plain-language verdict on how your racket fits you, and an organiser’s announcement tidied up before it goes out."
+      },
+      {
+        "id": "now",
+        "label": "Where it is now",
+        "text": "In the first twelve days of first-party usage tracking, 19 members opened the app 210 times and moved between tabs 809 times. Next is the real test of multi-club: a second club running a full session from sign-up to settled bill.\nBPM is my proof that the principle I bring to enterprise work holds when I also own the strategy, the trade-offs and the consequences. It is also where I learned what a designer can do when AI does the building."
+      }
+    ]
+  }
+}
