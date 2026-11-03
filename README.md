@@ -145,7 +145,7 @@ Production env vars are set in Azure Portal → Static Web App → Environment V
 - CORS: `Access-Control-Allow-Origin: *` (acceptable for public portfolio API)
 - Rate limiting is in-memory — does not persist across Azure Function cold starts
 - `content/` directory is NOT deployed with the function (local dev only)
-- Run `npm audit` regularly — last clean audit: March 2026
+- Run `npm audit` regularly. Last pass November 2026: no critical or high findings. Six moderate findings remain, all one `minimatch` advisory inside eslint (lint tooling, never deployed); its only fix is a major version eslint 9 does not support yet
 
 ---
 
